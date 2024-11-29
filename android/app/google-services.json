@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "341744325210",
+    "project_id": "am-i-dreaming",
+    "storage_bucket": "am-i-dreaming.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341744325210:android:2980c013bd538c69c77e63",
+        "android_client_info": {
+          "package_name": "com.example"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_2Dm2fPjAVfCAbXwds8zGjofn8hvgbFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341744325210:android:2bd3d56a9252f360c77e63",
+        "android_client_info": {
+          "package_name": "com.example.am_i_dreaiming"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_2Dm2fPjAVfCAbXwds8zGjofn8hvgbFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341744325210:android:8f0adc669c22444bc77e63",
+        "android_client_info": {
+          "package_name": "com.example.am_i_dreaming"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_2Dm2fPjAVfCAbXwds8zGjofn8hvgbFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
