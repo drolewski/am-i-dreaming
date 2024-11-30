@@ -3,7 +3,7 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 
-import '../home/home.dart';
+import '../navigation/navigation.dart';
 
 
 class AuthGate extends StatelessWidget {
@@ -32,7 +32,7 @@ class AuthGate extends StatelessWidget {
           );
         }
 
-        return const HomeScreen();
+        return const Navigation();
       },
     );
   }

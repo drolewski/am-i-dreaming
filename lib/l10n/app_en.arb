@@ -1,3 +1,6 @@
 {
-  "@@localization": "en"
+  "@@localization": "en",
+  "dreams": "Dreams",
+  "horoscopes": "Horoscopes",
+  "user": "User"
 }
