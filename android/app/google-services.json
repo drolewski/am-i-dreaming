@@ -12,7 +12,12 @@
           "package_name": "com.example"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "341744325210-05rj207uc8rrurfj6n24r8u064gd3a4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD_2Dm2fPjAVfCAbXwds8zGjofn8hvgbFI"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341744325210-05rj207uc8rrurfj6n24r8u064gd3a4k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "341744325210-ldbgkg14bk1gbjerfkknkthpifrp0jin.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.amIDreaming"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +48,12 @@
           "package_name": "com.example.am_i_dreaiming"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "341744325210-05rj207uc8rrurfj6n24r8u064gd3a4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD_2Dm2fPjAVfCAbXwds8zGjofn8hvgbFI"
@@ -39,7 +61,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341744325210-05rj207uc8rrurfj6n24r8u064gd3a4k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "341744325210-ldbgkg14bk1gbjerfkknkthpifrp0jin.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.amIDreaming"
+              }
+            }
+          ]
         }
       }
     },
@@ -50,7 +84,12 @@
           "package_name": "com.example.am_i_dreaming"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "341744325210-05rj207uc8rrurfj6n24r8u064gd3a4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD_2Dm2fPjAVfCAbXwds8zGjofn8hvgbFI"
@@ -58,7 +97,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341744325210-05rj207uc8rrurfj6n24r8u064gd3a4k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "341744325210-ldbgkg14bk1gbjerfkknkthpifrp0jin.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.amIDreaming"
+              }
+            }
+          ]
         }
       }
     }

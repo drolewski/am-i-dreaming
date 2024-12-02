@@ -1,15 +1,17 @@
-import 'package:am_i_dreaming/src/auth/auth.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+import '../home/home.dart';
+
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
+    return CupertinoApp.router(
       title: 'Am I Dreaming?',
       localizationsDelegates: [
         AppLocalizations.delegate,
@@ -23,7 +25,17 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         primaryColor: CupertinoColors.systemTeal,
       ),
-      home: const AuthGate(),
+      routerConfig: _router,
     );
   }
 }
+
+
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+        path: "/",
+        builder: (context, state) => const Home(),
+    )
+  ]
+);

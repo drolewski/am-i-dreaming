@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
+import 'app_state.dart';
 import 'firebase_options.dart';
-import 'src/app/my_app.dart';
+import 'src/app/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,5 +12,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => ApplicationState(),
+    builder: ((context, child) => const App()),
+  ));
 }
