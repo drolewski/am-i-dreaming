@@ -1,8 +1,9 @@
 # TODOs
 
 ## Important
-- Store login session in app memory/state?
-- Don't show the auth screen when user is logged in
+- Add only one dream per day
+- Better dream list/view styling
+- Dream details modal with navigation sliver bar
 
 
 ## Future tasks
@@ -14,3 +15,4 @@
 - Test google login on real app ios/android
 - Zodiac based on zodiac symbol of user on application navigation
 - Do i need labels on navigation buttons?
+- Subscription/premium model

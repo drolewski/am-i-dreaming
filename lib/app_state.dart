@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:am_i_dreaming/src/model/dream_document.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
@@ -8,19 +12,28 @@ import 'firebase_options.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
-    init();
+    initUser();
+    initDreams();
   }
 
   bool _loggedIn = false;
+
   bool get loggedIn => _loggedIn;
 
-  Future<void> init() async {
+  StreamSubscription<QuerySnapshot>? _dreamDocumentSubscription;
+  List<DreamDocument> _dreamDocuments = [];
+
+  List<DreamDocument> get dreamDocuments => _dreamDocuments;
+
+  Future<void> initUser() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
 
     FirebaseUIAuth.configureProviders([
       EmailAuthProvider(),
-      GoogleProvider(clientId: "341744325210-ldbgkg14bk1gbjerfkknkthpifrp0jin.apps.googleusercontent.com")
+      GoogleProvider(
+          clientId:
+              "341744325210-ldbgkg14bk1gbjerfkknkthpifrp0jin.apps.googleusercontent.com")
     ]);
 
     FirebaseAuth.instance.userChanges().listen((user) {
@@ -30,6 +43,44 @@ class ApplicationState extends ChangeNotifier {
         _loggedIn = false;
       }
       notifyListeners();
+    });
+  }
+
+  Future<void> initDreams() async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      _dreamDocumentSubscription = FirebaseFirestore.instance
+          .collection('dream')
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .listen((snapshot) {
+        _dreamDocuments = [];
+        for (final document in snapshot.docs) {
+          _dreamDocuments.add(
+            DreamDocument(
+              text: document.data()['text'] as String,
+              timestamp: document.data()['timestamp'] as int,
+            ),
+          );
+        }
+        notifyListeners();
+      });
+    } else {
+      _dreamDocuments = [];
+      _dreamDocumentSubscription?.cancel();
+    }
+    notifyListeners();
+  }
+
+  Future<DocumentReference> addNewDream(String dream) {
+    if (!_loggedIn) {
+      throw Exception('Must be logged in');
+    }
+
+    return FirebaseFirestore.instance.collection('dream').add(<String, dynamic>{
+      'text': dream,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
     });
   }
 }

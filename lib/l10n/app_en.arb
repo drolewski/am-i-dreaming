@@ -1,6 +1,20 @@
 {
-  "@@localization": "en",
+  "@localization": "en",
   "dreams": "Dreams",
   "horoscopes": "Horoscopes",
-  "user": "User"
+  "user": "User",
+  "describe_dream": "Describe Your dream",
+  "validation_enter_describe_dream": "Enter Yours dream description",
+  "validation_too_long_describe_dream": "Yours dream description is too long",
+  "button_add_dream": "Add dream!",
+  "formattedDate": "{date}",
+  "@formattedDate": {
+    "description": "Date parameter",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  }
 }

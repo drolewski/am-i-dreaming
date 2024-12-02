@@ -1,6 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import '../../../app_state.dart';
+import '../../view/dreams/dream_input.dart';
+import '../../view/dreams/dreams_list.dart';
 
 class Navigation extends StatelessWidget {
   const Navigation({super.key});
@@ -31,12 +35,18 @@ class Navigation extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(top: 60.0),
                     ),
-                    Center(child: Text(_tabName(context, index))),
-                    Center(
-                      child: CupertinoButton(
-                          child: const Text("logout"),
-                          onPressed: () => FirebaseAuth.instance.signOut()),
-                    )
+                    Consumer<ApplicationState>(
+                      builder: (context, appState, _) => Center(
+                        child:
+                            DreamsList(dreamDocuments: appState.dreamDocuments),
+                      ),
+                    ),
+                    Consumer<ApplicationState>(
+                        builder: (context, appState, _) => Center(
+                              child: DreamInput(
+                                  addDream: (dream) =>
+                                      appState.addNewDream(dream)),
+                            ))
                   ],
                 ), // implementation of tabs in navigation
               );

@@ -17,8 +17,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
-        builder: (context, appState, _) => !appState.loggedIn
-            ? const AuthGate()
-            : const Navigation());
+        builder: (context, appState, _) =>
+            !appState.loggedIn ? const AuthGate() : const Navigation());
   }
 }

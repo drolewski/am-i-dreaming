@@ -1,9 +1,23 @@
 {
-  "@@localization": "pl",
+  "@localization": "pl",
   "dreams": "Sny",
   "horoscopes": "Horoscopy",
   "user": "Użytkownik",
-  "@@user": {
+  "@user": {
     "description": "Użytkownik na pasku nawigacji, ta nazwa mogłaby mieć nazwę bliższą domenie zodiaków"
+  },
+  "describe_dream": "Opisz Twój sen",
+  "validation_enter_describe_dream": "Wprowadź swój opis snu",
+  "validation_too_long_describe_dream": "Twój opis snu jest zbyt długi",
+  "button_add_dream": "Śnij!",
+  "formattedDate": "{date}",
+  "@formattedDate": {
+    "description": "Date parameter",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
   }
 }
