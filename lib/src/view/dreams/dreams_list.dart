@@ -2,7 +2,7 @@ import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../util/date_formater.dart';
+import 'dream_list_item.dart';
 
 class DreamsList extends StatefulWidget {
   const DreamsList({super.key, required this.dreamDocuments});
@@ -37,11 +37,10 @@ class _DreamsListState extends State<DreamsList> {
               padding: const EdgeInsets.only(top: 60),
               initialItemCount: widget.dreamDocuments.length,
               itemBuilder: (_, int index, Animation<double> animation) {
-                return SizeTransition(
-                    sizeFactor: animation,
-                    child: Center(
-                        child: Text(
-                            '${formatTimestamp(context, widget.dreamDocuments[index].timestamp)}: ${widget.dreamDocuments[index].text}')));
+                return DreamListItem(
+                  dream: widget.dreamDocuments[index],
+                  animation: animation,
+                );
               },
             ));
   }

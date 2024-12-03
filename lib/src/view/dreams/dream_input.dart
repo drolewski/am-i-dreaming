@@ -18,9 +18,7 @@ class _DreamInputState extends State<DreamInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Form(
+    return Form(
         key: _formKey,
         child: Column(
           children: <Widget>[
@@ -58,7 +56,6 @@ class _DreamInputState extends State<DreamInput> {
                 )),
           ],
         ),
-      ),
     );
   }
 
