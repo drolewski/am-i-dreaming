@@ -8,7 +8,15 @@
   },
   "describe_dream": "Opisz Twój sen",
   "validation_enter_describe_dream": "Wprowadź swój opis snu",
-  "validation_too_long_describe_dream": "Twój opis snu jest zbyt długi",
+  "validation_too_long_describe_dream": "Maksymalan długość opisu snu to {max_dream_length} znaków",
+  "@validation_too_long_describe_dream": {
+    "description": "Dream description validation message",
+    "placeholders": {
+      "max_dream_length": {
+        "type": "num"
+      }
+    }
+  },
   "button_add_dream": "Śnij!",
   "formattedDate": "{date}",
   "@formattedDate": {
