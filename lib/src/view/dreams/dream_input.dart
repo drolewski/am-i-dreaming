@@ -42,18 +42,29 @@ class _DreamInputState extends State<DreamInput> {
                 return null;
               },
             ),
-            CupertinoButton(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  await widget.addDream(_controller.text);
-                  _controller.clear();
-                }
-              },
-              child: Text(AppLocalizations.of(context)!.button_add_dream),
-            ),
+            Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: CupertinoButton.filled(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await widget.addDream(_controller.text);
+                        _controller.clear();
+                      }
+                    },
+                    child: Text(AppLocalizations.of(context)!.button_add_dream),
+                  ),
+                )),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

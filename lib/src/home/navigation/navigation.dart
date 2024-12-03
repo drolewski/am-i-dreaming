@@ -29,24 +29,27 @@ class Navigation extends StatelessWidget {
           return CupertinoTabView(
             builder: (BuildContext context) {
               return CupertinoPageScaffold(
-                // navigationBar: const CupertinoNavigationBar(),
                 child: Column(
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(top: 60.0),
                     ),
-                    Consumer<ApplicationState>(
+                    Expanded(
+                      flex: 3,
+                        child: Consumer<ApplicationState>(
                       builder: (context, appState, _) => Center(
-                        child:
-                            DreamsList(dreamDocuments: appState.dreamDocuments),
-                      ),
-                    ),
-                    Consumer<ApplicationState>(
-                        builder: (context, appState, _) => Center(
-                              child: DreamInput(
-                                  addDream: (dream) =>
-                                      appState.addNewDream(dream)),
-                            ))
+                          child: DreamsList(
+                              dreamDocuments: appState.dreamDocuments)),
+                    )),
+                    Container(
+                        padding: const EdgeInsets.only(bottom: 80),
+                        // margin: EdgeInsets.all(100),
+                        child: Consumer<ApplicationState>(
+                            builder: (context, appState, _) => Center(
+                                  child: DreamInput(
+                                      addDream: (dream) =>
+                                          appState.addNewDream(dream)),
+                                )))
                   ],
                 ), // implementation of tabs in navigation
               );

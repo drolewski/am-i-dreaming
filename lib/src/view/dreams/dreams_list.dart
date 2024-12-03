@@ -1,5 +1,6 @@
 import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../util/date_formater.dart';
 
@@ -13,15 +14,35 @@ class DreamsList extends StatefulWidget {
 }
 
 class _DreamsListState extends State<DreamsList> {
+  final _key = GlobalKey();
+
+  static const Gradient _maskingGradient = LinearGradient(colors: [
+    CupertinoColors.transparent,
+    CupertinoColors.systemTeal,
+  ], stops: [
+    0.0,
+    0.4,
+  ], begin: Alignment.topCenter, end: Alignment.bottomCenter);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 8),
-        for (var dream in widget.dreamDocuments)
-          Text('${formatTimestamp(context, dream.timestamp)}: ${dream.text}'),
-        const SizedBox(height: 8),
-      ],
-    );
+    return widget.dreamDocuments.isEmpty
+        ? const CircularProgressIndicator()
+        : ShaderMask(
+            shaderCallback: (bounds) => _maskingGradient.createShader(bounds),
+            blendMode: BlendMode.dstIn,
+            child: AnimatedList(
+              key: _key,
+              reverse: true,
+              padding: const EdgeInsets.only(top: 60),
+              initialItemCount: widget.dreamDocuments.length,
+              itemBuilder: (_, int index, Animation<double> animation) {
+                return SizeTransition(
+                    sizeFactor: animation,
+                    child: Center(
+                        child: Text(
+                            '${formatTimestamp(context, widget.dreamDocuments[index].timestamp)}: ${widget.dreamDocuments[index].text}')));
+              },
+            ));
   }
 }
