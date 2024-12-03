@@ -33,7 +33,7 @@ class _DreamListRowState extends State<DreamListRow> {
             child: Text(
                 style:
                     const TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
-                maxLines: 7,
+                maxLines: 8,
                 overflow: TextOverflow.ellipsis,
                 widget.dream.text))
       ],

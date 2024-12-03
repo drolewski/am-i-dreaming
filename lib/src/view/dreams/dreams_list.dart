@@ -39,6 +39,7 @@ class _DreamsListState extends State<DreamsList> {
               itemBuilder: (_, int index, Animation<double> animation) {
                 return DreamListItem(
                   dream: widget.dreamDocuments[index],
+                  dreamIndex: index,
                   animation: animation,
                 );
               },

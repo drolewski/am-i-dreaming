@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../home/home.dart';
+import '../view/dream/dream_details.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -30,12 +31,13 @@ class App extends StatelessWidget {
   }
 }
 
-
-final _router = GoRouter(
-  routes: [
+final _router = GoRouter(routes: [
+  GoRoute(path: "/", builder: (context, state) => const Home(), routes: [
     GoRoute(
-        path: "/",
-        builder: (context, state) => const Home(),
-    )
-  ]
-);
+        path: "/dream/:index",
+        builder: (context, state) {
+          final index = state.pathParameters["index"]!;
+          return DreamDetails(dreamIndex: int.parse(index));
+        })
+  ])
+]);
