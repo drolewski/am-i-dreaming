@@ -1,9 +1,13 @@
 import 'package:am_i_dreaming/src/component/premium_button.dart';
+import 'package:am_i_dreaming/src/logic/zodiac/translate/element_translator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../component/detail_record.dart';
+import '../../logic/zodiac/translate/quality_translator.dart';
+import '../../logic/zodiac/zodiac.dart';
+import '../../logic/zodiac/translate/zodiac_translator.dart';
 
 class UserView extends StatefulWidget {
   const UserView({super.key});
@@ -36,6 +40,9 @@ class _UserViewState extends State<UserView> {
   }
 
   Column _displayUser() {
+    final zodiacValue = zodiac(892100939000);
+    final zodiacElement = element(zodiacValue.name);
+    final zodiacQuality = quality(zodiacValue.name);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -45,16 +52,50 @@ class _UserViewState extends State<UserView> {
               "Dominik",
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
             )),
-        const DetailsRecord(label: "Data urodzenia", value: "05:48 09.04.1998",),
-        const DetailsRecord(label: "Miejsce urodzenia", value: "Poznańxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, Polska",),
-        const DetailsRecord(label: "Znak zodiaku", value: "x",),
-        const DetailsRecord(label: "Dom astrologiczny", value: "x",),
-        const DetailsRecord(label: "Żywioł znaku zodiaku", value: "x",),
-        const DetailsRecord(label: "Jakość znaku zodiaku", value: "x",),
-        const DetailsRecord(label: "Fazy księżyca", value: "x",),
-        const DetailsRecord(label: "Powroty planetarne?", value: "x",),
-        const DetailsRecord(label: "Układ planet?", value: "x",),
-        const DetailsRecord(label: "Aspekty planetarne?", value: "x",),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.birth_date,
+          value: "05:48 09.04.1998",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.birth_place,
+          value: "Poznańxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, Polska",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.sex,
+          value: "Mężczyzna",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.zodiac,
+          value: "${translateZodiac(context, zodiacValue.name)} ${zodiacValue.icon}",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.zodiac_element,
+          value: translateElement(context, zodiacElement),
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.zodiac_quality,
+          value: translateQuality(context, zodiacQuality),
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.moon_phase,
+          value: "x",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.astrological_house,
+          value: "x",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.planetary_returns,
+          value: "x",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.planets_system,
+          value: "x",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.planetary_aspects,
+          value: "x",
+        ),
         const PremiumButton(),
         Container(
             margin: EdgeInsets.only(top: 10),
