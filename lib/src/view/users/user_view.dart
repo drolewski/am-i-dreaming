@@ -1,6 +1,9 @@
+import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../component/detail_record.dart';
 
 class UserView extends StatefulWidget {
   const UserView({super.key});
@@ -36,70 +39,23 @@ class _UserViewState extends State<UserView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-            padding: EdgeInsets.only(top: 6),
+        const Padding(
+            padding: EdgeInsets.only(top: 6, bottom: 12),
             child: Text(
               "Dominik",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
             )),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text(
-              "Data urodzenia: 05:48 09.04.1998",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
-            )),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text(
-              "Miejsce urodzenia: Poznańxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, Polska",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
-            )),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text(
-              "Płeć: Mężczyzna",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
-            )),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Znak zodiaku",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Dom astrologiczny",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Żywioł znaku zodiaku",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Jakość znaku zodiaku",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Fazy księżyca",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Powroty planetarne?",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Układ planet?",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text("Aspekty planetarne?",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w400))),
-        Container(
-            margin: EdgeInsets.only(top: 18),
-            child: Center(
-                child: SizedBox(
-                    width: double.infinity,
-                    child: CupertinoButton.filled(
-                        child: Text(AppLocalizations.of(context)!.buy_premium_button),
-                        onPressed: () => print("premium"))))),
+        const DetailsRecord(label: "Data urodzenia", value: "05:48 09.04.1998",),
+        const DetailsRecord(label: "Miejsce urodzenia", value: "Poznańxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, Polska",),
+        const DetailsRecord(label: "Znak zodiaku", value: "x",),
+        const DetailsRecord(label: "Dom astrologiczny", value: "x",),
+        const DetailsRecord(label: "Żywioł znaku zodiaku", value: "x",),
+        const DetailsRecord(label: "Jakość znaku zodiaku", value: "x",),
+        const DetailsRecord(label: "Fazy księżyca", value: "x",),
+        const DetailsRecord(label: "Powroty planetarne?", value: "x",),
+        const DetailsRecord(label: "Układ planet?", value: "x",),
+        const DetailsRecord(label: "Aspekty planetarne?", value: "x",),
+        const PremiumButton(),
         Container(
             margin: EdgeInsets.only(top: 10),
             child: Center(

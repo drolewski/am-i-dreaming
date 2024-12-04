@@ -1,4 +1,5 @@
 import 'package:am_i_dreaming/app_state.dart';
+import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/util/date_formater.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,15 +29,10 @@ class DreamDetails extends StatelessWidget {
                             child: Text(AppLocalizations.of(context)!
                                 .generate_dream_picture_button),
                             onPressed: () => print("generuj")))),
-                SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: CupertinoButton.filled(
-                            child: Text(AppLocalizations.of(context)!
-                                .buy_premium_button),
-                            onPressed: () => print("premium")))),
-                Text(appState.dreamDocuments[dreamIndex].text),
+                const PremiumButton(),
+                Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text(appState.dreamDocuments[dreamIndex].text)),
               ])));
     });
   }
