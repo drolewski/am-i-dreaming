@@ -6,32 +6,32 @@ class ZodiacModel {
 }
 
 enum ZodiacEnum {
-  Aries,
-  Taurus,
-  Gemini,
-  Cancer,
-  Leo,
-  Virgo,
-  Libra,
-  Scorpio,
-  Sagittarius,
-  Capricorn,
-  Aquarius,
-  Pisces,
-  Unknown;
+  aries,
+  taurus,
+  gemini,
+  cancer,
+  leo,
+  virgo,
+  libra,
+  scorpio,
+  sagittarius,
+  capricorn,
+  aquarius,
+  pisces,
+  unknown;
 }
 
 enum ElementEnum {
-  Fire,
-  Earth,
-  Air,
-  Water,
-  Unknown;
+  fire,
+  earth,
+  air,
+  water,
+  unknown;
 }
 
 enum ZodiacQualityEnum {
-  Cardinal,
-  Fixed,
-  Mutable,
-  Unknown;
+  cardinal,
+  fixed,
+  mutable,
+  unknown;
 }

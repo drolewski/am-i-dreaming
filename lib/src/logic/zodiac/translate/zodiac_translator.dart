@@ -4,29 +4,29 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 String translateZodiac(BuildContext context, ZodiacEnum zodiac) {
   switch (zodiac) {
-    case ZodiacEnum.Aries:
+    case ZodiacEnum.aries:
       return AppLocalizations.of(context)!.aries;
-    case ZodiacEnum.Taurus:
+    case ZodiacEnum.taurus:
       return AppLocalizations.of(context)!.taurus;
-    case ZodiacEnum.Gemini:
+    case ZodiacEnum.gemini:
       return AppLocalizations.of(context)!.gemini;
-    case ZodiacEnum.Cancer:
+    case ZodiacEnum.cancer:
       return AppLocalizations.of(context)!.cancer;
-    case ZodiacEnum.Leo:
+    case ZodiacEnum.leo:
       return AppLocalizations.of(context)!.leo;
-    case ZodiacEnum.Virgo:
+    case ZodiacEnum.virgo:
       return AppLocalizations.of(context)!.virgo;
-    case ZodiacEnum.Libra:
+    case ZodiacEnum.libra:
       return AppLocalizations.of(context)!.libra;
-    case ZodiacEnum.Scorpio:
+    case ZodiacEnum.scorpio:
       return AppLocalizations.of(context)!.scorpio;
-    case ZodiacEnum.Sagittarius:
+    case ZodiacEnum.sagittarius:
       return AppLocalizations.of(context)!.sagittarius;
-    case ZodiacEnum.Capricorn:
+    case ZodiacEnum.capricorn:
       return AppLocalizations.of(context)!.capricorn;
-    case ZodiacEnum.Aquarius:
+    case ZodiacEnum.aquarius:
       return AppLocalizations.of(context)!.aquarius;
-    case ZodiacEnum.Pisces:
+    case ZodiacEnum.pisces:
       return AppLocalizations.of(context)!.pisces;
     default:
       return AppLocalizations.of(context)!.unknown_zodiac;

@@ -1,13 +1,15 @@
 import 'package:am_i_dreaming/src/component/premium_button.dart';
+import 'package:am_i_dreaming/src/logic/moon/moon_phase.dart';
 import 'package:am_i_dreaming/src/logic/zodiac/translate/element_translator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../component/detail_record.dart';
+import '../../logic/moon/translate/moon_phase_translator.dart';
 import '../../logic/zodiac/translate/quality_translator.dart';
-import '../../logic/zodiac/zodiac.dart';
 import '../../logic/zodiac/translate/zodiac_translator.dart';
+import '../../logic/zodiac/zodiac.dart';
 
 class UserView extends StatefulWidget {
   const UserView({super.key});
@@ -40,9 +42,11 @@ class _UserViewState extends State<UserView> {
   }
 
   Column _displayUser() {
-    final zodiacValue = zodiac(892100939000);
+    final date = 892100939000;
+    final zodiacValue = zodiac(date);
     final zodiacElement = element(zodiacValue.name);
     final zodiacQuality = quality(zodiacValue.name);
+    final moonPhaseValue = moonPhase(date);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -66,7 +70,8 @@ class _UserViewState extends State<UserView> {
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac,
-          value: "${translateZodiac(context, zodiacValue.name)} ${zodiacValue.icon}",
+          value:
+              "${translateZodiac(context, zodiacValue.name)} ${zodiacValue.icon}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_element,
@@ -78,7 +83,7 @@ class _UserViewState extends State<UserView> {
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.moon_phase,
-          value: "x",
+          value: "${translateMoonPhase(context, moonPhaseValue.name)} ${moonPhaseValue.icon}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.astrological_house,

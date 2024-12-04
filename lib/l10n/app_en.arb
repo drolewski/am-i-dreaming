@@ -64,5 +64,9 @@
   "fixed": "Fixed",
   "mutable": "Mutable",
   "cardinal": "Cardinal",
-  "unknown_quality": "Unknown zodiac quality"
+  "unknown_quality": "Unknown zodiac quality",
+  "moon_last_quarter": "Last quarter of moon",
+  "moon_first_quarter": "First quarter of moon",
+  "moon_full": "Full moon",
+  "moon_new": "New moon"
 }

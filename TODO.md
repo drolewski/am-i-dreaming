@@ -6,6 +6,8 @@
 - Premium Subscription modal/screen and buy process
 - Zodiac based on zodiac symbol of user on application navigation
 - New, better app icon/logo in png
+- Tooltips on user details to describe specific details (Maybe whole screen to describe it?)
+- 
 
 
 

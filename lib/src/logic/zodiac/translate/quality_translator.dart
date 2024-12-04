@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 String translateQuality(BuildContext context, ZodiacQualityEnum quality) {
   switch (quality) {
-    case ZodiacQualityEnum.Fixed:
+    case ZodiacQualityEnum.fixed:
       return AppLocalizations.of(context)!.fixed;
-    case ZodiacQualityEnum.Mutable:
+    case ZodiacQualityEnum.mutable:
       return AppLocalizations.of(context)!.mutable;
-    case ZodiacQualityEnum.Cardinal:
+    case ZodiacQualityEnum.cardinal:
       return AppLocalizations.of(context)!.cardinal;
     default:
       return AppLocalizations.of(context)!.unknown_quality;

@@ -5,13 +5,13 @@ import '../../../model/zodiac_model.dart';
 
 String translateElement(BuildContext context, ElementEnum element) {
   switch (element) {
-    case ElementEnum.Air:
+    case ElementEnum.air:
       return AppLocalizations.of(context)!.air;
-    case ElementEnum.Water:
+    case ElementEnum.water:
       return AppLocalizations.of(context)!.water;
-    case ElementEnum.Earth:
+    case ElementEnum.earth:
       return AppLocalizations.of(context)!.earth;
-    case ElementEnum.Fire:
+    case ElementEnum.fire:
       return AppLocalizations.of(context)!.fire;
     default:
       return AppLocalizations.of(context)!.unknown_element;

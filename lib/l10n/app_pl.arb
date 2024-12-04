@@ -67,5 +67,9 @@
   "fixed": "Stały",
   "mutable": "Zmienny",
   "cardinal": "Kardynalny",
-  "unknown_quality": "Nieznana jakośc znaku zodiaku"
+  "unknown_quality": "Nieznana jakośc znaku zodiaku",
+  "moon_last_quarter": "Ostatnia kwadra księżyca",
+  "moon_first_quarter": "Pierwsza kwadra księżyca",
+  "moon_full": "Pełny księzyc",
+  "moon_new": "Nów"
 }
