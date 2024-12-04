@@ -25,6 +25,20 @@
       }
     }
   },
+  "formattedDateTime": "{date} {time}",
+  "@formattedDateTime": {
+    "description": "Date time parameter",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "time": {
+        "type": "DateTime",
+        "format": "Hm"
+      }
+    }
+  },
   "generate_dream_picture_button": "Generate picture",
   "buy_premium_button": "Premium subscription",
   "yes": "Yes",
@@ -41,7 +55,8 @@
   "zodiac_element": "Zodiac element",
   "zodiac_quality": "Zodiac quality",
   "moon_phase": "Moon phase",
-  "planetary_returns": "Planetary returns",
+  "next_sun_return": "Next sun return",
+  "next_moon_return": "Next moon return",
   "planets_system": "System of planets",
   "planetary_aspects": "Planetary aspects",
   "aries": "Aries",

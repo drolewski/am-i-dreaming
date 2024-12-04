@@ -23,16 +23,12 @@ class DreamDetails extends StatelessWidget {
               child: Column(children: [
                 SizedBox(
                     width: double.infinity,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: CupertinoButton(
-                            child: Text(AppLocalizations.of(context)!
-                                .generate_dream_picture_button),
-                            onPressed: () => print("generuj")))),
+                    child: CupertinoButton(
+                        child: Text(AppLocalizations.of(context)!
+                            .generate_dream_picture_button),
+                        onPressed: () => print("generuj"))),
                 const PremiumButton(),
-                Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Text(appState.dreamDocuments[dreamIndex].text)),
+                Text(appState.dreamDocuments[dreamIndex].text),
               ])));
     });
   }

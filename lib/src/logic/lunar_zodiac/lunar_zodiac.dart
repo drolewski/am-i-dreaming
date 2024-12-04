@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 
-ZodiacModel lunarZodiac(int timestamp, double latitude, double longitude) {
+import '../julian_day/julian_day.dart';
+
+ZodiacModel lunarZodiac(int timestamp) {
   double lunarPosition = _calculateLunarLongitude(timestamp);
 
   if (lunarPosition >= 0 && lunarPosition < 30) {
@@ -45,29 +47,8 @@ ZodiacModel lunarZodiac(int timestamp, double latitude, double longitude) {
   return ZodiacModel(name: ZodiacEnum.unknown, icon: "X️");
 }
 
-double _calculateJulianDay(int timestamp) {
-  final birthDateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
-  int year = birthDateTime.year;
-  int month = birthDateTime.month;
-  int day = birthDateTime.day;
-
-  if (month <= 2) {
-    year -= 1;
-    month += 12;
-  }
-
-  int A = (year / 100).floor();
-  int B = 2 - A + (A / 4).floor();
-
-  return (365.25 * (year + 4716)).floor() +
-      (30.6001 * (month + 1)).floor() +
-      day +
-      B -
-      1524.5;
-}
-
 double _calculateLunarLongitude(int timestamps) {
-  double JD = _calculateJulianDay(timestamps);
+  double JD = calculateJulianDay(DateTime.fromMillisecondsSinceEpoch(timestamps));
   double D = JD - 2451545.0;
 
   double meanLongitude = (218.316 + 13.176396 * D) % 360;

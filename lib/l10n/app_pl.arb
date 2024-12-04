@@ -28,6 +28,20 @@
       }
     }
   },
+  "formattedDateTime": "{date} {time}",
+  "@formattedDateTime": {
+    "description": "Date time parameter",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      },
+      "time": {
+        "type": "DateTime",
+        "format": "Hm"
+      }
+    }
+  },
   "generate_dream_picture_button": "Wygeneruj obraz",
   "buy_premium_button": "Subskrypcja Premium",
   "yes": "Tak",
@@ -44,7 +58,8 @@
   "zodiac_element": "Żywioł znaku zodiaku",
   "zodiac_quality": "Jakość znaku zodiaku",
   "moon_phase": "Faza księżyca",
-  "planetary_returns": "Powroty planetarne",
+  "next_sun_return": "Następny powrót Słońca",
+  "next_moon_return": "Następny powrót Księżyca",
   "planets_system": "Układ planet",
   "planetary_aspects": "Aspekty planetarne",
   "aries": "Baran",

@@ -1,15 +1,19 @@
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
+import 'package:am_i_dreaming/src/logic/astrological_house/translate/astrological_house_translate.dart';
 import 'package:am_i_dreaming/src/logic/lunar_zodiac/lunar_zodiac.dart';
 import 'package:am_i_dreaming/src/logic/moon/moon_phase.dart';
 import 'package:am_i_dreaming/src/logic/sun_zodiac/translate/element_translator.dart';
+import 'package:am_i_dreaming/src/model/planet_return.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../component/detail_record.dart';
 import '../../logic/astrological_house/astrological_house.dart';
 import '../../logic/moon/translate/moon_phase_translator.dart';
+import '../../logic/planet_return/planet_return.dart';
 import '../../logic/sun_zodiac/sun_zodiac.dart';
 import '../../logic/sun_zodiac/translate/quality_translator.dart';
 import '../../logic/sun_zodiac/translate/zodiac_translator.dart';
@@ -22,43 +26,42 @@ class UserView extends StatefulWidget {
 }
 
 class _UserViewState extends State<UserView> {
-  var _isEditModeEnabled = false;
+  var _isReloading = false;
+  var _planetReturns = PlanetReturnModel(
+      sunReturnDate: DateTime.now(), moonReturnDate: DateTime.now());
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           trailing: GestureDetector(
-              onTap: () =>
-                  setState(() => _isEditModeEnabled = !_isEditModeEnabled),
-              child: _isEditModeEnabled
-                  ? const Icon(
-                      CupertinoIcons.check_mark_circled_solid) // floppy_disk
-                  : const Icon(CupertinoIcons.pencil)),
+              onTap: () {
+                _reloadReturns(903518153000);
+              },
+              child: !_isReloading
+                  ? const Icon(CupertinoIcons.arrow_2_circlepath_circle_fill)
+                  : null),
           middle: Text(AppLocalizations.of(context)!.user),
         ),
         child: Padding(
             padding: const EdgeInsets.only(
                 top: 120.0, left: 20.0, right: 20.0, bottom: 80),
             child: SingleChildScrollView(
-                child: _isEditModeEnabled ? _editUser() : _displayUser())));
+                child: _isReloading ? _reloading() : _displayUser())));
   }
 
   Column _displayUser() {
     final date = 903518153000; //Monika: 903518153000; Dominik: 892100939000
-    final longitude =
-        52.40981729368307; // Strzelno: 52.62711116548577, 18.17401839176394
-    final latitude =
-        16.894916280501686; // Poznań: 52.40981729368307 16.894916280501686
     final sunZodiacValue = sunZodiac(date);
-    final lunarZodiacValue = lunarZodiac(date, latitude, longitude);
+    final lunarZodiacValue = lunarZodiac(date);
     final zodiacElement = element(sunZodiacValue.name);
     final zodiacQuality = quality(sunZodiacValue.name);
     final moonPhaseValue = moonPhase(date);
-    final houses = astroHouses(context, date);
+    final astrologicalHouseList = astrologicalHouses(date);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const PremiumButton(),
         const Padding(
             padding: EdgeInsets.only(top: 6, bottom: 12),
             child: Text(
@@ -102,20 +105,17 @@ class _UserViewState extends State<UserView> {
         ),
         DetailListRecord(
             label: AppLocalizations.of(context)!.astrological_house,
-            values: houses),
+            values:
+                translateAstrologicalHouses(context, astrologicalHouseList)),
         DetailsRecord(
-          label: AppLocalizations.of(context)!.planetary_returns,
-          value: "x",
+          label: AppLocalizations.of(context)!.next_sun_return,
+          value: AppLocalizations.of(context)!.formattedDateTime(
+              _planetReturns.sunReturnDate, _planetReturns.sunReturnDate),
         ),
         DetailsRecord(
-          label: AppLocalizations.of(context)!.planets_system,
-          value: "x",
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.planetary_aspects,
-          value: "x",
-        ),
-        const PremiumButton(),
+            label: AppLocalizations.of(context)!.next_moon_return,
+            value: AppLocalizations.of(context)!.formattedDateTime(
+                _planetReturns.moonReturnDate, _planetReturns.moonReturnDate)),
         Container(
             margin: EdgeInsets.only(top: 10),
             child: Center(
@@ -138,11 +138,12 @@ class _UserViewState extends State<UserView> {
     );
   }
 
-  Column _editUser() {
+  Column _reloading() {
     return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Edit"),
+        CircularProgressIndicator.adaptive(),
       ],
     );
   }
@@ -175,5 +176,19 @@ class _UserViewState extends State<UserView> {
         );
       },
     );
+  }
+
+  void _reloadReturns(int timestamp) {
+    setState(() {
+      _isReloading = true;
+    });
+    setState(() {
+      _planetReturns = calculatePlanetReturn(timestamp);;
+    });
+    setState(() {
+
+      _isReloading = false;
+    });
+    print(_planetReturns.moonReturnDate);
   }
 }

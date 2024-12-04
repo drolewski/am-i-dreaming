@@ -7,7 +7,7 @@ class PremiumButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(top: 18),
+        margin: EdgeInsets.only(top: 24, bottom: 24),
         child: Center(
             child: SizedBox(
                 width: double.infinity,
