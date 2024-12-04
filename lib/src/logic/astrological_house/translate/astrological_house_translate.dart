@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import '../../../model/zodiac_model.dart';
-import '../../sun_zodiac/translate/zodiac_translator.dart';
+import '../../zodiac/translate/zodiac_translator.dart';
 
 List<String> translateAstrologicalHouses(
     BuildContext context, List<ZodiacModel> assignedHouses) {

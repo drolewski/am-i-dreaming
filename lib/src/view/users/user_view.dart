@@ -1,22 +1,15 @@
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
-import 'package:am_i_dreaming/src/logic/astrological_house/translate/astrological_house_translate.dart';
-import 'package:am_i_dreaming/src/logic/lunar_zodiac/lunar_zodiac.dart';
-import 'package:am_i_dreaming/src/logic/moon/moon_phase.dart';
-import 'package:am_i_dreaming/src/logic/sun_zodiac/translate/element_translator.dart';
-import 'package:am_i_dreaming/src/model/planet_return.dart';
+import 'package:am_i_dreaming/src/view/users/user_details_records.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../component/detail_record.dart';
-import '../../logic/astrological_house/astrological_house.dart';
-import '../../logic/moon/translate/moon_phase_translator.dart';
-import '../../logic/planet_return/planet_return.dart';
-import '../../logic/sun_zodiac/sun_zodiac.dart';
-import '../../logic/sun_zodiac/translate/quality_translator.dart';
-import '../../logic/sun_zodiac/translate/zodiac_translator.dart';
+import '../../logic/zodiac/translate/element_translator.dart';
+import '../../logic/zodiac/translate/quality_translator.dart';
+import '../../service/user_astrological_details_calculator.dart';
 
 class UserView extends StatefulWidget {
   const UserView({super.key});
@@ -27,8 +20,6 @@ class UserView extends StatefulWidget {
 
 class _UserViewState extends State<UserView> {
   var _isReloading = false;
-  var _planetReturns = PlanetReturnModel(
-      sunReturnDate: DateTime.now(), moonReturnDate: DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +27,7 @@ class _UserViewState extends State<UserView> {
         navigationBar: CupertinoNavigationBar(
           trailing: GestureDetector(
               onTap: () {
-                _reloadReturns(903518153000);
+                _isReloading != _isReloading;
               },
               child: !_isReloading
                   ? const Icon(CupertinoIcons.arrow_2_circlepath_circle_fill)
@@ -51,13 +42,13 @@ class _UserViewState extends State<UserView> {
   }
 
   Column _displayUser() {
-    final date = 903518153000; //Monika: 903518153000; Dominik: 892100939000
-    final sunZodiacValue = sunZodiac(date);
-    final lunarZodiacValue = lunarZodiac(date);
-    final zodiacElement = element(sunZodiacValue.name);
-    final zodiacQuality = quality(sunZodiacValue.name);
-    final moonPhaseValue = moonPhase(date);
-    final astrologicalHouseList = astrologicalHouses(date);
+    // implement data input screen view :)
+    // Store it into DB
+    // reload view screen on click
+    // Tooltips on user details to describe specific details (Maybe whole screen to describe it?)
+    UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
+        UserAstrologicalDetailsCalculator(birthdayTimestamp: 903518153000);
+    final details = userAstrologicalDetailsCalculator.userAstrologicalDetails();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -82,40 +73,42 @@ class _UserViewState extends State<UserView> {
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.sun_zodiac,
-          value:
-              "${translateZodiac(context, sunZodiacValue.name)} ${sunZodiacValue.icon}",
+          value: toZodiacRecord(context, details.sunZodiac),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.lunar_zodiac,
-          value:
-              "${translateZodiac(context, lunarZodiacValue.name)} ${lunarZodiacValue.icon}",
+          value: toZodiacRecord(context, details.lunarZodiac),
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.ascendant,
+          value: toZodiacRecord(context, details.ascendant),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_element,
-          value: translateElement(context, zodiacElement),
+          value: translateElement(context, details.zodiacElement),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_quality,
-          value: translateQuality(context, zodiacQuality),
+          value: translateQuality(context, details.zodiacQuality),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.moon_phase,
-          value:
-              "${translateMoonPhase(context, moonPhaseValue.name)} ${moonPhaseValue.icon}",
+          value: toMoonPhaseRecord(context, details.moonPhase),
         ),
         DetailListRecord(
             label: AppLocalizations.of(context)!.astrological_house,
-            values:
-                translateAstrologicalHouses(context, astrologicalHouseList)),
+            values: toHousesRecords(context, details.houses)),
         DetailsRecord(
           label: AppLocalizations.of(context)!.next_sun_return,
           value: AppLocalizations.of(context)!.formattedDateTime(
-              _planetReturns.sunReturnDate, _planetReturns.sunReturnDate),
+              details.planetReturn.sunReturnDate,
+              details.planetReturn.sunReturnDate),
         ),
         DetailsRecord(
             label: AppLocalizations.of(context)!.next_moon_return,
             value: AppLocalizations.of(context)!.formattedDateTime(
-                _planetReturns.moonReturnDate, _planetReturns.moonReturnDate)),
+                details.planetReturn.moonReturnDate,
+                details.planetReturn.moonReturnDate)),
         Container(
             margin: EdgeInsets.only(top: 10),
             child: Center(
@@ -125,7 +118,7 @@ class _UserViewState extends State<UserView> {
                         child: Text(AppLocalizations.of(context)!.logout),
                         onPressed: () => FirebaseAuth.instance.signOut())))),
         Container(
-            margin: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10, bottom: 20),
             child: Center(
                 child: SizedBox(
                     width: double.infinity,
@@ -176,19 +169,5 @@ class _UserViewState extends State<UserView> {
         );
       },
     );
-  }
-
-  void _reloadReturns(int timestamp) {
-    setState(() {
-      _isReloading = true;
-    });
-    setState(() {
-      _planetReturns = calculatePlanetReturn(timestamp);;
-    });
-    setState(() {
-
-      _isReloading = false;
-    });
-    print(_planetReturns.moonReturnDate);
   }
 }

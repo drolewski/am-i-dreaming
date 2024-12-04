@@ -1,22 +1,54 @@
-double calculateJulianDay(DateTime dateTime) {
-  int year = dateTime.year;
-  int month = dateTime.month;
-  int day = dateTime.day;
+class JulianDayCalculator {
+  JulianDayCalculator({required this.birthDayTimestamp});
 
-  if (month <= 2) {
-    year -= 1;
-    month += 12;
+  final int birthDayTimestamp;
+
+  double calculateJulianDay() {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(birthDayTimestamp);
+    int year = dateTime.year;
+    int month = dateTime.month;
+    int day = dateTime.day;
+
+    if (month <= 2) {
+      year -= 1;
+      month += 12;
+    }
+
+    int A = (year / 100).floor();
+    int B = 2 - A + (A / 4).floor();
+
+    return (365.25 * (year + 4716)).floor() +
+        (30.6001 * (month + 1)).floor() +
+        day +
+        B -
+        1524.5 +
+        (dateTime.hour / 24) +
+        (dateTime.minute / 1440) +
+        (dateTime.second / 86400);
   }
 
-  int A = (year / 100).floor();
-  int B = 2 - A + (A / 4).floor();
+  double calculateParametrizedJulianDate(int parameterizedTimestamp) {
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(parameterizedTimestamp);
+    int year = dateTime.year;
+    int month = dateTime.month;
+    int day = dateTime.day;
 
-  return (365.25 * (year + 4716)).floor() +
-      (30.6001 * (month + 1)).floor() +
-      day +
-      B -
-      1524.5 +
-      (dateTime.hour / 24) +
-      (dateTime.minute / 1440) +
-      (dateTime.second / 86400);
+    if (month <= 2) {
+      year -= 1;
+      month += 12;
+    }
+
+    int A = (year / 100).floor();
+    int B = 2 - A + (A / 4).floor();
+
+    return (365.25 * (year + 4716)).floor() +
+        (30.6001 * (month + 1)).floor() +
+        day +
+        B -
+        1524.5 +
+        (dateTime.hour / 24) +
+        (dateTime.minute / 1440) +
+        (dateTime.second / 86400);
+  }
 }

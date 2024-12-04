@@ -3,15 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../model/zodiac_model.dart';
 
-String translateElement(BuildContext context, ElementEnum element) {
+String translateElement(BuildContext context, ZodiacElementEnum element) {
   switch (element) {
-    case ElementEnum.air:
+    case ZodiacElementEnum.air:
       return AppLocalizations.of(context)!.air;
-    case ElementEnum.water:
+    case ZodiacElementEnum.water:
       return AppLocalizations.of(context)!.water;
-    case ElementEnum.earth:
+    case ZodiacElementEnum.earth:
       return AppLocalizations.of(context)!.earth;
-    case ElementEnum.fire:
+    case ZodiacElementEnum.fire:
       return AppLocalizations.of(context)!.fire;
     default:
       return AppLocalizations.of(context)!.unknown_element;
