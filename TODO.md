@@ -3,7 +3,7 @@
 ## Important
 - Add only one dream per day
 - Generate picture on dream details
-- Premium Subscription model
+- Premium Subscription modal/screen and buy process
 - Zodiac based on zodiac symbol of user on application navigation
 - New, better app icon/logo in png
 

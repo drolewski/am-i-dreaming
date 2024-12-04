@@ -26,5 +26,10 @@
     }
   },
   "generate_dream_picture_button": "Generate picture",
-  "buy_premium_button": "Premium subscription"
+  "buy_premium_button": "Premium subscription",
+  "yes": "Yes",
+  "no": "No",
+  "delete_account": "Delete account",
+  "delete_account_question_modal": "Are You leaving us?",
+  "logout": "Logout"
 }
