@@ -2,17 +2,18 @@
 
 ## Important
 - Add only one dream per day
-- Better dream list/view styling
-- Dream details modal with navigation sliver bar
+- Generate picture on dream details
+- Premium Subscription model
+- Zodiac based on zodiac symbol of user on application navigation
+- New, better app icon/logo in png
+
 
 
 ## Future tasks
 - Style on android platform
 - Email reminders configuration
-- Password politics 
+- Password politics
 - Custom login view with error messages and better design
-- Apple integration
+- Apple integration for login
 - Test google login on real app ios/android
-- Zodiac based on zodiac symbol of user on application navigation
 - Do i need labels on navigation buttons?
-- Subscription/premium model

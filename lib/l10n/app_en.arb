@@ -24,5 +24,7 @@
         "format": "yMd"
       }
     }
-  }
+  },
+  "generate_dream_picture_button": "Generate picture",
+  "buy_premium_button": "Premium subscription"
 }
