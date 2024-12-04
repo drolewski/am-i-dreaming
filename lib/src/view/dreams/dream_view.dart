@@ -10,7 +10,8 @@ class DreamView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return CupertinoPageScaffold(
+        child: Column(
       children: [
         const Padding(
           padding: EdgeInsets.only(top: 60.0),
@@ -30,6 +31,6 @@ class DreamView extends StatelessWidget {
                           addDream: (dream) => appState.addNewDream(dream)),
                     )))
       ],
-    );
+    ));
   }
 }
