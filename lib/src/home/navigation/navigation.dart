@@ -1,10 +1,6 @@
+import 'package:am_i_dreaming/src/view/dreams/dream_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
-
-import '../../../app_state.dart';
-import '../../view/dreams/dream_input.dart';
-import '../../view/dreams/dreams_list.dart';
 
 class Navigation extends StatelessWidget {
   const Navigation({super.key});
@@ -29,29 +25,8 @@ class Navigation extends StatelessWidget {
           return CupertinoTabView(
             builder: (BuildContext context) {
               return CupertinoPageScaffold(
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 60.0),
-                    ),
-                    Expanded(
-                      flex: 3,
-                        child: Consumer<ApplicationState>(
-                      builder: (context, appState, _) => Center(
-                          child: DreamsList(
-                              dreamDocuments: appState.dreamDocuments)),
-                    )),
-                    Container(
-                        padding: const EdgeInsets.only(bottom: 80),
-                        // margin: EdgeInsets.all(100),
-                        child: Consumer<ApplicationState>(
-                            builder: (context, appState, _) => Center(
-                                  child: DreamInput(
-                                      addDream: (dream) =>
-                                          appState.addNewDream(dream)),
-                                )))
-                  ],
-                ), // implementation of tabs in navigation
+                child: _navigationTab(
+                    context, index), // implementation of tabs in navigation
               );
             },
           );
@@ -59,15 +34,15 @@ class Navigation extends StatelessWidget {
   }
 }
 
-String _tabName(BuildContext context, int index) {
+Widget _navigationTab(BuildContext context, int index) {
   switch (index) {
     case 0:
-      return AppLocalizations.of(context)!.dreams;
+      return const DreamView();
     case 1:
-      return AppLocalizations.of(context)!.horoscopes;
+      return Text(AppLocalizations.of(context)!.horoscopes);
     case 2:
-      return AppLocalizations.of(context)!.user;
+      return Text(AppLocalizations.of(context)!.user);
     default:
-      return "null";
+      return const Text("null");
   }
 }

@@ -23,7 +23,7 @@ class DreamDetails extends StatelessWidget {
                 SizedBox(
                     width: double.infinity,
                     child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                        padding: const EdgeInsets.only(bottom: 20),
                         child: CupertinoButton(
                             child: Text(AppLocalizations.of(context)!
                                 .generate_dream_picture_button),
@@ -31,7 +31,7 @@ class DreamDetails extends StatelessWidget {
                 SizedBox(
                     width: double.infinity,
                     child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        padding: const EdgeInsets.only(bottom: 20),
                         child: CupertinoButton.filled(
                             child: Text(AppLocalizations.of(context)!
                                 .buy_premium_button),

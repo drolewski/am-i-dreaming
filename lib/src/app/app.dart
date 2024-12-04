@@ -5,7 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 import '../home/home.dart';
-import '../view/dream/dream_details.dart';
+import '../view/dreams/dream/dream_details.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
