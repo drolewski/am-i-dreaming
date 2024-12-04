@@ -1,3 +1,4 @@
+import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/logic/lunar_zodiac/lunar_zodiac.dart';
 import 'package:am_i_dreaming/src/logic/moon/moon_phase.dart';
@@ -9,9 +10,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../component/detail_record.dart';
 import '../../logic/astrological_house/astrological_house.dart';
 import '../../logic/moon/translate/moon_phase_translator.dart';
+import '../../logic/sun_zodiac/sun_zodiac.dart';
 import '../../logic/sun_zodiac/translate/quality_translator.dart';
 import '../../logic/sun_zodiac/translate/zodiac_translator.dart';
-import '../../logic/sun_zodiac/sun_zodiac.dart';
 
 class UserView extends StatefulWidget {
   const UserView({super.key});
@@ -32,7 +33,7 @@ class _UserViewState extends State<UserView> {
                   setState(() => _isEditModeEnabled = !_isEditModeEnabled),
               child: _isEditModeEnabled
                   ? const Icon(
-                  CupertinoIcons.check_mark_circled_solid) // floppy_disk
+                      CupertinoIcons.check_mark_circled_solid) // floppy_disk
                   : const Icon(CupertinoIcons.pencil)),
           middle: Text(AppLocalizations.of(context)!.user),
         ),
@@ -44,19 +45,17 @@ class _UserViewState extends State<UserView> {
   }
 
   Column _displayUser() {
-    final date = 892100939000;//Monika: 903518153000; Dominik: 892100939000
-    final longitude = 52.40981729368307;// Strzelno: 52.62711116548577, 18.17401839176394
-    final latitude = 16.894916280501686; // Poznań: 52.40981729368307 16.894916280501686
+    final date = 903518153000; //Monika: 903518153000; Dominik: 892100939000
+    final longitude =
+        52.40981729368307; // Strzelno: 52.62711116548577, 18.17401839176394
+    final latitude =
+        16.894916280501686; // Poznań: 52.40981729368307 16.894916280501686
     final sunZodiacValue = sunZodiac(date);
     final lunarZodiacValue = lunarZodiac(date, latitude, longitude);
     final zodiacElement = element(sunZodiacValue.name);
     final zodiacQuality = quality(sunZodiacValue.name);
     final moonPhaseValue = moonPhase(date);
-    final astroHouse = AstroHouse(date, latitude, longitude);
-    final ascendant = astroHouse.calculateAscendant();
-    final houses = astroHouse.calculateHouses();
-    print(houses);
-    print(ascendant);
+    final houses = astroHouses(context, date);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -81,12 +80,12 @@ class _UserViewState extends State<UserView> {
         DetailsRecord(
           label: AppLocalizations.of(context)!.sun_zodiac,
           value:
-          "${translateZodiac(context, sunZodiacValue.name)} ${sunZodiacValue.icon}",
+              "${translateZodiac(context, sunZodiacValue.name)} ${sunZodiacValue.icon}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.lunar_zodiac,
           value:
-          "${translateZodiac(context, lunarZodiacValue.name)} ${lunarZodiacValue.icon}",
+              "${translateZodiac(context, lunarZodiacValue.name)} ${lunarZodiacValue.icon}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_element,
@@ -98,13 +97,12 @@ class _UserViewState extends State<UserView> {
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.moon_phase,
-          value: "${translateMoonPhase(
-              context, moonPhaseValue.name)} ${moonPhaseValue.icon}",
+          value:
+              "${translateMoonPhase(context, moonPhaseValue.name)} ${moonPhaseValue.icon}",
         ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.astrological_house,
-          value: "x",
-        ),
+        DetailListRecord(
+            label: AppLocalizations.of(context)!.astrological_house,
+            values: houses),
         DetailsRecord(
           label: AppLocalizations.of(context)!.planetary_returns,
           value: "x",
@@ -133,10 +131,9 @@ class _UserViewState extends State<UserView> {
                     width: double.infinity,
                     child: CupertinoButton(
                         child:
-                        Text(AppLocalizations.of(context)!.delete_account),
-                        onPressed: () =>
-                            Navigator.of(context)
-                                .restorablePush(_modalBuilder)))))
+                            Text(AppLocalizations.of(context)!.delete_account),
+                        onPressed: () => Navigator.of(context)
+                            .restorablePush(_modalBuilder)))))
       ],
     );
   }
@@ -157,7 +154,7 @@ class _UserViewState extends State<UserView> {
         return CupertinoActionSheet(
           title: Text(AppLocalizations.of(context)!.delete_account),
           message:
-          Text(AppLocalizations.of(context)!.delete_account_question_modal),
+              Text(AppLocalizations.of(context)!.delete_account_question_modal),
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
               child: Text(AppLocalizations.of(context)!.yes),
