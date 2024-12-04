@@ -19,3 +19,5 @@
 - Apple integration for login
 - Test google login on real app ios/android
 - Do i need labels on navigation buttons?
+- More specific moon phase calculation like here: https://github.com/enoosoft/moon_phase/
+- 

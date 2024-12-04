@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../component/detail_record.dart';
+import '../../logic/astrological_house/astrological_house.dart';
 import '../../logic/moon/translate/moon_phase_translator.dart';
 import '../../logic/zodiac/translate/quality_translator.dart';
 import '../../logic/zodiac/translate/zodiac_translator.dart';
@@ -30,7 +31,7 @@ class _UserViewState extends State<UserView> {
                   setState(() => _isEditModeEnabled = !_isEditModeEnabled),
               child: _isEditModeEnabled
                   ? const Icon(
-                      CupertinoIcons.check_mark_circled_solid) // floppy_disk
+                  CupertinoIcons.check_mark_circled_solid) // floppy_disk
                   : const Icon(CupertinoIcons.pencil)),
           middle: Text(AppLocalizations.of(context)!.user),
         ),
@@ -42,11 +43,18 @@ class _UserViewState extends State<UserView> {
   }
 
   Column _displayUser() {
-    final date = 892100939000;
+    final date = 903518153000;//Monika: 903518153000; Dominik: 892100939000
     final zodiacValue = zodiac(date);
     final zodiacElement = element(zodiacValue.name);
     final zodiacQuality = quality(zodiacValue.name);
     final moonPhaseValue = moonPhase(date);
+    final longitude = 52.62711116548577;// Strzelno: 52.62711116548577, 18.17401839176394
+    final latitude = 18.17401839176394; // Poznań: 52.40981729368307 16.894916280501686
+    final astroHouse = AstroHouse(date, latitude, longitude);
+    final ascendant = astroHouse.calculateAscendant();
+    final houses = astroHouse.calculateHouses();
+    print(houses);
+    print(ascendant);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -69,9 +77,9 @@ class _UserViewState extends State<UserView> {
           value: "Mężczyzna",
         ),
         DetailsRecord(
-          label: AppLocalizations.of(context)!.zodiac,
+          label: AppLocalizations.of(context)!.sun_zodiac,
           value:
-              "${translateZodiac(context, zodiacValue.name)} ${zodiacValue.icon}",
+          "${translateZodiac(context, zodiacValue.name)} ${zodiacValue.icon}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_element,
@@ -83,7 +91,8 @@ class _UserViewState extends State<UserView> {
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.moon_phase,
-          value: "${translateMoonPhase(context, moonPhaseValue.name)} ${moonPhaseValue.icon}",
+          value: "${translateMoonPhase(
+              context, moonPhaseValue.name)} ${moonPhaseValue.icon}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.astrological_house,
@@ -117,9 +126,10 @@ class _UserViewState extends State<UserView> {
                     width: double.infinity,
                     child: CupertinoButton(
                         child:
-                            Text(AppLocalizations.of(context)!.delete_account),
-                        onPressed: () => Navigator.of(context)
-                            .restorablePush(_modalBuilder)))))
+                        Text(AppLocalizations.of(context)!.delete_account),
+                        onPressed: () =>
+                            Navigator.of(context)
+                                .restorablePush(_modalBuilder)))))
       ],
     );
   }
@@ -140,7 +150,7 @@ class _UserViewState extends State<UserView> {
         return CupertinoActionSheet(
           title: Text(AppLocalizations.of(context)!.delete_account),
           message:
-              Text(AppLocalizations.of(context)!.delete_account_question_modal),
+          Text(AppLocalizations.of(context)!.delete_account_question_modal),
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
               child: Text(AppLocalizations.of(context)!.yes),
