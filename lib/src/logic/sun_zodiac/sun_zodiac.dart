@@ -1,6 +1,6 @@
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 
-ZodiacModel zodiac(int timestamp) {
+ZodiacModel sunZodiac(int timestamp) {
   final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
   final month = dateTime.month;
   final day = dateTime.day;

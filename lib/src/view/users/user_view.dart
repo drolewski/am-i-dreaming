@@ -1,6 +1,7 @@
 import 'package:am_i_dreaming/src/component/premium_button.dart';
+import 'package:am_i_dreaming/src/logic/lunar_zodiac/lunar_zodiac.dart';
 import 'package:am_i_dreaming/src/logic/moon/moon_phase.dart';
-import 'package:am_i_dreaming/src/logic/zodiac/translate/element_translator.dart';
+import 'package:am_i_dreaming/src/logic/sun_zodiac/translate/element_translator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -8,9 +9,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../component/detail_record.dart';
 import '../../logic/astrological_house/astrological_house.dart';
 import '../../logic/moon/translate/moon_phase_translator.dart';
-import '../../logic/zodiac/translate/quality_translator.dart';
-import '../../logic/zodiac/translate/zodiac_translator.dart';
-import '../../logic/zodiac/zodiac.dart';
+import '../../logic/sun_zodiac/translate/quality_translator.dart';
+import '../../logic/sun_zodiac/translate/zodiac_translator.dart';
+import '../../logic/sun_zodiac/sun_zodiac.dart';
 
 class UserView extends StatefulWidget {
   const UserView({super.key});
@@ -43,13 +44,14 @@ class _UserViewState extends State<UserView> {
   }
 
   Column _displayUser() {
-    final date = 903518153000;//Monika: 903518153000; Dominik: 892100939000
-    final zodiacValue = zodiac(date);
-    final zodiacElement = element(zodiacValue.name);
-    final zodiacQuality = quality(zodiacValue.name);
+    final date = 892100939000;//Monika: 903518153000; Dominik: 892100939000
+    final longitude = 52.40981729368307;// Strzelno: 52.62711116548577, 18.17401839176394
+    final latitude = 16.894916280501686; // Poznań: 52.40981729368307 16.894916280501686
+    final sunZodiacValue = sunZodiac(date);
+    final lunarZodiacValue = lunarZodiac(date, latitude, longitude);
+    final zodiacElement = element(sunZodiacValue.name);
+    final zodiacQuality = quality(sunZodiacValue.name);
     final moonPhaseValue = moonPhase(date);
-    final longitude = 52.62711116548577;// Strzelno: 52.62711116548577, 18.17401839176394
-    final latitude = 18.17401839176394; // Poznań: 52.40981729368307 16.894916280501686
     final astroHouse = AstroHouse(date, latitude, longitude);
     final ascendant = astroHouse.calculateAscendant();
     final houses = astroHouse.calculateHouses();
@@ -79,7 +81,12 @@ class _UserViewState extends State<UserView> {
         DetailsRecord(
           label: AppLocalizations.of(context)!.sun_zodiac,
           value:
-          "${translateZodiac(context, zodiacValue.name)} ${zodiacValue.icon}",
+          "${translateZodiac(context, sunZodiacValue.name)} ${sunZodiacValue.icon}",
+        ),
+        DetailsRecord(
+          label: AppLocalizations.of(context)!.lunar_zodiac,
+          value:
+          "${translateZodiac(context, lunarZodiacValue.name)} ${lunarZodiacValue.icon}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_element,
