@@ -17,7 +17,8 @@ class UserForm extends StatefulWidget {
 
 class _UserFormState extends State<UserForm> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_UserFormState');
-  final _controller = TextEditingController();
+  final _birthCityController = TextEditingController();
+  final _birthCountryController = TextEditingController();
   final _nameMaxLength = 30;
   final _cityMaxLength = 30;
   final _prefixFontSize = 20.0;
@@ -26,20 +27,24 @@ class _UserFormState extends State<UserForm> {
   final _textColor = CupertinoColors.systemTeal;
   final _maxYear = DateTime.now().subtract(const Duration(days: 10 * 365));
 
-  var _date;
+  final _nameController = TextEditingController();
 
-  get date => _maxYear;
+  var _birthDate;
 
-  var _time = DateTime.now();
+  get birthDate => _maxYear;
 
-  int _selectedCountry = 0;
+  var _birthTime;
+
+  get birthTime => DateTime.now();
+
+  int _selectedCountryIndex = 175;
+  Country? _selectedCountry;
 
   @override
   Widget build(BuildContext contexts) {
     return SafeArea(
         child: Column(children: [
       Form(
-        autovalidateMode: AutovalidateMode.always,
         key: _formKey,
         child: CupertinoFormSection.insetGrouped(
           header: Center(
@@ -54,6 +59,7 @@ class _UserFormState extends State<UserForm> {
                   ))),
           children: <Widget>[
             CupertinoTextFormFieldRow(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               textAlign: TextAlign.end,
               textCapitalization: TextCapitalization.sentences,
               prefix: Padding(
@@ -68,7 +74,7 @@ class _UserFormState extends State<UserForm> {
               autofillHints: const [AutofillHints.name],
               placeholder: AppLocalizations.of(context)!.user_name,
               keyboardType: TextInputType.name,
-              controller: _controller,
+              controller: _nameController,
               autofocus: true,
               maxLength: _nameMaxLength,
               style: TextStyle(
@@ -101,7 +107,7 @@ class _UserFormState extends State<UserForm> {
                     padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Text(
                         formatTimestampToDate(
-                            context, date.millisecondsSinceEpoch),
+                            context, birthDate.millisecondsSinceEpoch),
                         style: TextStyle(
                             fontSize: _textFontSize,
                             fontWeight: FontWeight.w600,
@@ -114,7 +120,7 @@ class _UserFormState extends State<UserForm> {
                             showDayOfWeek: true,
                             maximumDate: _maxYear,
                             onDateTimeChanged: (DateTime newDate) =>
-                                setState(() => _date = newDate),
+                                setState(() => _birthDate = newDate),
                           ),
                         ))),
             CupertinoFormRow(
@@ -131,22 +137,23 @@ class _UserFormState extends State<UserForm> {
                     padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Text(
                         formatTimestampToTime(
-                            context, date.millisecondsSinceEpoch),
+                            context, birthTime.millisecondsSinceEpoch),
                         style: TextStyle(
                             fontSize: _textFontSize,
                             fontWeight: FontWeight.w600,
                             color: _textColor)),
                     onPressed: () => _showDialog(
                           CupertinoDatePicker(
-                            initialDateTime: _time,
+                            initialDateTime: _birthTime,
                             mode: CupertinoDatePickerMode.time,
                             use24hFormat: true,
                             showDayOfWeek: true,
                             onDateTimeChanged: (DateTime newDate) =>
-                                setState(() => _time = newDate),
+                                setState(() => _birthTime = newDate),
                           ),
                         ))),
             CupertinoTextFormFieldRow(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               textAlign: TextAlign.end,
               textCapitalization: TextCapitalization.sentences,
               prefix: Padding(
@@ -161,7 +168,7 @@ class _UserFormState extends State<UserForm> {
               keyboardType: TextInputType.streetAddress,
               autofillHints: const [AutofillHints.addressCity],
               placeholder: AppLocalizations.of(context)!.birth_city,
-              controller: _controller,
+              controller: _birthCityController,
               autofocus: true,
               maxLength: _cityMaxLength,
               style: TextStyle(
@@ -194,12 +201,11 @@ class _UserFormState extends State<UserForm> {
                     padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: Text(
                         textAlign: TextAlign.end,
-                        translateCountry(contexts, _selectedCountry),
+                        translateCountry(contexts, _selectedCountryIndex),
                         style: TextStyle(
                             fontSize: _textFontSize,
                             fontWeight: FontWeight.w600,
                             color: _textColor)),
-                    // Display a CupertinoPicker with list of fruits.
                     onPressed: () => _showDialog(
                           CupertinoPicker(
                             looping: true,
@@ -208,11 +214,13 @@ class _UserFormState extends State<UserForm> {
                             useMagnifier: true,
                             itemExtent: 32,
                             scrollController: FixedExtentScrollController(
-                              initialItem: _selectedCountry,
+                              initialItem: _selectedCountryIndex,
                             ),
                             onSelectedItemChanged: (int selectedItem) {
                               setState(() {
-                                _selectedCountry = selectedItem;
+                                _selectedCountryIndex = selectedItem;
+                                _selectedCountry =
+                                    widget.countries[selectedItem];
                               });
                             },
                             children: List<Widget>.generate(
