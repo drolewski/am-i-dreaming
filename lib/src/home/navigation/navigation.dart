@@ -2,7 +2,9 @@ import 'package:am_i_dreaming/src/view/dreams/dream_view.dart';
 import 'package:am_i_dreaming/src/view/users/user_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
+import '../../../app_state.dart';
 import '../../view/users/user_form.dart';
 
 class Navigation extends StatelessWidget {
@@ -39,7 +41,10 @@ Widget _navigationTab(BuildContext context, int index) {
     case 0:
       return const DreamView();
     case 1:
-      return UserForm();
+      return Consumer<ApplicationState>(
+          builder: (context, appState, _) => UserForm(
+                addUser: (user) => appState.addUser(user),
+              ));
     case 2:
       return const UserView();
     default:

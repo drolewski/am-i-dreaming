@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:am_i_dreaming/src/model/dream_document.dart';
+import 'package:am_i_dreaming/src/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
@@ -79,6 +80,23 @@ class ApplicationState extends ChangeNotifier {
 
     return FirebaseFirestore.instance.collection('dream').add(<String, dynamic>{
       'text': dream,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+    });
+  }
+
+  Future<DocumentReference> addUser(UserModel user) {
+    if (!_loggedIn) {
+      throw Exception('Must be logged in');
+    }
+
+    print("test");
+
+    return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
+      'name': user.name,
+      'birthCity': user.birthCity,
+      'birthdayTimestampUTC': user.birthdayTimestampUTC,
+      'birthCountryCode': user.birthCountryCode,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });
