@@ -11,26 +11,21 @@ class DreamView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        child: Column(
+        child: SafeArea(
+            child: Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 60.0),
-        ),
         Expanded(
             flex: 3,
             child: Consumer<ApplicationState>(
               builder: (context, appState, _) => Center(
                   child: DreamsList(dreamDocuments: appState.dreamDocuments)),
             )),
-        Container(
-            padding: const EdgeInsets.only(bottom: 80),
-            // margin: EdgeInsets.all(100),
-            child: Consumer<ApplicationState>(
-                builder: (context, appState, _) => Center(
-                      child: DreamInput(
-                          addDream: (dream) => appState.addNewDream(dream)),
-                    )))
+        Consumer<ApplicationState>(
+            builder: (context, appState, _) => Center(
+                  child: DreamInput(
+                      addDream: (dream) => appState.addNewDream(dream)),
+                ))
       ],
-    ));
+    )));
   }
 }

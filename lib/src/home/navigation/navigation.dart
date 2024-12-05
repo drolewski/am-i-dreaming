@@ -3,6 +3,8 @@ import 'package:am_i_dreaming/src/view/users/user_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../view/users/user_form.dart';
+
 class Navigation extends StatelessWidget {
   const Navigation({super.key});
 
@@ -25,7 +27,7 @@ class Navigation extends StatelessWidget {
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(
             builder: (BuildContext context) {
-              return _navigationTab(context, 2);
+              return _navigationTab(context, index);
             },
           );
         });
@@ -35,10 +37,9 @@ class Navigation extends StatelessWidget {
 Widget _navigationTab(BuildContext context, int index) {
   switch (index) {
     case 0:
-      return const CupertinoPageScaffold(child: DreamView());
+      return const DreamView();
     case 1:
-      return CupertinoPageScaffold(
-          child: Text(AppLocalizations.of(context)!.horoscopes));
+      return const UserForm();
     case 2:
       return const UserView();
     default:

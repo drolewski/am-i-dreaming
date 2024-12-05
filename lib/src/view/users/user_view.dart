@@ -34,11 +34,11 @@ class _UserViewState extends State<UserView> {
                   : null),
           middle: Text(AppLocalizations.of(context)!.user),
         ),
-        child: Padding(
-            padding: const EdgeInsets.only(
-                top: 120.0, left: 20.0, right: 20.0, bottom: 80),
-            child: SingleChildScrollView(
-                child: _isReloading ? _reloading() : _displayUser())));
+        child: SafeArea(
+            child: Container(
+                margin: const EdgeInsets.only(right: 20, left: 20),
+                child: SingleChildScrollView(
+                    child: _isReloading ? _reloading() : _displayUser()))));
   }
 
   Column _displayUser() {
@@ -53,12 +53,10 @@ class _UserViewState extends State<UserView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const PremiumButton(),
-        const Padding(
-            padding: EdgeInsets.only(top: 6, bottom: 12),
-            child: Text(
-              "Dominik",
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
-            )),
+        Text(
+          "Dominik",
+          style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+        ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.birth_date,
           value: "05:48 09.04.1998",
@@ -110,23 +108,20 @@ class _UserViewState extends State<UserView> {
                 details.planetReturn.moonReturnDate,
                 details.planetReturn.moonReturnDate)),
         Container(
-            margin: EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 10),
             child: Center(
                 child: SizedBox(
                     width: double.infinity,
                     child: CupertinoButton(
                         child: Text(AppLocalizations.of(context)!.logout),
                         onPressed: () => FirebaseAuth.instance.signOut())))),
-        Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 20),
-            child: Center(
-                child: SizedBox(
-                    width: double.infinity,
-                    child: CupertinoButton(
-                        child:
-                            Text(AppLocalizations.of(context)!.delete_account),
-                        onPressed: () => Navigator.of(context)
-                            .restorablePush(_modalBuilder)))))
+        Center(
+            child: SizedBox(
+                width: double.infinity,
+                child: CupertinoButton(
+                    child: Text(AppLocalizations.of(context)!.delete_account),
+                    onPressed: () =>
+                        Navigator.of(context).restorablePush(_modalBuilder))))
       ],
     );
   }

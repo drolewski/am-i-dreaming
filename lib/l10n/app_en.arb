@@ -85,5 +85,16 @@
   "moon_last_quarter": "Last quarter of moon",
   "moon_first_quarter": "First quarter of moon",
   "moon_full": "Full moon",
-  "moon_new": "New moon"
+  "moon_new": "New moon",
+  "user_name": "Name",
+  "user_name_min_length_validation": "Enter Your name",
+  "user_name_max_length_validation": "Given name is longer than {length}",
+  "@user_name_max_length_validation": {
+    "description": "Name max length validation",
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  }
 }

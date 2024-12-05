@@ -18,18 +18,20 @@ class DreamDetails extends StatelessWidget {
             middle: Text(formatTimestamp(
                 context, appState.dreamDocuments[dreamIndex].timestamp)),
           ),
-          child: Padding(
-              padding: const EdgeInsets.only(top: 120, left: 20.0, right: 20.0),
-              child: Column(children: [
-                SizedBox(
-                    width: double.infinity,
-                    child: CupertinoButton(
-                        child: Text(AppLocalizations.of(context)!
-                            .generate_dream_picture_button),
-                        onPressed: () => print("generuj"))),
-                const PremiumButton(),
-                Text(appState.dreamDocuments[dreamIndex].text),
-              ])));
+          child: SafeArea(
+              child: Padding(
+                  padding:
+                      const EdgeInsets.only(top: 20, left: 20.0, right: 20.0),
+                  child: Column(children: [
+                    SizedBox(
+                        width: double.infinity,
+                        child: CupertinoButton(
+                            child: Text(AppLocalizations.of(context)!
+                                .generate_dream_picture_button),
+                            onPressed: () => print("generuj"))),
+                    const PremiumButton(),
+                    Text(appState.dreamDocuments[dreamIndex].text),
+                  ]))));
     });
   }
 }

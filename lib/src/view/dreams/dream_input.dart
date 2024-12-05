@@ -24,11 +24,12 @@ class _DreamInputState extends State<DreamInput> {
       child: Column(
         children: <Widget>[
           CupertinoTextFormFieldRow(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             placeholder: AppLocalizations.of(context)!.describe_dream,
             controller: _controller,
             maxLines: 5,
             minLines: 5,
-            autofocus: true,
+            autofocus: false,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return AppLocalizations.of(context)!

@@ -88,5 +88,16 @@
   "moon_last_quarter": "Ostatnia kwadra księżyca",
   "moon_first_quarter": "Pierwsza kwadra księżyca",
   "moon_full": "Pełny księzyc",
-  "moon_new": "Nów"
+  "moon_new": "Nów",
+  "user_name": "Imię",
+  "user_name_min_length_validation": "Podaj swoje imię",
+  "user_name_max_length_validation": "Podane imię jest dłuższe niż {length}",
+  "@user_name_max_length_validation": {
+    "description": "Name max length validation",
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  }
 }

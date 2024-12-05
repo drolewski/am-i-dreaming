@@ -6,6 +6,7 @@
 - Premium Subscription modal/screen and buy process
 - Zodiac based on zodiac symbol of user on application navigation
 - New, better app icon/logo in png
+- Name meaning screen
 
 
 
