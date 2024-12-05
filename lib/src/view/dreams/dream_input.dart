@@ -20,7 +20,6 @@ class _DreamInputState extends State<DreamInput> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      autovalidateMode: AutovalidateMode.always,
       key: _formKey,
       child: Column(
         children: <Widget>[

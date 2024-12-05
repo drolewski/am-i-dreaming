@@ -37,6 +37,10 @@ class ApplicationState extends ChangeNotifier {
 
   UserDocument? get userDocument => _userDocument;
 
+  bool _userDocumentSet = false;
+
+  bool get userDocumentSet => _userDocumentSet;
+
   UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
       UserAstrologicalDetailsCalculator();
 
@@ -96,6 +100,7 @@ class ApplicationState extends ChangeNotifier {
           .snapshots()
           .listen((snapshot) {
         _userDocument = null;
+        _userDocumentSet = true;
         if (snapshot.docs.length == 1) {
           _userDocument = UserDocument(
             id: snapshot.docs[0].id,
@@ -130,6 +135,7 @@ class ApplicationState extends ChangeNotifier {
       });
     } else {
       _userDocument = null;
+      _userDocumentSet = false;
       _userDocumentSubscription?.cancel();
     }
     notifyListeners();

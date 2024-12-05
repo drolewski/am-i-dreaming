@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
     return Consumer<ApplicationState>(
         builder: (context, appState, _) => !appState.loggedIn
             ? const AuthGate()
-            : appState.userDocument == null
+            : appState.userDocumentSet && appState.userDocument == null
                 ? Consumer<ApplicationState>(
                     builder: (context, appState, _) => UserForm(
                           addUser: (user) => appState.addUser(user),

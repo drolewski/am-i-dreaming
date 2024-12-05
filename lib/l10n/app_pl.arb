@@ -128,5 +128,6 @@
   "male": "Mężczyzna",
   "nonBinary": "Osoba niebinarna",
   "preferNotToAnswer": "Wolę nie odpowiadać",
-  "other": "Inne"
+  "other": "Inne",
+  "save_user_data": "Zapisz dane"
 }

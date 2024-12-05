@@ -125,5 +125,6 @@
   "male": "Man",
   "nonBinary": "Non-binary",
   "preferNotToAnswer": "Prefer not to answer",
-  "other": "Other"
+  "other": "Other",
+  "save_user_data": "Save data"
 }

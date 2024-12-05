@@ -34,7 +34,6 @@ class _UserFormState extends State<UserForm> {
   final _prefixColor = CupertinoColors.white;
   final _textColor = CupertinoColors.systemTeal;
   final _maxYear = DateTime.now().subtract(const Duration(days: 10 * 365));
-  bool _isReloading = false;
 
   var _birthDate = DateTime.now().subtract(const Duration(days: 10 * 365));
 
@@ -44,10 +43,12 @@ class _UserFormState extends State<UserForm> {
 
   var _selectedSexIndex = 0;
 
+  bool _isReloading = false;
+
   @override
   Widget build(BuildContext contexts) {
     return _isReloading
-        ? const CircularProgressIndicator()
+        ? const Center(child: const CircularProgressIndicator())
         : SafeArea(
             child: Column(children: [
             Form(
@@ -276,7 +277,6 @@ class _UserFormState extends State<UserForm> {
                                           (int selectedItem) {
                                         setState(() {
                                           _selectedCountryIndex = selectedItem;
-                                          ;
                                         });
                                       },
                                       children: List<Widget>.generate(
@@ -297,30 +297,38 @@ class _UserFormState extends State<UserForm> {
                         child: CupertinoButton.filled(
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                _isReloading = true;
-                              });
-                              await widget.addUser(UserModel(
-                                  name: _nameController.text,
-                                  sex: widget.sexes[_selectedSexIndex].name,
-                                  birthCity: _birthCityController.text,
-                                  birthdayTimestampUTC: birthDateTimestampUTC(),
-                                  birthCountryCode: widget
-                                      .countries[_selectedCountryIndex]
-                                      .countryCode));
-                              setState(() {
-                                _isReloading = false;
-                              });
-                              _birthCityController.clear();
-                              _nameController.clear();
+                              _saveData();
                             }
                           },
                           child: Text(
-                              AppLocalizations.of(context)!.button_add_dream),
+                              AppLocalizations.of(context)!.save_user_data),
                         ),
                       ))
                 ]))
           ]));
+  }
+
+  Future<void> _saveData() async {
+    setState(() {
+      _isReloading = true;
+    });
+    try {
+      await Future.delayed(const Duration(seconds: 1));
+      await widget.addUser(UserModel(
+          name: _nameController.text,
+          sex: widget.sexes[_selectedSexIndex].name,
+          birthCity: _birthCityController.text,
+          birthdayTimestampUTC: birthDateTimestampUTC(),
+          birthCountryCode:
+              widget.countries[_selectedCountryIndex].countryCode));
+      _birthCityController.clear();
+      _nameController.clear();
+      await Future.delayed(const Duration(seconds: 1));
+    } finally {
+      setState(() {
+        _isReloading = false;
+      });
+    }
   }
 
   int birthDateTimestampUTC() {
