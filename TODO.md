@@ -1,7 +1,13 @@
 # TODOs
 
 ## Important
-
+- Integrate with chat-gpt
+- Integrate with edge function
+- Generate horoscope
+- Integrate with firebase storage
+- Generate dream image
+- Integrate with GoogleAds
+- Integrate with Payment
 - Add only one dream per day
 - Generate picture on dream details
 - Premium Subscription modal/screen and buy process
