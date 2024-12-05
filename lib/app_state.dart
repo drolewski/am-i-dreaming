@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:am_i_dreaming/src/model/dream_document.dart';
+import 'package:am_i_dreaming/src/model/moon_model.dart';
+import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/model/user_model.dart';
+import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
@@ -16,6 +19,7 @@ class ApplicationState extends ChangeNotifier {
   ApplicationState() {
     initUser();
     initDreams();
+    initUserDetails();
   }
 
   bool _loggedIn = false;
@@ -26,6 +30,11 @@ class ApplicationState extends ChangeNotifier {
   List<DreamDocument> _dreamDocuments = [];
 
   List<DreamDocument> get dreamDocuments => _dreamDocuments;
+
+  StreamSubscription<QuerySnapshot>? _userDocumentSubscription;
+  UserDocument? _userDocument = null;
+
+  UserDocument? get userDocument => _userDocument;
 
   UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
       UserAstrologicalDetailsCalculator();
@@ -77,6 +86,49 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> initUserDetails() async {
+    if (FirebaseAuth.instance.currentUser != null) {
+      _userDocumentSubscription = FirebaseFirestore.instance
+          .collection('user')
+          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .limit(1)
+          .snapshots()
+          .listen((snapshot) {
+        _userDocument = null;
+        if (snapshot.docs.length == 1) {
+          _userDocument = UserDocument(
+            name: snapshot.docs[0].data()['name'] as String,
+            birthCity: snapshot.docs[0].data()['birthCity'] as String,
+            birthdayTimestampUTC: snapshot.docs[0].data()['timestamp'] as int,
+            birthCountryCode:
+                snapshot.docs[0].data()['birthCountryCode'] as String,
+            sunZodiac: ZodiacEnum.fromString(
+                snapshot.docs[0].data()['sunZodiac'] as String),
+            lunarZodiac: ZodiacEnum.fromString(
+                snapshot.docs[0].data()['lunarZodiac'] as String),
+            zodiacElement: ZodiacElementEnum.fromString(snapshot.docs[0].data()['zodiacElement'] as String),
+            zodiacQuality: ZodiacQualityEnum.fromString(snapshot.docs[0].data()['zodiacQuality'] as String),
+            moonPhase: MoonPhaseEnum.fromString(snapshot.docs[0].data()['moonPhase'] as String),
+            houses: (snapshot.docs[0].data()['houses'] as List<dynamic>)
+                .map((element) => ZodiacEnum.fromString(element as String))
+                .toList(),
+            sunReturnDate: snapshot.docs[0].data()['sunReturnDate'] as int,
+            moonReturnDate: snapshot.docs[0].data()['moonReturnDate'] as int,
+            ascendant: ZodiacEnum.fromString(
+                snapshot.docs[0].data()['ascendant'] as String),
+            timestamp: snapshot.docs[0].data()['timestamp'] as int,
+            userId: snapshot.docs[0].data()['userId'] as String,
+          );
+        }
+        notifyListeners();
+      });
+    } else {
+      _userDocument = null;
+      _userDocumentSubscription?.cancel();
+    }
+    notifyListeners();
+  }
+
   Future<DocumentReference> addNewDream(String dream) {
     if (!_loggedIn) {
       throw Exception('Must be logged in');
@@ -108,8 +160,10 @@ class ApplicationState extends ChangeNotifier {
       'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
       'moonPhase': userAstrologicalDetails.moonPhase.name,
       'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
-      'sunReturnDate': userAstrologicalDetails.planetReturn.sunReturnDate,
-      'moonReturnDate': userAstrologicalDetails.planetReturn.moonReturnDate,
+      'sunReturnDate': userAstrologicalDetails
+          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
+      'moonReturnDate': userAstrologicalDetails
+          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
       'ascendant': userAstrologicalDetails.ascendant.name,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,

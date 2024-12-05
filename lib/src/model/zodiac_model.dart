@@ -20,6 +20,9 @@ enum ZodiacEnum {
   pisces,
   unknown;
 
+  static ZodiacEnum fromString(String str) =>
+      ZodiacEnum.values.firstWhere((value) => value.name == str);
+
   ZodiacModel toModel() {
     Map<ZodiacEnum, String> icons = {
       ZodiacEnum.aries: "♈️",
@@ -46,6 +49,9 @@ enum ZodiacElementEnum {
   air,
   water,
   unknown;
+
+  static ZodiacElementEnum fromString(String str) =>
+      ZodiacElementEnum.values.firstWhere((value) => value.name == str);
 }
 
 enum ZodiacQualityEnum {
@@ -53,4 +59,7 @@ enum ZodiacQualityEnum {
   fixed,
   mutable,
   unknown;
+
+  static ZodiacQualityEnum fromString(String str) =>
+      ZodiacQualityEnum.values.firstWhere((value) => value.name == str);
 }

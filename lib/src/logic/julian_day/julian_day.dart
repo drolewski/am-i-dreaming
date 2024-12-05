@@ -3,7 +3,7 @@ class JulianDayCalculator {
 
   double calculateJulianDay(int parameterizedTimestamp) {
     DateTime dateTime =
-        DateTime.fromMillisecondsSinceEpoch(parameterizedTimestamp);
+        DateTime.fromMillisecondsSinceEpoch(parameterizedTimestamp, isUtc: true);
     int year = dateTime.year;
     int month = dateTime.month;
     int day = dateTime.day;

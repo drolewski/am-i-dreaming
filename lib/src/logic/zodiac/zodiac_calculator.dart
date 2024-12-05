@@ -4,7 +4,7 @@ import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 
 class ZodiacCalculator {
   ZodiacEnum sunZodiac(int birthdayTimestampUTC) {
-    final dateTime = DateTime.fromMillisecondsSinceEpoch(birthdayTimestampUTC);
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(birthdayTimestampUTC, isUtc: true);
     final month = dateTime.month;
     final day = dateTime.day;
 

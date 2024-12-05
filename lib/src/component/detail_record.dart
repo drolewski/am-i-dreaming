@@ -9,20 +9,21 @@ class DetailsRecord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(top: 6),
+        padding: const EdgeInsets.only(top: 8),
         child: Row(children: [
           Expanded(
               child: Text(
             label,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           )),
           Expanded(
               child: Container(
                   alignment: Alignment.centerRight,
                   child: Text(
+                    textAlign: TextAlign.end,
                     value,
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w400),
+                        fontSize: 22, fontWeight: FontWeight.w400),
                   )))
         ]));
   }

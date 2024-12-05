@@ -29,7 +29,7 @@ class Navigation extends StatelessWidget {
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(
             builder: (BuildContext context) {
-              return _navigationTab(context, 1);
+              return _navigationTab(context, 2);
             },
           );
         });
@@ -46,7 +46,9 @@ Widget _navigationTab(BuildContext context, int index) {
                 addUser: (user) => appState.addUser(user),
               ));
     case 2:
-      return const UserView();
+      return Consumer<ApplicationState>(
+          builder: (context, appState, _) =>
+              UserView(userDocument: appState.userDocument));
     default:
       return const CupertinoPageScaffold(child: Text("null"));
   }

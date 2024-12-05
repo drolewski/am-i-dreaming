@@ -21,4 +21,7 @@ enum MoonPhaseEnum {
 
     return MoonPhaseModel(name: this, icon: icons[this] ?? "🌑");
   }
+
+  static MoonPhaseEnum fromString(String str) =>
+      MoonPhaseEnum.values.firstWhere((value) => value.name == str);
 }

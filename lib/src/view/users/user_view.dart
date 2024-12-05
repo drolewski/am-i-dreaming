@@ -1,5 +1,6 @@
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
+import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/view/users/user_details_records.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,10 +10,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../component/detail_record.dart';
 import '../../logic/zodiac/translate/element_translator.dart';
 import '../../logic/zodiac/translate/quality_translator.dart';
-import '../../service/user_astrological_details_calculator.dart';
+import '../../util/date_formater.dart';
 
 class UserView extends StatefulWidget {
-  const UserView({super.key});
+  const UserView({super.key, required this.userDocument});
+
+  final UserDocument? userDocument;
 
   @override
   State<StatefulWidget> createState() => _UserViewState();
@@ -38,32 +41,31 @@ class _UserViewState extends State<UserView> {
             child: Container(
                 margin: const EdgeInsets.only(right: 20, left: 20),
                 child: SingleChildScrollView(
-                    child: _isReloading ? _reloading() : _displayUser()))));
+                    child: _isReloading || widget.userDocument == null
+                        ? _reloading()
+                        : _displayUser()))));
   }
 
   Column _displayUser() {
-    // implement data input screen view :)
-    // Store it into DB
     // reload view screen on click
     // Tooltips on user details to describe specific details (Maybe whole screen to describe it?)
-    UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
-        UserAstrologicalDetailsCalculator();
-    final details = userAstrologicalDetailsCalculator.userAstrologicalDetails(903518153000);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const PremiumButton(),
         Text(
-          "Dominik",
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+          widget.userDocument!.name,
+          style: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.birth_date,
-          value: "05:48 09.04.1998",
+          value: formatTimestampToDateTime(
+              context, widget.userDocument!.birthdayTimestampUTC),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.birth_place,
-          value: "Poznańxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, Polska",
+          value:
+              "${widget.userDocument!.birthCity}, ${widget.userDocument!.birthCountryCode}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.sex,
@@ -71,42 +73,40 @@ class _UserViewState extends State<UserView> {
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.sun_zodiac,
-          value: toZodiacRecord(context, details.sunZodiac),
+          value: toZodiacRecord(context, widget.userDocument!.sunZodiac),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.lunar_zodiac,
-          value: toZodiacRecord(context, details.lunarZodiac),
+          value: toZodiacRecord(context, widget.userDocument!.lunarZodiac),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.ascendant,
-          value: toZodiacRecord(context, details.ascendant),
+          value: toZodiacRecord(context, widget.userDocument!.ascendant),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_element,
-          value: translateElement(context, details.zodiacElement),
+          value: translateElement(context, widget.userDocument!.zodiacElement),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.zodiac_quality,
-          value: translateQuality(context, details.zodiacQuality),
+          value: translateQuality(context, widget.userDocument!.zodiacQuality),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.moon_phase,
-          value: toMoonPhaseRecord(context, details.moonPhase),
+          value: toMoonPhaseRecord(context, widget.userDocument!.moonPhase),
         ),
         DetailListRecord(
             label: AppLocalizations.of(context)!.astrological_house,
-            values: toHousesRecords(context, details.houses)),
+            values: toHousesRecords(context, widget.userDocument!.houses)),
         DetailsRecord(
           label: AppLocalizations.of(context)!.next_sun_return,
-          value: AppLocalizations.of(context)!.formattedDateTime(
-              details.planetReturn.sunReturnDate,
-              details.planetReturn.sunReturnDate),
+          value: formatTimestampToDateTime(
+              context, widget.userDocument!.sunReturnDate),
         ),
         DetailsRecord(
             label: AppLocalizations.of(context)!.next_moon_return,
-            value: AppLocalizations.of(context)!.formattedDateTime(
-                details.planetReturn.moonReturnDate,
-                details.planetReturn.moonReturnDate)),
+            value: formatTimestampToDateTime(
+                context, widget.userDocument!.moonReturnDate)),
         Container(
             margin: const EdgeInsets.only(top: 10),
             child: Center(
