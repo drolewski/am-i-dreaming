@@ -3,13 +3,8 @@ import 'dart:math';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 
 class ZodiacCalculator {
-  ZodiacCalculator({required this.birthdayTimestamp, required this.julianDay});
-
-  final int birthdayTimestamp;
-  final double julianDay;
-
-  ZodiacEnum sunZodiac() {
-    final dateTime = DateTime.fromMillisecondsSinceEpoch(birthdayTimestamp);
+  ZodiacEnum sunZodiac(int birthdayTimestampUTC) {
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(birthdayTimestampUTC);
     final month = dateTime.month;
     final day = dateTime.day;
 
@@ -79,8 +74,8 @@ class ZodiacCalculator {
     return elements[zodiac] ?? ZodiacQualityEnum.unknown;
   }
 
-  ZodiacEnum lunarZodiac() {
-    double lunarPosition = _calculateLunarLongitude();
+  ZodiacEnum lunarZodiac(double julianDay) {
+    double lunarPosition = _calculateLunarLongitude(julianDay);
 
     if (lunarPosition >= 0 && lunarPosition < 30) {
       return ZodiacEnum.aries;
@@ -122,7 +117,7 @@ class ZodiacCalculator {
     return ZodiacEnum.unknown;
   }
 
-  double _calculateLunarLongitude() {
+  double _calculateLunarLongitude(double julianDay) {
     double D = julianDay - 2451545.0;
 
     double meanLongitude = (218.316 + 13.176396 * D) % 360;

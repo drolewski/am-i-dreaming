@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:am_i_dreaming/src/model/user_model.dart';
+import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
@@ -25,6 +26,9 @@ class ApplicationState extends ChangeNotifier {
   List<DreamDocument> _dreamDocuments = [];
 
   List<DreamDocument> get dreamDocuments => _dreamDocuments;
+
+  UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
+      UserAstrologicalDetailsCalculator();
 
   Future<void> initUser() async {
     await Firebase.initializeApp(
@@ -90,13 +94,23 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
-    print("test");
+    final userAstrologicalDetails = userAstrologicalDetailsCalculator
+        .userAstrologicalDetails(user.birthdayTimestampUTC);
 
     return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
       'name': user.name,
       'birthCity': user.birthCity,
       'birthdayTimestampUTC': user.birthdayTimestampUTC,
       'birthCountryCode': user.birthCountryCode,
+      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
+      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
+      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
+      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
+      'moonPhase': userAstrologicalDetails.moonPhase.name,
+      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
+      'sunReturnDate': userAstrologicalDetails.planetReturn.sunReturnDate,
+      'moonReturnDate': userAstrologicalDetails.planetReturn.moonReturnDate,
+      'ascendant': userAstrologicalDetails.ascendant.name,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });

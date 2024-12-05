@@ -7,37 +7,34 @@ import '../logic/julian_day/julian_day.dart';
 import '../logic/planet_return/planet_return_calculator.dart';
 
 class UserAstrologicalDetailsCalculator {
-  UserAstrologicalDetailsCalculator({required this.birthdayTimestamp}) {
-    julianDayCalculator =
-        JulianDayCalculator(birthDayTimestamp: birthdayTimestamp);
-    julianDay = julianDayCalculator.calculateJulianDay();
-    zodiacCalculator = ZodiacCalculator(
-        birthdayTimestamp: birthdayTimestamp, julianDay: julianDay);
-    moonPhaseCalculator = MoonPhaseCalculator(julianDay: julianDay);
-    astrologicalHouseCalculator =
-        AstrologicalHouseCalculator(julianDay: julianDay);
+  UserAstrologicalDetailsCalculator() {
+    julianDayCalculator = JulianDayCalculator();
+    zodiacCalculator = ZodiacCalculator();
+    moonPhaseCalculator = MoonPhaseCalculator();
+    astrologicalHouseCalculator = AstrologicalHouseCalculator();
     planetReturnCalculator =
         PlanetReturnCalculator(julianDayCalculator: julianDayCalculator);
   }
 
-  final int birthdayTimestamp;
-  late final double julianDay;
   late final ZodiacCalculator zodiacCalculator;
   late final MoonPhaseCalculator moonPhaseCalculator;
   late final AstrologicalHouseCalculator astrologicalHouseCalculator;
   late final JulianDayCalculator julianDayCalculator;
   late final PlanetReturnCalculator planetReturnCalculator;
 
-  UserAstrologicalDetails userAstrologicalDetails() {
-    final sunZodiacValue = zodiacCalculator.sunZodiac();
+  UserAstrologicalDetails userAstrologicalDetails(int birthDateTimestampUTC) {
+    final julianDay =
+        julianDayCalculator.calculateJulianDay(birthDateTimestampUTC);
+    final sunZodiacValue = zodiacCalculator.sunZodiac(birthDateTimestampUTC);
     final zodiacElement = zodiacCalculator.element(sunZodiacValue);
     final zodiacQuality = zodiacCalculator.quality(sunZodiacValue);
-    final lunarZodiacValue = zodiacCalculator.lunarZodiac();
-    final moonPhaseValue = moonPhaseCalculator.moonPhase();
+    final lunarZodiacValue = zodiacCalculator.lunarZodiac(julianDay);
+    final moonPhaseValue = moonPhaseCalculator.moonPhase(julianDay);
     final astrologicalHouseList =
-        astrologicalHouseCalculator.astrologicalHouses();
-    final ascendantZodiac = astrologicalHouseCalculator.ascendant();
-    final planetReturn = planetReturnCalculator.calculatePlanetReturn();
+        astrologicalHouseCalculator.astrologicalHouses(julianDay);
+    final ascendantZodiac = astrologicalHouseCalculator.ascendant(julianDay);
+    final planetReturn =
+        planetReturnCalculator.calculatePlanetReturn(birthDateTimestampUTC);
     return UserAstrologicalDetails(
         sunZodiac: sunZodiacValue,
         lunarZodiac: lunarZodiacValue,

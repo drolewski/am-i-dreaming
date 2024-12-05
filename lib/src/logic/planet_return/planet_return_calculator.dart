@@ -8,14 +8,15 @@ class PlanetReturnCalculator {
 
   final JulianDayCalculator julianDayCalculator;
 
-  PlanetReturnModel calculatePlanetReturn() {
-    double birthdayJulianDay = julianDayCalculator.calculateJulianDay();
+  PlanetReturnModel calculatePlanetReturn(int birthdayTimestampUTC) {
+    double birthdayJulianDay =
+        julianDayCalculator.calculateJulianDay(birthdayTimestampUTC);
     double sunBirthPosition = _calculateSunPosition(birthdayJulianDay);
     double moonBirthPosition = _calculateMoonLongitude(birthdayJulianDay);
 
     DateTime today = DateTime.now();
-    double candidateJulianDay = julianDayCalculator
-        .calculateParametrizedJulianDate(today.millisecondsSinceEpoch);
+    double candidateJulianDay =
+        julianDayCalculator.calculateJulianDay(today.millisecondsSinceEpoch);
 
     bool hasSunPosition = false;
     bool hasMoonPosition = false;
@@ -38,8 +39,8 @@ class PlanetReturnCalculator {
       }
 
       today = today.add(const Duration(minutes: 1));
-      candidateJulianDay = julianDayCalculator
-          .calculateParametrizedJulianDate(today.millisecondsSinceEpoch);
+      candidateJulianDay =
+          julianDayCalculator.calculateJulianDay(today.millisecondsSinceEpoch);
     }
 
     return PlanetReturnModel(moonReturnDate: moonDay, sunReturnDate: sunDay);

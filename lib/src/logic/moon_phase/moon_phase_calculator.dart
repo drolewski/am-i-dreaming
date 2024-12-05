@@ -1,11 +1,7 @@
 import 'package:am_i_dreaming/src/model/moon_model.dart';
 
 class MoonPhaseCalculator {
-  MoonPhaseCalculator({required this.julianDay});
-
-  final double julianDay;
-
-  MoonPhaseEnum moonPhase() {
+  MoonPhaseEnum moonPhase(double julianDay) {
     const double knownNewMoonJD = 2451550.1;
     const double lunarCycle = 29.53;
 

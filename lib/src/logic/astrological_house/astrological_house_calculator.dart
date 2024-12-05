@@ -3,9 +3,6 @@ import 'dart:math';
 import '../../model/zodiac_model.dart';
 
 class AstrologicalHouseCalculator {
-  AstrologicalHouseCalculator({required this.julianDay});
-
-  final double julianDay;
   final List<ZodiacEnum> signs = [
     ZodiacEnum.aries,
     ZodiacEnum.taurus,
@@ -21,8 +18,8 @@ class AstrologicalHouseCalculator {
     ZodiacEnum.pisces,
   ];
 
-  List<ZodiacEnum> astrologicalHouses() {
-    List<double> houses = _calculateHouses();
+  List<ZodiacEnum> astrologicalHouses(double julianDay) {
+    List<double> houses = _calculateHouses(julianDay);
 
     return houses.map((degree) {
       int signIndex = (degree ~/ 30) % 12;
@@ -30,13 +27,13 @@ class AstrologicalHouseCalculator {
     }).toList();
   }
 
-  ZodiacEnum ascendant() {
-    double ascendantValue = _calculateAscendant();
+  ZodiacEnum ascendant(double julianDay) {
+    double ascendantValue = _calculateAscendant(julianDay);
     int signIndex = (ascendantValue ~/ 30) % 12;
     return signs[signIndex];
   }
 
-  double _calculateAscendant() {
+  double _calculateAscendant(double julianDay) {
     double D = julianDay - 2451545.0;
 
     double L = (280.460 + 0.9856474 * D) % 360;
@@ -54,8 +51,8 @@ class AstrologicalHouseCalculator {
     return ascendant;
   }
 
-  List<double> _calculateHouses() {
-    double ascendant = _calculateAscendant();
+  List<double> _calculateHouses(double julianDay) {
+    double ascendant = _calculateAscendant(julianDay);
 
     List<double> houses = [];
     for (int i = 0; i < 12; i++) {

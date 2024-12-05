@@ -47,8 +47,8 @@ class _UserViewState extends State<UserView> {
     // reload view screen on click
     // Tooltips on user details to describe specific details (Maybe whole screen to describe it?)
     UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
-        UserAstrologicalDetailsCalculator(birthdayTimestamp: 903518153000);
-    final details = userAstrologicalDetailsCalculator.userAstrologicalDetails();
+        UserAstrologicalDetailsCalculator();
+    final details = userAstrologicalDetailsCalculator.userAstrologicalDetails(903518153000);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
