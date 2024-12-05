@@ -10,8 +10,6 @@ import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.d
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'firebase_options.dart';
@@ -39,19 +37,16 @@ class ApplicationState extends ChangeNotifier {
 
   bool get userDocumentSet => _userDocumentSet;
 
+  bool _dreamDocumentSet = false;
+
+  bool get dreamDocumentSet => _dreamDocumentSet;
+
   UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
       UserAstrologicalDetailsCalculator();
 
   Future<void> initUser() async {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
-
-    FirebaseUIAuth.configureProviders([
-      EmailAuthProvider(),
-      GoogleProvider(
-          clientId:
-              "341744325210-ldbgkg14bk1gbjerfkknkthpifrp0jin.apps.googleusercontent.com")
-    ]);
 
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
@@ -63,6 +58,7 @@ class ApplicationState extends ChangeNotifier {
             .snapshots()
             .listen((snapshot) {
           _dreamDocuments = [];
+          _dreamDocumentSet = true;
           for (final document in snapshot.docs) {
             _dreamDocuments.add(
               DreamDocument(
@@ -116,6 +112,7 @@ class ApplicationState extends ChangeNotifier {
       } else {
         _loggedIn = false;
         _dreamDocuments = [];
+        _dreamDocumentSet = false;
         _userDocument = null;
         _userDocumentSet = false;
         _userDocumentSubscription?.cancel();

@@ -20,11 +20,11 @@ class _HomeState extends State<Home> {
     return Consumer<ApplicationState>(
         builder: (context, appState, _) => !appState.loggedIn
             ? const AuthGate()
-            : appState.userDocumentSet && appState.userDocument == null
-                ? Consumer<ApplicationState>(
+            : appState.userDocumentSet && appState.userDocument != null
+                ? const Navigation()
+                : Consumer<ApplicationState>(
                     builder: (context, appState, _) => UserForm(
                           addUser: (user) => appState.addUser(user),
-                        ))
-                : const Navigation());
+                        )));
   }
 }

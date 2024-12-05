@@ -18,7 +18,7 @@ class DreamView extends StatelessWidget {
             flex: 3,
             child: Consumer<ApplicationState>(
               builder: (context, appState, _) => Center(
-                  child: DreamsList(dreamDocuments: appState.dreamDocuments)),
+                  child: DreamsList(dreamDocuments: appState.dreamDocuments, isDreamSet: appState.dreamDocumentSet,)),
             )),
         Consumer<ApplicationState>(
             builder: (context, appState, _) => Center(
