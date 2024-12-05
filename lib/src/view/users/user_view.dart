@@ -17,10 +17,10 @@ import '../../model/sex_enum.dart';
 import '../../util/date_formater.dart';
 
 class UserView extends StatefulWidget {
-  UserView(
-      {super.key,
-      required this.userDocument,
-      required this.updateUserDetails}) {
+  UserView({super.key,
+    required this.userDocument,
+    required this.updateUserDetails,
+    required this.destroyState}) {
     countryProvider = CountryProvider();
   }
 
@@ -28,6 +28,7 @@ class UserView extends StatefulWidget {
 
   late final CountryProvider countryProvider;
   final Future<void> Function(String id, int timestamp) updateUserDetails;
+  final Future<void> Function() destroyState;
 
   @override
   State<StatefulWidget> createState() => _UserViewState();
@@ -58,8 +59,6 @@ class _UserViewState extends State<UserView> {
   }
 
   Column _displayUser() {
-    // reload view screen on click
-    // Tooltips on user details to describe specific details (Maybe whole screen to describe it?)
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -76,7 +75,8 @@ class _UserViewState extends State<UserView> {
         DetailsRecord(
           label: AppLocalizations.of(context)!.birth_place,
           value:
-              "${widget.userDocument!.birthCity}, ${widget.countryProvider.getCountryName(context, widget.userDocument!.birthCountryCode)}",
+          "${widget.userDocument!.birthCity}, ${widget.countryProvider
+              .getCountryName(context, widget.userDocument!.birthCountryCode)}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.sex,
@@ -128,7 +128,10 @@ class _UserViewState extends State<UserView> {
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w400),
                             AppLocalizations.of(context)!.logout),
-                        onPressed: () => FirebaseAuth.instance.signOut())))),
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                          widget.destroyState();
+                        })))),
         Center(
             child: SizedBox(
                 width: double.infinity,
@@ -166,7 +169,7 @@ class _UserViewState extends State<UserView> {
         return CupertinoActionSheet(
           title: Text(AppLocalizations.of(context)!.delete_account),
           message:
-              Text(AppLocalizations.of(context)!.delete_account_question_modal),
+          Text(AppLocalizations.of(context)!.delete_account_question_modal),
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
               child: Text(AppLocalizations.of(context)!.yes),

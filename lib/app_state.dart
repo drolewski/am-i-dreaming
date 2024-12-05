@@ -19,8 +19,6 @@ import 'firebase_options.dart';
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
     initUser();
-    initDreams();
-    initUserDetails();
   }
 
   bool _loggedIn = false;
@@ -58,86 +56,83 @@ class ApplicationState extends ChangeNotifier {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
+        _dreamDocumentSubscription = FirebaseFirestore.instance
+            .collection('dream')
+            .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .orderBy('timestamp', descending: true)
+            .snapshots()
+            .listen((snapshot) {
+          _dreamDocuments = [];
+          for (final document in snapshot.docs) {
+            _dreamDocuments.add(
+              DreamDocument(
+                text: document.data()['text'] as String,
+                timestamp: document.data()['timestamp'] as int,
+              ),
+            );
+          }
+          notifyListeners();
+        });
+        _userDocumentSubscription = FirebaseFirestore.instance
+            .collection('user')
+            .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .limit(1)
+            .snapshots()
+            .listen((snapshot) {
+          _userDocument = null;
+          _userDocumentSet = true;
+          if (snapshot.docs.length == 1) {
+            _userDocument = UserDocument(
+              id: snapshot.docs[0].id,
+              name: snapshot.docs[0].data()['name'] as String,
+              sex: SexEnum.fromString(snapshot.docs[0].data()['sex'] as String),
+              birthCity: snapshot.docs[0].data()['birthCity'] as String,
+              birthdayTimestampUTC: snapshot.docs[0].data()['timestamp'] as int,
+              birthCountryCode:
+              snapshot.docs[0].data()['birthCountryCode'] as String,
+              sunZodiac: ZodiacEnum.fromString(
+                  snapshot.docs[0].data()['sunZodiac'] as String),
+              lunarZodiac: ZodiacEnum.fromString(
+                  snapshot.docs[0].data()['lunarZodiac'] as String),
+              zodiacElement: ZodiacElementEnum.fromString(
+                  snapshot.docs[0].data()['zodiacElement'] as String),
+              zodiacQuality: ZodiacQualityEnum.fromString(
+                  snapshot.docs[0].data()['zodiacQuality'] as String),
+              moonPhase: MoonPhaseEnum.fromString(
+                  snapshot.docs[0].data()['moonPhase'] as String),
+              houses: (snapshot.docs[0].data()['houses'] as List<dynamic>)
+                  .map((element) => ZodiacEnum.fromString(element as String))
+                  .toList(),
+              sunReturnDate: snapshot.docs[0].data()['sunReturnDate'] as int,
+              moonReturnDate: snapshot.docs[0].data()['moonReturnDate'] as int,
+              ascendant: ZodiacEnum.fromString(
+                  snapshot.docs[0].data()['ascendant'] as String),
+              timestamp: snapshot.docs[0].data()['timestamp'] as int,
+              userId: snapshot.docs[0].data()['userId'] as String,
+            );
+          }
+          notifyListeners();
+        });
       } else {
         _loggedIn = false;
+        _dreamDocuments = [];
+        _userDocument = null;
+        _userDocumentSet = false;
+        _userDocumentSubscription?.cancel();
+        _dreamDocumentSubscription?.cancel();
       }
       notifyListeners();
     });
   }
 
-  Future<void> initDreams() async {
-    if (FirebaseAuth.instance.currentUser != null) {
-      _dreamDocumentSubscription = FirebaseFirestore.instance
-          .collection('dream')
-          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .orderBy('timestamp', descending: true)
-          .snapshots()
-          .listen((snapshot) {
-        _dreamDocuments = [];
-        for (final document in snapshot.docs) {
-          _dreamDocuments.add(
-            DreamDocument(
-              text: document.data()['text'] as String,
-              timestamp: document.data()['timestamp'] as int,
-            ),
-          );
-        }
-        notifyListeners();
-      });
-    } else {
-      _dreamDocuments = [];
-      _dreamDocumentSubscription?.cancel();
-    }
-    notifyListeners();
-  }
 
-  Future<void> initUserDetails() async {
-    if (FirebaseAuth.instance.currentUser != null) {
-      _userDocumentSubscription = FirebaseFirestore.instance
-          .collection('user')
-          .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .limit(1)
-          .snapshots()
-          .listen((snapshot) {
-        _userDocument = null;
-        _userDocumentSet = true;
-        if (snapshot.docs.length == 1) {
-          _userDocument = UserDocument(
-            id: snapshot.docs[0].id,
-            name: snapshot.docs[0].data()['name'] as String,
-            sex: SexEnum.fromString(snapshot.docs[0].data()['sex'] as String),
-            birthCity: snapshot.docs[0].data()['birthCity'] as String,
-            birthdayTimestampUTC: snapshot.docs[0].data()['timestamp'] as int,
-            birthCountryCode:
-                snapshot.docs[0].data()['birthCountryCode'] as String,
-            sunZodiac: ZodiacEnum.fromString(
-                snapshot.docs[0].data()['sunZodiac'] as String),
-            lunarZodiac: ZodiacEnum.fromString(
-                snapshot.docs[0].data()['lunarZodiac'] as String),
-            zodiacElement: ZodiacElementEnum.fromString(
-                snapshot.docs[0].data()['zodiacElement'] as String),
-            zodiacQuality: ZodiacQualityEnum.fromString(
-                snapshot.docs[0].data()['zodiacQuality'] as String),
-            moonPhase: MoonPhaseEnum.fromString(
-                snapshot.docs[0].data()['moonPhase'] as String),
-            houses: (snapshot.docs[0].data()['houses'] as List<dynamic>)
-                .map((element) => ZodiacEnum.fromString(element as String))
-                .toList(),
-            sunReturnDate: snapshot.docs[0].data()['sunReturnDate'] as int,
-            moonReturnDate: snapshot.docs[0].data()['moonReturnDate'] as int,
-            ascendant: ZodiacEnum.fromString(
-                snapshot.docs[0].data()['ascendant'] as String),
-            timestamp: snapshot.docs[0].data()['timestamp'] as int,
-            userId: snapshot.docs[0].data()['userId'] as String,
-          );
-        }
-        notifyListeners();
-      });
-    } else {
-      _userDocument = null;
-      _userDocumentSet = false;
-      _userDocumentSubscription?.cancel();
-    }
+
+  Future<void> destroy() async {
+    _userDocument = null;
+    _userDocumentSet = false;
+    _userDocumentSubscription?.cancel();
+    _dreamDocuments = [];
+    _dreamDocumentSubscription?.cancel();
     notifyListeners();
   }
 

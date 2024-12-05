@@ -43,8 +43,12 @@ Widget _navigationTab(BuildContext context, int index) {
       return const Text("horoskopy");
     case 2:
       return Consumer<ApplicationState>(
-          builder: (context, appState, _) =>
-              UserView(userDocument: appState.userDocument, updateUserDetails: (id, timestamp) => appState.updateUserDetails(id, timestamp)));
+          builder: (context, appState, _) => UserView(
+                userDocument: appState.userDocument,
+                updateUserDetails: (id, timestamp) =>
+                    appState.updateUserDetails(id, timestamp),
+                destroyState: () => appState.destroy(),
+              ));
     default:
       return const CupertinoPageScaffold(child: Text("null"));
   }

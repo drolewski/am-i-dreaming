@@ -7,8 +7,8 @@
 - Zodiac based on zodiac symbol of user on application navigation
 - New, better app icon/logo in png
 - Name meaning screen
-
-
+- Refactor routing on screen to GoRouter
+- Refactor loading circle to non blocking
 
 ## Future tasks
 - Style on android platform
