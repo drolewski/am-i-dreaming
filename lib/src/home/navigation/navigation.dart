@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app_state.dart';
-import '../../view/users/user_form.dart';
 
 class Navigation extends StatelessWidget {
   const Navigation({super.key});
@@ -41,10 +40,7 @@ Widget _navigationTab(BuildContext context, int index) {
     case 0:
       return const DreamView();
     case 1:
-      return Consumer<ApplicationState>(
-          builder: (context, appState, _) => UserForm(
-                addUser: (user) => appState.addUser(user),
-              ));
+      return const Text("horoskopy");
     case 2:
       return Consumer<ApplicationState>(
           builder: (context, appState, _) =>

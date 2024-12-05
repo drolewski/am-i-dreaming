@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../model/sex_enum.dart';
+
 class UserForm extends StatefulWidget {
   UserForm({super.key, required this.addUser}) {
     var countryService = CountryService();
@@ -14,6 +16,7 @@ class UserForm extends StatefulWidget {
   }
 
   late final List<Country> countries;
+  final List<SexEnum> sexes = SexEnum.values;
   final FutureOr<void> Function(UserModel user) addUser;
 
   @override
@@ -22,6 +25,7 @@ class UserForm extends StatefulWidget {
 
 class _UserFormState extends State<UserForm> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_UserFormState');
+  final _nameController = TextEditingController();
   final _birthCityController = TextEditingController();
   final _nameMaxLength = 30;
   final _cityMaxLength = 30;
@@ -32,17 +36,13 @@ class _UserFormState extends State<UserForm> {
   final _maxYear = DateTime.now().subtract(const Duration(days: 10 * 365));
   bool _isReloading = false;
 
-  final _nameController = TextEditingController();
+  var _birthDate = DateTime.now().subtract(const Duration(days: 10 * 365));
 
-  var _birthDate;
-
-  get birthDate => _maxYear;
-
-  var _birthTime;
-
-  get birthTime => DateTime.now();
+  var _birthTime = DateTime.now();
 
   int _selectedCountryIndex = 175;
+
+  var _selectedSexIndex = 0;
 
   @override
   Widget build(BuildContext contexts) {
@@ -105,6 +105,51 @@ class _UserFormState extends State<UserForm> {
                           prefix: Padding(
                               padding: const EdgeInsets.only(right: 4),
                               child: Text(
+                                AppLocalizations.of(context)!.sex,
+                                style: TextStyle(
+                                    color: _prefixColor,
+                                    fontSize: _prefixFontSize,
+                                    fontWeight: FontWeight.w600),
+                              )),
+                          child: CupertinoButton(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                              child: Text(
+                                  textAlign: TextAlign.end,
+                                  translateSex(contexts, _selectedSexIndex),
+                                  style: TextStyle(
+                                      fontSize: _textFontSize,
+                                      fontWeight: FontWeight.w600,
+                                      color: _textColor)),
+                              onPressed: () => _showDialog(
+                                    CupertinoPicker(
+                                      looping: true,
+                                      magnification: 2.35 / 2.1,
+                                      squeeze: 1.25,
+                                      useMagnifier: true,
+                                      itemExtent: 32,
+                                      scrollController:
+                                          FixedExtentScrollController(
+                                        initialItem: _selectedSexIndex,
+                                      ),
+                                      onSelectedItemChanged:
+                                          (int selectedItem) {
+                                        setState(() {
+                                          _selectedSexIndex = selectedItem;
+                                          ;
+                                        });
+                                      },
+                                      children: List<Widget>.generate(
+                                          widget.sexes.length, (int index) {
+                                        return Center(
+                                            child: Text(
+                                                translateSex(contexts, index)));
+                                      }),
+                                    ),
+                                  ))),
+                      CupertinoFormRow(
+                          prefix: Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: Text(
                                 AppLocalizations.of(context)!.birth_date,
                                 style: TextStyle(
                                     color: _prefixColor,
@@ -115,18 +160,19 @@ class _UserFormState extends State<UserForm> {
                               padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                               child: Text(
                                   formatTimestampToDate(context,
-                                      birthDate.millisecondsSinceEpoch),
+                                      _birthDate.millisecondsSinceEpoch),
                                   style: TextStyle(
                                       fontSize: _textFontSize,
                                       fontWeight: FontWeight.w600,
                                       color: _textColor)),
                               onPressed: () => _showDialog(
                                     CupertinoDatePicker(
-                                      initialDateTime: birthDate,
+                                      initialDateTime: _birthDate,
                                       mode: CupertinoDatePickerMode.date,
                                       use24hFormat: true,
-                                      showDayOfWeek: true,
-                                      maximumDate: birthDate,
+                                      showDayOfWeek: false,
+                                      maximumYear: _maxYear.year,
+                                      minimumYear: 1900,
                                       onDateTimeChanged: (DateTime newDate) =>
                                           setState(() => _birthDate = newDate),
                                     ),
@@ -145,14 +191,14 @@ class _UserFormState extends State<UserForm> {
                               padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                               child: Text(
                                   formatTimestampToTime(context,
-                                      birthTime.millisecondsSinceEpoch),
+                                      _birthTime.millisecondsSinceEpoch),
                                   style: TextStyle(
                                       fontSize: _textFontSize,
                                       fontWeight: FontWeight.w600,
                                       color: _textColor)),
                               onPressed: () => _showDialog(
                                     CupertinoDatePicker(
-                                      initialDateTime: birthTime,
+                                      initialDateTime: _birthTime,
                                       mode: CupertinoDatePickerMode.time,
                                       use24hFormat: true,
                                       showDayOfWeek: true,
@@ -256,6 +302,7 @@ class _UserFormState extends State<UserForm> {
                               });
                               await widget.addUser(UserModel(
                                   name: _nameController.text,
+                                  sex: widget.sexes[_selectedSexIndex].name,
                                   birthCity: _birthCityController.text,
                                   birthdayTimestampUTC: birthDateTimestampUTC(),
                                   birthCountryCode: widget
@@ -277,8 +324,8 @@ class _UserFormState extends State<UserForm> {
   }
 
   int birthDateTimestampUTC() {
-    return DateTime(birthDate.year, birthDate.month, birthDate.day,
-            birthTime.hour, birthTime.minute)
+    return DateTime(_birthDate.year, _birthDate.month, _birthDate.day,
+            _birthTime.hour, _birthTime.minute)
         .toUtc()
         .millisecondsSinceEpoch;
   }
@@ -287,6 +334,9 @@ class _UserFormState extends State<UserForm> {
       CountryLocalizations.of(contexts)!
           .countryName(countryCode: widget.countries[index].countryCode) ??
       widget.countries[index].displayName;
+
+  String translateSex(BuildContext contexts, int index) =>
+      SexEnum.translate(contexts, widget.sexes[index]);
 
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(

@@ -120,5 +120,10 @@
         "type": "int"
       }
     }
-  }
+  },
+  "female": "Woman",
+  "male": "Man",
+  "nonBinary": "Non-binary",
+  "preferNotToAnswer": "Prefer not to answer",
+  "other": "Other"
 }

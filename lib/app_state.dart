@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:am_i_dreaming/src/model/moon_model.dart';
+import 'package:am_i_dreaming/src/model/sex_enum.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/model/user_model.dart';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
@@ -98,6 +99,7 @@ class ApplicationState extends ChangeNotifier {
         if (snapshot.docs.length == 1) {
           _userDocument = UserDocument(
             name: snapshot.docs[0].data()['name'] as String,
+            sex: SexEnum.fromString(snapshot.docs[0].data()['sex'] as String),
             birthCity: snapshot.docs[0].data()['birthCity'] as String,
             birthdayTimestampUTC: snapshot.docs[0].data()['timestamp'] as int,
             birthCountryCode:
@@ -151,6 +153,7 @@ class ApplicationState extends ChangeNotifier {
 
     return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
       'name': user.name,
+      'sex': user.sex,
       'birthCity': user.birthCity,
       'birthdayTimestampUTC': user.birthdayTimestampUTC,
       'birthCountryCode': user.birthCountryCode,

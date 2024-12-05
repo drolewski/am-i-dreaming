@@ -1,4 +1,5 @@
 import 'package:am_i_dreaming/src/home/auth/auth.dart';
+import 'package:am_i_dreaming/src/view/users/user_form.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
-        builder: (context, appState, _) =>
-            !appState.loggedIn ? const AuthGate() : const Navigation());
+        builder: (context, appState, _) => !appState.loggedIn
+            ? const AuthGate()
+            : appState.userDocument == null
+                ? Consumer<ApplicationState>(
+                    builder: (context, appState, _) => UserForm(
+                          addUser: (user) => appState.addUser(user),
+                        ))
+                : const Navigation());
   }
 }

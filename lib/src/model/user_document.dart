@@ -1,3 +1,4 @@
+import 'package:am_i_dreaming/src/model/sex_enum.dart';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 
 import 'moon_model.dart';
@@ -5,6 +6,7 @@ import 'moon_model.dart';
 class UserDocument {
   UserDocument(
       {required this.name,
+      required this.sex,
       required this.birthCity,
       required this.birthdayTimestampUTC,
       required this.birthCountryCode,
@@ -21,6 +23,7 @@ class UserDocument {
       required this.userId});
 
   final String name;
+  final SexEnum sex;
   final String birthCity;
   final int birthdayTimestampUTC;
   final String birthCountryCode;

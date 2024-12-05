@@ -1,6 +1,7 @@
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
+import 'package:am_i_dreaming/src/service/country_provider.dart';
 import 'package:am_i_dreaming/src/view/users/user_details_records.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,12 +11,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../component/detail_record.dart';
 import '../../logic/zodiac/translate/element_translator.dart';
 import '../../logic/zodiac/translate/quality_translator.dart';
+import '../../model/sex_enum.dart';
 import '../../util/date_formater.dart';
 
 class UserView extends StatefulWidget {
-  const UserView({super.key, required this.userDocument});
+  UserView(
+      {super.key, required this.userDocument}) {
+    countryProvider = CountryProvider();
+  }
 
   final UserDocument? userDocument;
+
+  late final CountryProvider countryProvider;
 
   @override
   State<StatefulWidget> createState() => _UserViewState();
@@ -65,11 +72,11 @@ class _UserViewState extends State<UserView> {
         DetailsRecord(
           label: AppLocalizations.of(context)!.birth_place,
           value:
-              "${widget.userDocument!.birthCity}, ${widget.userDocument!.birthCountryCode}",
+              "${widget.userDocument!.birthCity}, ${widget.countryProvider.getCountryName(context, widget.userDocument!.birthCountryCode)}",
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.sex,
-          value: "Mężczyzna",
+          value: SexEnum.translate(context, widget.userDocument!.sex),
         ),
         DetailsRecord(
           label: AppLocalizations.of(context)!.sun_zodiac,

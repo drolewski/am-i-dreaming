@@ -12,16 +12,16 @@ class DetailListRecord extends StatelessWidget {
     final valueWidgets = values.map((h) {
       return Text(
         h,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
       );
     }).toList();
     return Padding(
-        padding: const EdgeInsets.only(top: 6),
+        padding: const EdgeInsets.only(top: 8),
         child: Row(children: [
           Expanded(
               child: Text(
             label,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
           )),
           Expanded(
               child: Container(
