@@ -12,8 +12,10 @@ class PremiumButton extends StatelessWidget {
             child: SizedBox(
                 width: double.infinity,
                 child: CupertinoButton.filled(
-                    child:
-                        Text(AppLocalizations.of(context)!.buy_premium_button),
+                    child: Text(
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w400),
+                        AppLocalizations.of(context)!.buy_premium_button),
                     onPressed: () => print("premium")))));
   }
 }

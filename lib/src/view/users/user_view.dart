@@ -15,8 +15,7 @@ import '../../model/sex_enum.dart';
 import '../../util/date_formater.dart';
 
 class UserView extends StatefulWidget {
-  UserView(
-      {super.key, required this.userDocument}) {
+  UserView({super.key, required this.userDocument}) {
     countryProvider = CountryProvider();
   }
 
@@ -120,13 +119,19 @@ class _UserViewState extends State<UserView> {
                 child: SizedBox(
                     width: double.infinity,
                     child: CupertinoButton(
-                        child: Text(AppLocalizations.of(context)!.logout),
+                        child: Text(
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w400),
+                            AppLocalizations.of(context)!.logout),
                         onPressed: () => FirebaseAuth.instance.signOut())))),
         Center(
             child: SizedBox(
                 width: double.infinity,
                 child: CupertinoButton(
-                    child: Text(AppLocalizations.of(context)!.delete_account),
+                    child: Text(
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w400),
+                        AppLocalizations.of(context)!.delete_account),
                     onPressed: () =>
                         Navigator.of(context).restorablePush(_modalBuilder))))
       ],
