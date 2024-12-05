@@ -98,6 +98,7 @@ class ApplicationState extends ChangeNotifier {
         _userDocument = null;
         if (snapshot.docs.length == 1) {
           _userDocument = UserDocument(
+            id: snapshot.docs[0].id,
             name: snapshot.docs[0].data()['name'] as String,
             sex: SexEnum.fromString(snapshot.docs[0].data()['sex'] as String),
             birthCity: snapshot.docs[0].data()['birthCity'] as String,
@@ -108,9 +109,12 @@ class ApplicationState extends ChangeNotifier {
                 snapshot.docs[0].data()['sunZodiac'] as String),
             lunarZodiac: ZodiacEnum.fromString(
                 snapshot.docs[0].data()['lunarZodiac'] as String),
-            zodiacElement: ZodiacElementEnum.fromString(snapshot.docs[0].data()['zodiacElement'] as String),
-            zodiacQuality: ZodiacQualityEnum.fromString(snapshot.docs[0].data()['zodiacQuality'] as String),
-            moonPhase: MoonPhaseEnum.fromString(snapshot.docs[0].data()['moonPhase'] as String),
+            zodiacElement: ZodiacElementEnum.fromString(
+                snapshot.docs[0].data()['zodiacElement'] as String),
+            zodiacQuality: ZodiacQualityEnum.fromString(
+                snapshot.docs[0].data()['zodiacQuality'] as String),
+            moonPhase: MoonPhaseEnum.fromString(
+                snapshot.docs[0].data()['moonPhase'] as String),
             houses: (snapshot.docs[0].data()['houses'] as List<dynamic>)
                 .map((element) => ZodiacEnum.fromString(element as String))
                 .toList(),
@@ -169,6 +173,30 @@ class ApplicationState extends ChangeNotifier {
           .planetReturn.moonReturnDate.millisecondsSinceEpoch,
       'ascendant': userAstrologicalDetails.ascendant.name,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+    });
+  }
+
+  Future<void> updateUserDetails(String id, int birthdayTimestampUTC) async {
+    if (!_loggedIn) {
+      throw Exception('Must be logged in');
+    }
+
+    final userAstrologicalDetails = userAstrologicalDetailsCalculator
+        .userAstrologicalDetails(birthdayTimestampUTC);
+
+    FirebaseFirestore.instance.collection('user').doc(id).update({
+      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
+      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
+      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
+      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
+      'moonPhase': userAstrologicalDetails.moonPhase.name,
+      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
+      'sunReturnDate': userAstrologicalDetails
+          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
+      'moonReturnDate': userAstrologicalDetails
+          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
+      'ascendant': userAstrologicalDetails.ascendant.name,
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });
   }

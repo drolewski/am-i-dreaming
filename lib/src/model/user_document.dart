@@ -5,7 +5,8 @@ import 'moon_model.dart';
 
 class UserDocument {
   UserDocument(
-      {required this.name,
+      {required this.id,
+      required this.name,
       required this.sex,
       required this.birthCity,
       required this.birthdayTimestampUTC,
@@ -22,6 +23,7 @@ class UserDocument {
       required this.timestamp,
       required this.userId});
 
+  final String id;
   final String name;
   final SexEnum sex;
   final String birthCity;

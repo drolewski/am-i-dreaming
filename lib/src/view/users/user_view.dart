@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
@@ -15,20 +17,24 @@ import '../../model/sex_enum.dart';
 import '../../util/date_formater.dart';
 
 class UserView extends StatefulWidget {
-  UserView({super.key, required this.userDocument}) {
+  UserView(
+      {super.key,
+      required this.userDocument,
+      required this.updateUserDetails}) {
     countryProvider = CountryProvider();
   }
 
   final UserDocument? userDocument;
 
   late final CountryProvider countryProvider;
+  final Future<void> Function(String id, int timestamp) updateUserDetails;
 
   @override
   State<StatefulWidget> createState() => _UserViewState();
 }
 
 class _UserViewState extends State<UserView> {
-  var _isReloading = false;
+  bool _isReloading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,7 @@ class _UserViewState extends State<UserView> {
         navigationBar: CupertinoNavigationBar(
           trailing: GestureDetector(
               onTap: () {
-                _isReloading != _isReloading;
+                performAction();
               },
               child: !_isReloading
                   ? const Icon(CupertinoIcons.arrow_2_circlepath_circle_fill)
@@ -46,10 +52,9 @@ class _UserViewState extends State<UserView> {
         child: SafeArea(
             child: Container(
                 margin: const EdgeInsets.only(right: 20, left: 20),
-                child: SingleChildScrollView(
-                    child: _isReloading || widget.userDocument == null
-                        ? _reloading()
-                        : _displayUser()))));
+                child: _isReloading || widget.userDocument == null
+                    ? const Center(child: CircularProgressIndicator.adaptive())
+                    : SingleChildScrollView(child: _displayUser()))));
   }
 
   Column _displayUser() {
@@ -138,14 +143,20 @@ class _UserViewState extends State<UserView> {
     );
   }
 
-  Column _reloading() {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CircularProgressIndicator.adaptive(),
-      ],
-    );
+  Future<void> performAction() async {
+    setState(() {
+      _isReloading = true;
+    });
+    try {
+      await Future.delayed(Duration(seconds: 1));
+      widget.updateUserDetails(
+          widget.userDocument!.id, widget.userDocument!.birthdayTimestampUTC);
+      await Future.delayed(Duration(seconds: 1));
+    } finally {
+      setState(() {
+        _isReloading = false;
+      });
+    }
   }
 
   @pragma('vm:entry-point')
