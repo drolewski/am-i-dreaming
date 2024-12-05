@@ -15,7 +15,7 @@ class DreamDetails extends StatelessWidget {
     return Consumer<ApplicationState>(builder: (context, appState, _) {
       return CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
-            middle: Text(formatTimestamp(
+            middle: Text(formatTimestampToDate(
                 context, appState.dreamDocuments[dreamIndex].timestamp)),
           ),
           child: SafeArea(

@@ -27,7 +27,7 @@ class Navigation extends StatelessWidget {
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(
             builder: (BuildContext context) {
-              return _navigationTab(context, index);
+              return _navigationTab(context, 1);
             },
           );
         });
@@ -39,7 +39,7 @@ Widget _navigationTab(BuildContext context, int index) {
     case 0:
       return const DreamView();
     case 1:
-      return const UserForm();
+      return UserForm();
     case 2:
       return const UserView();
     default:

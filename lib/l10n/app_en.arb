@@ -39,6 +39,16 @@
       }
     }
   },
+  "formattedTime": "{time}",
+  "@formattedTime": {
+    "description": "Time parameter",
+    "placeholders": {
+      "time": {
+        "type": "DateTime",
+        "format": "Hm"
+      }
+    }
+  },
   "generate_dream_picture_button": "Generate picture",
   "buy_premium_button": "Premium subscription",
   "yes": "Yes",
@@ -86,11 +96,25 @@
   "moon_first_quarter": "First quarter of moon",
   "moon_full": "Full moon",
   "moon_new": "New moon",
+  "about_you_form": "About You",
   "user_name": "Name",
   "user_name_min_length_validation": "Enter Your name",
   "user_name_max_length_validation": "Given name is longer than {length}",
   "@user_name_max_length_validation": {
     "description": "Name max length validation",
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "birth_date_time": "Birth time",
+  "birth_country": "Birth country",
+  "birth_city": "Birth city",
+  "city_min_length_validation": "Enter city of you birth",
+  "city_max_length_validation": "Given city name is longer than {length}",
+  "@city_max_length_validation": {
+    "description": "City max length validation",
     "placeholders": {
       "length": {
         "type": "int"

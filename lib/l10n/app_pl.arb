@@ -28,6 +28,16 @@
       }
     }
   },
+  "formattedTime": "{time}",
+  "@formattedTime": {
+    "description": "Time parameter",
+    "placeholders": {
+      "time": {
+        "type": "DateTime",
+        "format": "Hm"
+      }
+    }
+  },
   "formattedDateTime": "{date} {time}",
   "@formattedDateTime": {
     "description": "Date time parameter",
@@ -89,11 +99,25 @@
   "moon_first_quarter": "Pierwsza kwadra księżyca",
   "moon_full": "Pełny księzyc",
   "moon_new": "Nów",
+  "about_you_form": "O Tobie",
   "user_name": "Imię",
   "user_name_min_length_validation": "Podaj swoje imię",
   "user_name_max_length_validation": "Podane imię jest dłuższe niż {length}",
   "@user_name_max_length_validation": {
     "description": "Name max length validation",
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "birth_date_time": "Godzina urodzenia",
+  "birth_country": "Kraj urodzenia",
+  "birth_city": "Miasto urodzenia",
+  "city_min_length_validation": "Podaj nazwę miasta swoich narodzin",
+  "city_max_length_validation": "Podane miasto jest dłuższe niż {length}",
+  "@city_max_length_validation": {
+    "description": "City max length validation",
     "placeholders": {
       "length": {
         "type": "int"

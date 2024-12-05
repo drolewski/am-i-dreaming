@@ -22,7 +22,7 @@ class _DreamListRowState extends State<DreamListRow> {
             child: Text(
                 style:
                     const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                formatTimestamp(context, widget.dream.timestamp))),
+                formatTimestampToDate(context, widget.dream.timestamp))),
         const Padding(
             padding: EdgeInsets.only(left: 10.0, right: 10.0),
             child: Icon(

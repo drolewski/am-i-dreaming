@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:firebase_ui_localizations/firebase_ui_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,7 +20,8 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        FirebaseUILocalizations.delegate
+        FirebaseUILocalizations.delegate,
+        CountryLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: const CupertinoThemeData(
