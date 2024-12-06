@@ -49,7 +49,7 @@ class _UserFormState extends State<UserForm> {
   @override
   Widget build(BuildContext contexts) {
     return _isReloading
-        ? const Center(child: const CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator.adaptive())
         : CupertinoPageScaffold(
             navigationBar: const CupertinoNavigationBar(),
             child: SafeArea(
@@ -319,22 +319,18 @@ class _UserFormState extends State<UserForm> {
     setState(() {
       _isReloading = true;
     });
-    try {
-      await widget.addUser(UserModel(
-          name: _nameController.text,
-          sex: widget.sexes[_selectedSexIndex].name,
-          birthCity: _birthCityController.text,
-          birthdayTimestampUTC: birthDateTimestampUTC(),
-          birthCountryCode:
-              widget.countries[_selectedCountryIndex].countryCode));
-      _birthCityController.clear();
-      _nameController.clear();
-      context.pushReplacement("/");
-    } finally {
-      setState(() {
-        _isReloading = false;
-      });
-    }
+    await widget.addUser(UserModel(
+        name: _nameController.text,
+        sex: widget.sexes[_selectedSexIndex].name,
+        birthCity: _birthCityController.text,
+        birthdayTimestampUTC: birthDateTimestampUTC(),
+        birthCountryCode: widget.countries[_selectedCountryIndex].countryCode));
+    _birthCityController.clear();
+    _nameController.clear();
+    setState(() {
+      _isReloading = false;
+    });
+    context.pushReplacement("/");
   }
 
   int birthDateTimestampUTC() {

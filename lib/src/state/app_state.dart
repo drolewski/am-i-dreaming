@@ -179,28 +179,4 @@ class ApplicationState extends ChangeNotifier {
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });
   }
-
-  Future<void> updateUserDetails(String id, int birthdayTimestampUTC) async {
-    if (!_loggedIn) {
-      throw Exception('Must be logged in');
-    }
-
-    final userAstrologicalDetails = userAstrologicalDetailsCalculator
-        .userAstrologicalDetails(birthdayTimestampUTC);
-
-    FirebaseFirestore.instance.collection('user').doc(id).update({
-      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
-      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
-      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
-      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
-      'moonPhase': userAstrologicalDetails.moonPhase.name,
-      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
-      'sunReturnDate': userAstrologicalDetails
-          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
-      'moonReturnDate': userAstrologicalDetails
-          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
-      'ascendant': userAstrologicalDetails.ascendant.name,
-      'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
-  }
 }

@@ -2,170 +2,201 @@ import 'dart:async';
 
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
-import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/service/country_provider.dart';
+import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:am_i_dreaming/src/view/users/user_details_records.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../component/detail_record.dart';
 import '../../logic/zodiac/translate/element_translator.dart';
 import '../../logic/zodiac/translate/quality_translator.dart';
 import '../../model/sex_enum.dart';
+import '../../service/user_astrological_details_calculator.dart';
 import '../../util/date_formater.dart';
 
 class UserDetailsView extends StatefulWidget {
-  UserDetailsView({super.key,
-    required this.userDocument,
-    required this.updateUserDetails,
-    required this.destroyState}) {
-    countryProvider = CountryProvider();
-  }
-
-  final UserDocument? userDocument;
-
-  late final CountryProvider countryProvider;
-  final Future<void> Function(String id, int timestamp) updateUserDetails;
-  final FutureOr<void> Function() destroyState;
+  const UserDetailsView({super.key});
 
   @override
   State<StatefulWidget> createState() => _UserDetailsViewState();
 }
 
 class _UserDetailsViewState extends State<UserDetailsView> {
-  bool _isReloading = false;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+  final CountryProvider countryProvider = CountryProvider();
+  final userAstrologicalDetailsCalculator = UserAstrologicalDetailsCalculator();
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          trailing: GestureDetector(
-              onTap: () {
-                performAction();
-              },
-              child: !_isReloading
-                  ? const Icon(CupertinoIcons.arrow_2_circlepath_circle_fill)
-                  : null),
-          middle: Text(AppLocalizations.of(context)!.user),
-        ),
-        child: SafeArea(
-            child: Container(
-                margin: const EdgeInsets.only(right: 20, left: 20),
-                child: _isReloading || widget.userDocument == null
-                    ? const Center(child: CircularProgressIndicator.adaptive())
-                    : SingleChildScrollView(child: _displayUser()))));
+    return Consumer<ApplicationState>(
+        builder: (context, appState, child) => isLoading
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  trailing: GestureDetector(
+                      onTap: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        try {
+                          await _performUpdateAction(appState); // Await the action.
+                        } finally {
+                          setState(() {
+                            _isLoading = false; // Reset loading state.
+                          });
+                        }
+                      },
+                      child: !isLoading
+                          ? const Icon(
+                              CupertinoIcons.arrow_2_circlepath_circle_fill)
+                          : null),
+                  middle: Text(AppLocalizations.of(context)!.user),
+                ),
+                child: SafeArea(
+                    child: Container(
+                        margin: const EdgeInsets.only(right: 20, left: 20),
+                        child: SingleChildScrollView(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const PremiumButton(),
+                            Text(
+                              appState.userDocument!.name,
+                              style: const TextStyle(
+                                  fontSize: 36, fontWeight: FontWeight.w600),
+                            ),
+                            DetailsRecord(
+                              label: AppLocalizations.of(context)!.birth_date,
+                              value: formatTimestampToDateTime(context,
+                                  appState.userDocument!.birthdayTimestampUTC),
+                            ),
+                            DetailsRecord(
+                              label: AppLocalizations.of(context)!.birth_place,
+                              value:
+                                  "${appState.userDocument!.birthCity}, ${countryProvider.getCountryName(context, appState.userDocument!.birthCountryCode)}",
+                            ),
+                            DetailsRecord(
+                              label: AppLocalizations.of(context)!.sex,
+                              value: SexEnum.translate(
+                                  context, appState.userDocument!.sex),
+                            ),
+                            DetailsRecord(
+                              label: AppLocalizations.of(context)!.sun_zodiac,
+                              value: toZodiacRecord(
+                                  context, appState.userDocument!.sunZodiac),
+                            ),
+                            DetailsRecord(
+                              label: AppLocalizations.of(context)!.lunar_zodiac,
+                              value: toZodiacRecord(
+                                  context, appState.userDocument!.lunarZodiac),
+                            ),
+                            DetailsRecord(
+                              label: AppLocalizations.of(context)!.ascendant,
+                              value: toZodiacRecord(
+                                  context, appState.userDocument!.ascendant),
+                            ),
+                            DetailsRecord(
+                              label:
+                                  AppLocalizations.of(context)!.zodiac_element,
+                              value: translateElement(
+                                  context, appState.userDocument!.zodiacElement),
+                            ),
+                            DetailsRecord(
+                              label:
+                                  AppLocalizations.of(context)!.zodiac_quality,
+                              value: translateQuality(
+                                  context, appState.userDocument!.zodiacQuality),
+                            ),
+                            DetailsRecord(
+                              label: AppLocalizations.of(context)!.moon_phase,
+                              value: toMoonPhaseRecord(
+                                  context, appState.userDocument!.moonPhase),
+                            ),
+                            DetailListRecord(
+                                label: AppLocalizations.of(context)!
+                                    .astrological_house,
+                                values: toHousesRecords(
+                                    context, appState.userDocument!.houses)),
+                            DetailsRecord(
+                              label:
+                                  AppLocalizations.of(context)!.next_sun_return,
+                              value: formatTimestampToDateTime(
+                                  context, appState.userDocument!.sunReturnDate),
+                            ),
+                            DetailsRecord(
+                                label: AppLocalizations.of(context)!
+                                    .next_moon_return,
+                                value: formatTimestampToDateTime(context,
+                                    appState.userDocument!.moonReturnDate)),
+                            Container(
+                                margin: const EdgeInsets.only(top: 10),
+                                child: Center(
+                                    child: SizedBox(
+                                        width: double.infinity,
+                                        child: CupertinoButton(
+                                            child: Text(
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                                AppLocalizations.of(context)!
+                                                    .logout),
+                                            onPressed: () {
+                                              _signOut(appState);
+                                            })))),
+                            Center(
+                                child: SizedBox(
+                                    width: double.infinity,
+                                    child: CupertinoButton(
+                                        child: Text(
+                                            style: const TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w400),
+                                            AppLocalizations.of(context)!
+                                                .delete_account),
+                                        onPressed: () => Navigator.of(context)
+                                            .restorablePush(_modalBuilder))))
+                          ],
+                        ))))));
   }
 
-  Column _displayUser() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const PremiumButton(),
-        Text(
-          widget.userDocument!.name,
-          style: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.birth_date,
-          value: formatTimestampToDateTime(
-              context, widget.userDocument!.birthdayTimestampUTC),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.birth_place,
-          value:
-          "${widget.userDocument!.birthCity}, ${widget.countryProvider
-              .getCountryName(context, widget.userDocument!.birthCountryCode)}",
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.sex,
-          value: SexEnum.translate(context, widget.userDocument!.sex),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.sun_zodiac,
-          value: toZodiacRecord(context, widget.userDocument!.sunZodiac),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.lunar_zodiac,
-          value: toZodiacRecord(context, widget.userDocument!.lunarZodiac),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.ascendant,
-          value: toZodiacRecord(context, widget.userDocument!.ascendant),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.zodiac_element,
-          value: translateElement(context, widget.userDocument!.zodiacElement),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.zodiac_quality,
-          value: translateQuality(context, widget.userDocument!.zodiacQuality),
-        ),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.moon_phase,
-          value: toMoonPhaseRecord(context, widget.userDocument!.moonPhase),
-        ),
-        DetailListRecord(
-            label: AppLocalizations.of(context)!.astrological_house,
-            values: toHousesRecords(context, widget.userDocument!.houses)),
-        DetailsRecord(
-          label: AppLocalizations.of(context)!.next_sun_return,
-          value: formatTimestampToDateTime(
-              context, widget.userDocument!.sunReturnDate),
-        ),
-        DetailsRecord(
-            label: AppLocalizations.of(context)!.next_moon_return,
-            value: formatTimestampToDateTime(
-                context, widget.userDocument!.moonReturnDate)),
-        Container(
-            margin: const EdgeInsets.only(top: 10),
-            child: Center(
-                child: SizedBox(
-                    width: double.infinity,
-                    child: CupertinoButton(
-                        child: Text(
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w400),
-                            AppLocalizations.of(context)!.logout),
-                        onPressed: () {
-                          _signOut();
-                        })))),
-        Center(
-            child: SizedBox(
-                width: double.infinity,
-                child: CupertinoButton(
-                    child: Text(
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w400),
-                        AppLocalizations.of(context)!.delete_account),
-                    onPressed: () =>
-                        Navigator.of(context).restorablePush(_modalBuilder))))
-      ],
-    );
-  }
-
-  Future<void> _signOut() async {
+  Future<void> _signOut(ApplicationState appState) async {
     await FirebaseAuth.instance.signOut();
-    widget.destroyState();
+    appState.destroy();
     context.pushReplacement("/");
   }
 
-  Future<void> performAction() async {
-    setState(() {
-      _isReloading = true;
-    });
-    try {
-      await Future.delayed(Duration(seconds: 1));
-      widget.updateUserDetails(
-          widget.userDocument!.id, widget.userDocument!.birthdayTimestampUTC);
-      await Future.delayed(Duration(seconds: 1));
-    } finally {
-      setState(() {
-        _isReloading = false;
-      });
+  Future<void> _performUpdateAction(ApplicationState appState) async {
+    if (!appState.loggedIn) {
+      throw Exception('Must be logged in');
     }
+    final userAstrologicalDetails = userAstrologicalDetailsCalculator
+        .userAstrologicalDetails(DateTime.now().millisecondsSinceEpoch);
+    return FirebaseFirestore.instance
+        .collection('user')
+        .doc(appState.userDocument!.id)
+        .update({
+      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
+      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
+      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
+      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
+      'moonPhase': userAstrologicalDetails.moonPhase.name,
+      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
+      'sunReturnDate': userAstrologicalDetails
+          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
+      'moonReturnDate': userAstrologicalDetails
+          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
+      'ascendant': userAstrologicalDetails.ascendant.name,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+    });
   }
 
   @pragma('vm:entry-point')
@@ -175,7 +206,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
         return CupertinoActionSheet(
           title: Text(AppLocalizations.of(context)!.delete_account),
           message:
-          Text(AppLocalizations.of(context)!.delete_account_question_modal),
+              Text(AppLocalizations.of(context)!.delete_account_question_modal),
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
               child: Text(AppLocalizations.of(context)!.yes),

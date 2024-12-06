@@ -14,11 +14,6 @@ class UserView extends StatelessWidget {
         builder: (context, appState, _) =>
             appState.userDocument == null && appState.userDocumentSet
                 ? const UserEmptyDetailsView()
-                : UserDetailsView(
-                    userDocument: appState.userDocument,
-                    updateUserDetails: (id, timestamp) =>
-                        appState.updateUserDetails(id, timestamp),
-                    destroyState: () => appState.destroy(),
-                  ));
+                : const UserDetailsView());
   }
 }
