@@ -1,6 +1,7 @@
 # TODOs
 
 ## Important
+
 - Integrate with chat-gpt
 - Integrate with edge function
 - Generate horoscope
@@ -9,15 +10,15 @@
 - Integrate with GoogleAds
 - Integrate with Payment
 - Add only one dream per day
+- Calculate spend on single generation of image and special horoscopes.
 - Generate picture on dream details
 - Premium Subscription modal/screen and buy process
 - Zodiac based on zodiac symbol of user on application navigation
 - New, better app icon/logo in png
 - Name meaning screen
-- Refactor routing on screen to GoRouter (- There is bug in login process and redirection to home screen process)
-- Refactor loading circle to non blocking
 - delete user account action
 - test google login and logout ;) google.disconnected() ?
+- Fix typography, texts etc.
 
 ## Future tasks
 
