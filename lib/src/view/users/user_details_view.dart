@@ -47,7 +47,8 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                           _isLoading = true;
                         });
                         try {
-                          await _performUpdateAction(appState); // Await the action.
+                          await _performUpdateAction(
+                              appState); // Await the action.
                         } finally {
                           setState(() {
                             _isLoading = false; // Reset loading state.
@@ -106,14 +107,14 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                             DetailsRecord(
                               label:
                                   AppLocalizations.of(context)!.zodiac_element,
-                              value: translateElement(
-                                  context, appState.userDocument!.zodiacElement),
+                              value: translateElement(context,
+                                  appState.userDocument!.zodiacElement),
                             ),
                             DetailsRecord(
                               label:
                                   AppLocalizations.of(context)!.zodiac_quality,
-                              value: translateQuality(
-                                  context, appState.userDocument!.zodiacQuality),
+                              value: translateQuality(context,
+                                  appState.userDocument!.zodiacQuality),
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.moon_phase,
@@ -128,8 +129,8 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                             DetailsRecord(
                               label:
                                   AppLocalizations.of(context)!.next_sun_return,
-                              value: formatTimestampToDateTime(
-                                  context, appState.userDocument!.sunReturnDate),
+                              value: formatTimestampToDateTime(context,
+                                  appState.userDocument!.sunReturnDate),
                             ),
                             DetailsRecord(
                                 label: AppLocalizations.of(context)!

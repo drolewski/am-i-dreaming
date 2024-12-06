@@ -8,10 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../home/navigation/navigation.dart';
-import '../state/app_state.dart';
 import '../view/dreams/dream/dream_details.dart';
 
 class App extends StatelessWidget {
@@ -72,9 +70,5 @@ final _router = GoRouter(
           ),
         ],
       ),
-      GoRoute(
-          path: "/user/form",
-          builder: (context, state) => Consumer<ApplicationState>(
-              builder: (context, appState, _) =>
-                  UserForm(addUser: (user) => appState.addUser(user)))),
+      GoRoute(path: "/user/form", builder: (context, state) => UserForm()),
     ]);

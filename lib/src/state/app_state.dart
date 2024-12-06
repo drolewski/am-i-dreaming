@@ -4,7 +4,6 @@ import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:am_i_dreaming/src/model/moon_model.dart';
 import 'package:am_i_dreaming/src/model/sex_enum.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
-import 'package:am_i_dreaming/src/model/user_model.dart';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -145,36 +144,6 @@ class ApplicationState extends ChangeNotifier {
 
     return FirebaseFirestore.instance.collection('dream').add(<String, dynamic>{
       'text': dream,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
-  }
-
-  Future<DocumentReference> addUser(UserModel user) {
-    if (!_loggedIn) {
-      throw Exception('Must be logged in');
-    }
-
-    final userAstrologicalDetails = userAstrologicalDetailsCalculator
-        .userAstrologicalDetails(user.birthdayTimestampUTC);
-
-    return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
-      'name': user.name,
-      'sex': user.sex,
-      'birthCity': user.birthCity,
-      'birthdayTimestampUTC': user.birthdayTimestampUTC,
-      'birthCountryCode': user.birthCountryCode,
-      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
-      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
-      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
-      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
-      'moonPhase': userAstrologicalDetails.moonPhase.name,
-      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
-      'sunReturnDate': userAstrologicalDetails
-          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
-      'moonReturnDate': userAstrologicalDetails
-          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
-      'ascendant': userAstrologicalDetails.ascendant.name,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });
