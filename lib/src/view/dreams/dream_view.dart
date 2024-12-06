@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import '../../../app_state.dart';
+import '../../state/app_state.dart';
 import 'dream_input.dart';
 import 'dreams_list.dart';
 

@@ -2,9 +2,6 @@ import 'package:am_i_dreaming/src/view/dreams/dream_view.dart';
 import 'package:am_i_dreaming/src/view/users/user_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
-
-import '../../../app_state.dart';
 
 class Navigation extends StatelessWidget {
   const Navigation({super.key});
@@ -42,13 +39,7 @@ Widget _navigationTab(BuildContext context, int index) {
     case 1:
       return const Text("horoskopy");
     case 2:
-      return Consumer<ApplicationState>(
-          builder: (context, appState, _) => UserView(
-                userDocument: appState.userDocument,
-                updateUserDetails: (id, timestamp) =>
-                    appState.updateUserDetails(id, timestamp),
-                destroyState: () => appState.destroy(),
-              ));
+      return const UserView();
     default:
       return const CupertinoPageScaffold(child: Text("null"));
   }

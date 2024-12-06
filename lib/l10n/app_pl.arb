@@ -130,5 +130,7 @@
   "preferNotToAnswer": "Wolę nie odpowiadać",
   "other": "Inne",
   "save_user_data": "Zapisz dane",
-  "no_dreams": "Jeszcze z nami nie śniłeś"
+  "no_dreams": "Jeszcze z nami nie śniłeś",
+  "empty_user_form_button": "Uzupełnij dane",
+  "empty_user_form_text": "Uzupełnij dane i ciesz się naszymi horoskopami"
 }

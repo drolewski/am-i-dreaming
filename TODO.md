@@ -16,6 +16,8 @@
 - Name meaning screen
 - Refactor routing on screen to GoRouter (- There is bug in login process and redirection to home screen process)
 - Refactor loading circle to non blocking
+- delete user account action
+- test google login and logout ;) google.disconnected() ?
 
 ## Future tasks
 

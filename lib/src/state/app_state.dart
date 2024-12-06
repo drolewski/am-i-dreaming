@@ -12,7 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'firebase_options.dart';
+import '../../firebase_options.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -22,6 +22,10 @@ class ApplicationState extends ChangeNotifier {
   bool _loggedIn = false;
 
   bool get loggedIn => _loggedIn;
+
+  User? _userStored = null;
+
+  User? get userStored => _userStored;
 
   StreamSubscription<QuerySnapshot>? _dreamDocumentSubscription;
   List<DreamDocument> _dreamDocuments = [];
@@ -51,24 +55,7 @@ class ApplicationState extends ChangeNotifier {
     FirebaseAuth.instance.userChanges().listen((user) {
       if (user != null) {
         _loggedIn = true;
-        _dreamDocumentSubscription = FirebaseFirestore.instance
-            .collection('dream')
-            .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .orderBy('timestamp', descending: true)
-            .snapshots()
-            .listen((snapshot) {
-          _dreamDocuments = [];
-          _dreamDocumentSet = true;
-          for (final document in snapshot.docs) {
-            _dreamDocuments.add(
-              DreamDocument(
-                text: document.data()['text'] as String,
-                timestamp: document.data()['timestamp'] as int,
-              ),
-            );
-          }
-          notifyListeners();
-        });
+        _userStored = user;
         _userDocumentSubscription = FirebaseFirestore.instance
             .collection('user')
             .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -85,7 +72,7 @@ class ApplicationState extends ChangeNotifier {
               birthCity: snapshot.docs[0].data()['birthCity'] as String,
               birthdayTimestampUTC: snapshot.docs[0].data()['timestamp'] as int,
               birthCountryCode:
-              snapshot.docs[0].data()['birthCountryCode'] as String,
+                  snapshot.docs[0].data()['birthCountryCode'] as String,
               sunZodiac: ZodiacEnum.fromString(
                   snapshot.docs[0].data()['sunZodiac'] as String),
               lunarZodiac: ZodiacEnum.fromString(
@@ -109,6 +96,24 @@ class ApplicationState extends ChangeNotifier {
           }
           notifyListeners();
         });
+        _dreamDocumentSubscription = FirebaseFirestore.instance
+            .collection('dream')
+            .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .orderBy('timestamp', descending: true)
+            .snapshots()
+            .listen((snapshot) {
+          _dreamDocuments = [];
+          _dreamDocumentSet = true;
+          for (final document in snapshot.docs) {
+            _dreamDocuments.add(
+              DreamDocument(
+                text: document.data()['text'] as String,
+                timestamp: document.data()['timestamp'] as int,
+              ),
+            );
+          }
+          notifyListeners();
+        });
       } else {
         _loggedIn = false;
         _dreamDocuments = [];
@@ -122,13 +127,13 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-
-
   Future<void> destroy() async {
+    _loggedIn = false;
+    _dreamDocuments = [];
+    _dreamDocumentSet = false;
     _userDocument = null;
     _userDocumentSet = false;
     _userDocumentSubscription?.cancel();
-    _dreamDocuments = [];
     _dreamDocumentSubscription?.cancel();
     notifyListeners();
   }

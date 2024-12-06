@@ -127,5 +127,7 @@
   "preferNotToAnswer": "Prefer not to answer",
   "other": "Other",
   "save_user_data": "Save data",
-  "no_dreams": "You don't dream yet with us"
+  "no_dreams": "You don't dream yet with us",
+  "empty_user_form_button": "Fill data",
+  "empty_user_form_text": "Fill data and feel happy with our horoscopes"
 }

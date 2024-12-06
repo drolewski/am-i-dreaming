@@ -1,4 +1,4 @@
-import 'package:am_i_dreaming/app_state.dart';
+import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/util/date_formater.dart';
 import 'package:flutter/cupertino.dart';

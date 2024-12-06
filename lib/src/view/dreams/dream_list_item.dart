@@ -34,7 +34,7 @@ class _DreamListItemState extends State<DreamListItem> {
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
                     onTap: () {
-                      context.push("/dream/${widget.dreamIndex}");
+                      context.push("/dreams/${widget.dreamIndex}");
                     },
                     child: DreamListRow(dream: widget.dream)))));
   }
