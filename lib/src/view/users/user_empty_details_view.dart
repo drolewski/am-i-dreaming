@@ -1,10 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-class UserEmptyDetailsView extends StatelessWidget {
+import '../../state/app_state.dart';
+
+class UserEmptyDetailsView extends StatefulWidget {
   const UserEmptyDetailsView({super.key});
 
+  @override
+  State<UserEmptyDetailsView> createState() => _UserEmptyDetailsViewState();
+}
+
+class _UserEmptyDetailsViewState extends State<UserEmptyDetailsView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -26,6 +35,29 @@ class UserEmptyDetailsView extends StatelessWidget {
                           child: Text(AppLocalizations.of(context)!
                               .empty_user_form_button),
                           onPressed: () => context.push("/user/form"))),
+                  Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: Center(
+                          child: SizedBox(
+                              width: double.infinity,
+                              child: Consumer<ApplicationState>(
+                                  builder: (context, appState, child) =>
+                                      CupertinoButton(
+                                          child: Text(
+                                              style: const TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w400),
+                                              AppLocalizations.of(context)!
+                                                  .logout),
+                                          onPressed: () {
+                                            _signOut(appState);
+                                          })))))
                 ])));
+  }
+
+  Future<void> _signOut(ApplicationState appState) async {
+    await FirebaseAuth.instance.signOut();
+    context.pushReplacement("/login");
+    appState.destroy();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:am_i_dreaming/src/model/moon_model.dart';
 import 'package:am_i_dreaming/src/model/sex_enum.dart';
+import 'package:am_i_dreaming/src/model/user_astrological_details.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../firebase_options.dart';
+import '../model/user_model.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -32,9 +34,9 @@ class ApplicationState extends ChangeNotifier {
   List<DreamDocument> get dreamDocuments => _dreamDocuments;
 
   StreamSubscription<QuerySnapshot>? _userDocumentSubscription;
-  UserDocument? _userDocument = null;
+  UserDocument _userDocument = UserDocument.empty();
 
-  UserDocument? get userDocument => _userDocument;
+  UserDocument get userDocument => _userDocument;
 
   bool _userDocumentSet = false;
 
@@ -61,7 +63,7 @@ class ApplicationState extends ChangeNotifier {
             .limit(1)
             .snapshots()
             .listen((snapshot) {
-          _userDocument = null;
+          _userDocument = UserDocument.empty();
           _userDocumentSet = true;
           if (snapshot.docs.length == 1) {
             _userDocument = UserDocument(
@@ -117,7 +119,7 @@ class ApplicationState extends ChangeNotifier {
         _loggedIn = false;
         _dreamDocuments = [];
         _dreamDocumentSet = false;
-        _userDocument = null;
+        _userDocument = UserDocument.empty();
         _userDocumentSet = false;
         _userDocumentSubscription?.cancel();
         _dreamDocumentSubscription?.cancel();
@@ -130,7 +132,7 @@ class ApplicationState extends ChangeNotifier {
     _loggedIn = false;
     _dreamDocuments = [];
     _dreamDocumentSet = false;
-    _userDocument = null;
+    _userDocument = UserDocument.empty();
     _userDocumentSet = false;
     _userDocumentSubscription?.cancel();
     _dreamDocumentSubscription?.cancel();
@@ -147,5 +149,67 @@ class ApplicationState extends ChangeNotifier {
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });
+  }
+
+  Future<DocumentReference> saveData(UserModel user) async {
+    if (!loggedIn) {
+      throw Exception('Must be logged in');
+    }
+    final userAstrologicalDetails =
+        await _userAstrologicalDetails(user.birthdayTimestampUTC);
+
+    return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
+      'name': user.name,
+      'sex': user.sex,
+      'birthCity': user.birthCity,
+      'birthdayTimestampUTC': user.birthdayTimestampUTC,
+      'birthCountryCode': user.birthCountryCode,
+      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
+      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
+      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
+      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
+      'moonPhase': userAstrologicalDetails.moonPhase.name,
+      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
+      'sunReturnDate': userAstrologicalDetails
+          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
+      'moonReturnDate': userAstrologicalDetails
+          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
+      'ascendant': userAstrologicalDetails.ascendant.name,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+    });
+  }
+
+  Future<void> updateUserData() async {
+    if (!loggedIn) {
+      throw Exception('Must be logged in');
+    }
+
+    final userAstrologicalDetails =
+        await _userAstrologicalDetails(userDocument.birthdayTimestampUTC);
+
+    return FirebaseFirestore.instance
+        .collection('user')
+        .doc(userDocument.id)
+        .update({
+      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
+      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
+      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
+      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
+      'moonPhase': userAstrologicalDetails.moonPhase.name,
+      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
+      'sunReturnDate': userAstrologicalDetails
+          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
+      'moonReturnDate': userAstrologicalDetails
+          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
+      'ascendant': userAstrologicalDetails.ascendant.name,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+    });
+  }
+
+  Future<UserAstrologicalDetails> _userAstrologicalDetails(
+      int timestamp) async {
+    return await userAstrologicalDetailsCalculator.userAstrologicalDetails(
+        timestamp); // TODO there is problem - move it into theedge function.
   }
 }

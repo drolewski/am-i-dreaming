@@ -1,3 +1,4 @@
+import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/view/users/user_details_view.dart';
 import 'package:am_i_dreaming/src/view/users/user_empty_details_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,7 @@ class UserView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
         builder: (context, appState, _) =>
-            appState.userDocument == null && appState.userDocumentSet
+            appState.userDocument == UserDocument.empty()
                 ? const UserEmptyDetailsView()
                 : const UserDetailsView());
   }

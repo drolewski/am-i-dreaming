@@ -22,7 +22,8 @@ class UserAstrologicalDetailsCalculator {
   late final JulianDayCalculator julianDayCalculator;
   late final PlanetReturnCalculator planetReturnCalculator;
 
-  UserAstrologicalDetails userAstrologicalDetails(int birthDateTimestampUTC) {
+  Future<UserAstrologicalDetails> userAstrologicalDetails(
+      int birthDateTimestampUTC) async {
     final julianDay =
         julianDayCalculator.calculateJulianDay(birthDateTimestampUTC);
     final sunZodiacValue = zodiacCalculator.sunZodiac(birthDateTimestampUTC);
@@ -35,7 +36,7 @@ class UserAstrologicalDetailsCalculator {
     final ascendantZodiac = astrologicalHouseCalculator.ascendant(julianDay);
     final planetReturn =
         planetReturnCalculator.calculatePlanetReturn(birthDateTimestampUTC);
-    return UserAstrologicalDetails(
+    return Future.value(UserAstrologicalDetails(
         sunZodiac: sunZodiacValue,
         lunarZodiac: lunarZodiacValue,
         zodiacElement: zodiacElement,
@@ -43,6 +44,6 @@ class UserAstrologicalDetailsCalculator {
         moonPhase: moonPhaseValue,
         houses: astrologicalHouseList,
         ascendant: ascendantZodiac,
-        planetReturn: planetReturn);
+        planetReturn: planetReturn));
   }
 }

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
+import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/service/country_provider.dart';
 import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:am_i_dreaming/src/view/users/user_details_records.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,6 @@ import '../../component/detail_record.dart';
 import '../../logic/zodiac/translate/element_translator.dart';
 import '../../logic/zodiac/translate/quality_translator.dart';
 import '../../model/sex_enum.dart';
-import '../../service/user_astrological_details_calculator.dart';
 import '../../util/date_formater.dart';
 
 class UserDetailsView extends StatefulWidget {
@@ -32,12 +31,12 @@ class _UserDetailsViewState extends State<UserDetailsView> {
 
   bool get isLoading => _isLoading;
   final CountryProvider countryProvider = CountryProvider();
-  final userAstrologicalDetailsCalculator = UserAstrologicalDetailsCalculator();
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
-        builder: (context, appState, child) => isLoading
+        builder: (context, appState, child) => isLoading &&
+                appState.userDocument == UserDocument.empty()
             ? const Center(child: CircularProgressIndicator.adaptive())
             : CupertinoPageScaffold(
                 navigationBar: CupertinoNavigationBar(
@@ -47,11 +46,10 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                           _isLoading = true;
                         });
                         try {
-                          await _performUpdateAction(
-                              appState); // Await the action.
+                          await appState.updateUserData();
                         } finally {
                           setState(() {
-                            _isLoading = false; // Reset loading state.
+                            _isLoading = false;
                           });
                         }
                       },
@@ -70,73 +68,73 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                           children: [
                             const PremiumButton(),
                             Text(
-                              appState.userDocument!.name,
+                              appState.userDocument.name,
                               style: const TextStyle(
                                   fontSize: 36, fontWeight: FontWeight.w600),
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.birth_date,
                               value: formatTimestampToDateTime(context,
-                                  appState.userDocument!.birthdayTimestampUTC),
+                                  appState.userDocument.birthdayTimestampUTC),
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.birth_place,
                               value:
-                                  "${appState.userDocument!.birthCity}, ${countryProvider.getCountryName(context, appState.userDocument!.birthCountryCode)}",
+                                  "${appState.userDocument.birthCity}, ${countryProvider.getCountryName(context, appState.userDocument.birthCountryCode)}",
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.sex,
                               value: SexEnum.translate(
-                                  context, appState.userDocument!.sex),
+                                  context, appState.userDocument.sex),
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.sun_zodiac,
                               value: toZodiacRecord(
-                                  context, appState.userDocument!.sunZodiac),
+                                  context, appState.userDocument.sunZodiac),
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.lunar_zodiac,
                               value: toZodiacRecord(
-                                  context, appState.userDocument!.lunarZodiac),
+                                  context, appState.userDocument.lunarZodiac),
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.ascendant,
                               value: toZodiacRecord(
-                                  context, appState.userDocument!.ascendant),
+                                  context, appState.userDocument.ascendant),
                             ),
                             DetailsRecord(
                               label:
                                   AppLocalizations.of(context)!.zodiac_element,
-                              value: translateElement(context,
-                                  appState.userDocument!.zodiacElement),
+                              value: translateElement(
+                                  context, appState.userDocument.zodiacElement),
                             ),
                             DetailsRecord(
                               label:
                                   AppLocalizations.of(context)!.zodiac_quality,
-                              value: translateQuality(context,
-                                  appState.userDocument!.zodiacQuality),
+                              value: translateQuality(
+                                  context, appState.userDocument.zodiacQuality),
                             ),
                             DetailsRecord(
                               label: AppLocalizations.of(context)!.moon_phase,
                               value: toMoonPhaseRecord(
-                                  context, appState.userDocument!.moonPhase),
+                                  context, appState.userDocument.moonPhase),
                             ),
                             DetailListRecord(
                                 label: AppLocalizations.of(context)!
                                     .astrological_house,
                                 values: toHousesRecords(
-                                    context, appState.userDocument!.houses)),
+                                    context, appState.userDocument.houses)),
                             DetailsRecord(
                               label:
                                   AppLocalizations.of(context)!.next_sun_return,
-                              value: formatTimestampToDateTime(context,
-                                  appState.userDocument!.sunReturnDate),
+                              value: formatTimestampToDateTime(
+                                  context, appState.userDocument.sunReturnDate),
                             ),
                             DetailsRecord(
                                 label: AppLocalizations.of(context)!
                                     .next_moon_return,
                                 value: formatTimestampToDateTime(context,
-                                    appState.userDocument!.moonReturnDate)),
+                                    appState.userDocument.moonReturnDate)),
                             Container(
                                 margin: const EdgeInsets.only(top: 10),
                                 child: Center(
@@ -173,31 +171,6 @@ class _UserDetailsViewState extends State<UserDetailsView> {
     await FirebaseAuth.instance.signOut();
     appState.destroy();
     context.pushReplacement("/");
-  }
-
-  Future<void> _performUpdateAction(ApplicationState appState) async {
-    if (!appState.loggedIn) {
-      throw Exception('Must be logged in');
-    }
-    final userAstrologicalDetails = userAstrologicalDetailsCalculator
-        .userAstrologicalDetails(DateTime.now().millisecondsSinceEpoch);
-    return FirebaseFirestore.instance
-        .collection('user')
-        .doc(appState.userDocument!.id)
-        .update({
-      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
-      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
-      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
-      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
-      'moonPhase': userAstrologicalDetails.moonPhase.name,
-      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
-      'sunReturnDate': userAstrologicalDetails
-          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
-      'moonReturnDate': userAstrologicalDetails
-          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
-      'ascendant': userAstrologicalDetails.ascendant.name,
-      'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
   }
 
   @pragma('vm:entry-point')

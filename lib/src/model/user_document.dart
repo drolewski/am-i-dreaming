@@ -40,4 +40,35 @@ class UserDocument {
   final ZodiacEnum ascendant;
   final int timestamp;
   final String userId;
+
+  @override
+  bool operator ==(Object other) {
+    return other is UserDocument &&
+        other.id == id &&
+        other.userId == userId &&
+        other.birthdayTimestampUTC == other.birthdayTimestampUTC &&
+        other.timestamp == other.timestamp &&
+        other.name == other.name;
+  }
+
+  static empty() {
+    return UserDocument(
+        id: "",
+        name: "name",
+        sex: SexEnum.other,
+        birthCity: "",
+        birthdayTimestampUTC: 0,
+        birthCountryCode: "",
+        sunZodiac: ZodiacEnum.unknown,
+        lunarZodiac: ZodiacEnum.unknown,
+        zodiacElement: ZodiacElementEnum.unknown,
+        zodiacQuality: ZodiacQualityEnum.unknown,
+        moonPhase: MoonPhaseEnum.fullMoon,
+        houses: List.empty(),
+        sunReturnDate: 0,
+        moonReturnDate: 0,
+        ascendant: ZodiacEnum.unknown,
+        timestamp: 0,
+        userId: "");
+  }
 }
