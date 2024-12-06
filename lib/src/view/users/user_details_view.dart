@@ -168,9 +168,9 @@ class _UserDetailsViewState extends State<UserDetailsView> {
   }
 
   Future<void> _signOut(ApplicationState appState) async {
+    context.pushReplacement("/login");
     await FirebaseAuth.instance.signOut();
     appState.destroy();
-    context.pushReplacement("/");
   }
 
   @pragma('vm:entry-point')
