@@ -2,7 +2,7 @@
 
 ## Important
 
-- Integrate with chat-gpt
+- Integrate with chat-gpt maybe gemini with easier integration and better image generation 
 - Integrate with edge function
 - Generate horoscope
 - Integrate with firebase storage
