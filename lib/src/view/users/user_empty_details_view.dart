@@ -23,12 +23,12 @@ class _UserEmptyDetailsViewState extends State<UserEmptyDetailsView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                       child: Text(
                           style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.w600),
-                          "Uzupełnij dane i ciesz się naszymi horoskopami")),
+                          AppLocalizations.of(context)!.empty_user_form_text)),
                   SizedBox(
                       width: double.infinity,
                       child: CupertinoButton.filled(
