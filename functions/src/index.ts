@@ -9,10 +9,14 @@ export const astrologicalCalculator =
     onCall<AstrologicalCalculatorRequest, AstrologicalData>(
         ({data}) => {
             logger.info(
-                `Astrological calculator call with birthday timestamp:
-            ${data.birthdayTimestamp},`,
+                `Astrological calculator call with birthday timestamp:${data.birthdayTimestamp}`,
                 {structuredData: true}
             );
-            return calculateAstrologicalData(data.birthdayTimestamp);
+            const astrologicalData = calculateAstrologicalData(data.birthdayTimestamp);
+            logger.info(
+                `Astrological data calculation finished ${astrologicalData}`,
+                {structuredData: true}
+            );
+            return astrologicalData;
         }
     );

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:am_i_dreaming/src/model/moon_model.dart';
 import 'package:am_i_dreaming/src/model/sex_enum.dart';
-import 'package:am_i_dreaming/src/model/user_astrological_details.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.dart';
@@ -152,33 +151,38 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<DocumentReference> saveData(UserModel user) async {
+  Future<DocumentReference?> saveData(
+      UserModel user, AstrologicalData? astrologicalData) async {
     if (!loggedIn) {
       throw Exception('Must be logged in');
     }
-    final userAstrologicalDetails =
-        await _userAstrologicalDetails(user.birthdayTimestampUTC);
 
-    return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
-      'name': user.name,
-      'sex': user.sex,
-      'birthCity': user.birthCity,
-      'birthdayTimestampUTC': user.birthdayTimestampUTC,
-      'birthCountryCode': user.birthCountryCode,
-      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
-      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
-      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
-      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
-      'moonPhase': userAstrologicalDetails.moonPhase.name,
-      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
-      'sunReturnDate': userAstrologicalDetails
-          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
-      'moonReturnDate': userAstrologicalDetails
-          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
-      'ascendant': userAstrologicalDetails.ascendant.name,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
+    print(astrologicalData);
+    print(astrologicalData != null);
+    if (astrologicalData != null) {
+      print(astrologicalData.sunZodiac);
+      return FirebaseFirestore.instance
+          .collection('user')
+          .add(<String, dynamic>{
+        'name': user.name,
+        'sex': user.sex,
+        'birthCity': user.birthCity,
+        'birthdayTimestampUTC': user.birthdayTimestampUTC,
+        'birthCountryCode': user.birthCountryCode,
+        'sunZodiac': astrologicalData.sunZodiac,
+        'lunarZodiac': astrologicalData.lunarZodiac,
+        'zodiacElement': astrologicalData.zodiacElement,
+        'zodiacQuality': astrologicalData.zodiacQuality,
+        'moonPhase': astrologicalData.moonPhase,
+        'houses': astrologicalData.astrologicalHouses,
+        'sunReturnDate': astrologicalData.planetReturns.sunReturnDate,
+        'moonReturnDate': astrologicalData.planetReturns.moonReturnDate,
+        'ascendant': astrologicalData.ascendantZodiac,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'userId': FirebaseAuth.instance.currentUser!.uid,
+      });
+    }
+    return null;
   }
 
   Future<void> updateUserData(AstrologicalData? astrologicalData) async {
@@ -203,11 +207,5 @@ class ApplicationState extends ChangeNotifier {
         'userId': FirebaseAuth.instance.currentUser!.uid,
       });
     }
-  }
-
-  Future<UserAstrologicalDetails> _userAstrologicalDetails(
-      int timestamp) async {
-    return await userAstrologicalDetailsCalculator.userAstrologicalDetails(
-        timestamp); // TODO there is problem - move it into theedge function.
   }
 }

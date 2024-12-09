@@ -1,3 +1,5 @@
+import * as logger from "firebase-functions/logger";
+
 export interface AstrologicalCalculatorRequest {
     birthdayTimestamp: number;
     text: string
@@ -22,15 +24,25 @@ interface PlanetReturns {
 export const calculateAstrologicalData = (birthdayTimestamp: number
 ): AstrologicalData => {
     const birthdayDate = new Date(birthdayTimestamp);
+    logger.info(`${birthdayDate}`, {structuredData: true});
     const julianDay = calculateJulianDay(birthdayDate);
+    logger.info(`${julianDay}`, {structuredData: true});
     const sunZodiac = calculateSunZodiac(birthdayDate);
+    logger.info(`${sunZodiac}`, {structuredData: true});
     const zodiacElement = calculateZodiacElement(sunZodiac);
+    logger.info(`${zodiacElement}`, {structuredData: true});
     const zodiacQuality = calculateZodiacQuality(sunZodiac);
+    logger.info(`${zodiacQuality}`, {structuredData: true});
     const lunarZodiac = calculateLunarZodiac(julianDay);
+    logger.info(`${lunarZodiac}`, {structuredData: true});
     const moonPhase = calculateMoonPhase(julianDay);
+    logger.info(`${moonPhase}`, {structuredData: true});
     const ascendantZodiac = calculateAscendant(julianDay);
+    logger.info(`${ascendantZodiac}`, {structuredData: true});
     const astrologicalHouses = calculateAstrologicalHouses(julianDay);
+    logger.info(`${astrologicalHouses}`, {structuredData: true});
     const planetReturns = calculatePlanetReturn(julianDay);
+    logger.info(`${planetReturns}`, {structuredData: true});
 
     return {
         sunZodiac: sunZodiac,
@@ -304,7 +316,7 @@ const calculatePlanetReturn = (birthdayJulianDate: number): PlanetReturns => {
             moonDay = today;
         }
 
-        today = newDate(today, 1);
+        today = newDate(today, 90);
         candidateJulianDay = calculateJulianDay(today);
     }
 
@@ -314,10 +326,8 @@ const calculatePlanetReturn = (birthdayJulianDate: number): PlanetReturns => {
     };
 };
 
-const newDate = (baseDate: Date, durationMin: number): Date => {
-    const newDate = new Date(baseDate);
-    newDate.setMinutes(baseDate.getMinutes() + durationMin);
-    return newDate;
+const newDate = (baseDate: Date, durationSeconds: number): Date => {
+    return new Date(baseDate.getTime() + durationSeconds * 1000);
 };
 
 const calculateSunPosition = (julianDay: number): number => {
@@ -348,7 +358,5 @@ const calculateMoonLongitude = (julianDay: number): number => {
     const C = 1.914602 *
         Math.sin(M * Math.PI / 180) +
         0.019993 * Math.sin(2 * M * Math.PI / 180);
-    const trueLongitude = (L0 + C + mPrime + F) % 360;
-
-    return trueLongitude;
+    return (L0 + C + mPrime + F) % 360;
 };

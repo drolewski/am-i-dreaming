@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../../functions/astrological_calculator.dart';
 import '../../model/sex_enum.dart';
 
 class UserForm extends StatefulWidget {
@@ -368,7 +369,12 @@ class _UserFormState extends State<UserForm> {
                                                       _selectedCountryIndex]
                                                   .countryCode);
                                           try {
-                                            await appState.saveData(userModel);
+                                            var userAstrologicalData =
+                                                await astrologicalCalculator(
+                                                    context,
+                                                    userModel.birthdayTimestampUTC);
+                                            await appState.saveData(userModel,
+                                                userAstrologicalData);
                                           } finally {
                                             setState(() {
                                               _isReloading = false;
