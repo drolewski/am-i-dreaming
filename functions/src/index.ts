@@ -9,11 +9,15 @@
 
 import {onRequest} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
+import {setGlobalOptions} from "firebase-functions";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
+setGlobalOptions({region: "europe-west1"});
+
 export const helloWorld = onRequest((request, response) => {
   logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
+  response.status(200);
+  response.send(JSON.stringify({data: {message: "Hello from Firebase!"}}));
 });
