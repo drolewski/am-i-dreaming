@@ -13,6 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../firebase_options.dart';
+import '../functions/astrological_calculator.dart';
 import '../model/user_model.dart';
 
 class ApplicationState extends ChangeNotifier {
@@ -180,31 +181,28 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<void> updateUserData() async {
+  Future<void> updateUserData(AstrologicalData? astrologicalData) async {
     if (!loggedIn) {
       throw Exception('Must be logged in');
     }
 
-    final userAstrologicalDetails =
-        await _userAstrologicalDetails(userDocument.birthdayTimestampUTC);
-
-    return FirebaseFirestore.instance
-        .collection('user')
-        .doc(userDocument.id)
-        .update({
-      'sunZodiac': userAstrologicalDetails.sunZodiac.name,
-      'lunarZodiac': userAstrologicalDetails.lunarZodiac.name,
-      'zodiacElement': userAstrologicalDetails.zodiacElement.name,
-      'zodiacQuality': userAstrologicalDetails.zodiacQuality.name,
-      'moonPhase': userAstrologicalDetails.moonPhase.name,
-      'houses': userAstrologicalDetails.houses.map((h) => h.name).toList(),
-      'sunReturnDate': userAstrologicalDetails
-          .planetReturn.sunReturnDate.millisecondsSinceEpoch,
-      'moonReturnDate': userAstrologicalDetails
-          .planetReturn.moonReturnDate.millisecondsSinceEpoch,
-      'ascendant': userAstrologicalDetails.ascendant.name,
-      'userId': FirebaseAuth.instance.currentUser!.uid,
-    });
+    if (astrologicalData != null) {
+      return FirebaseFirestore.instance
+          .collection('user')
+          .doc(userDocument.id)
+          .update({
+        'sunZodiac': astrologicalData.sunZodiac,
+        'lunarZodiac': astrologicalData.lunarZodiac,
+        'zodiacElement': astrologicalData.zodiacElement,
+        'zodiacQuality': astrologicalData.zodiacQuality,
+        'moonPhase': astrologicalData.moonPhase,
+        'houses': astrologicalData.astrologicalHouses,
+        'sunReturnDate': astrologicalData.planetReturns.sunReturnDate,
+        'moonReturnDate': astrologicalData.planetReturns.moonReturnDate,
+        'ascendant': astrologicalData.ascendantZodiac,
+        'userId': FirebaseAuth.instance.currentUser!.uid,
+      });
+    }
   }
 
   Future<UserAstrologicalDetails> _userAstrologicalDetails(

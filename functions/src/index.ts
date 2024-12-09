@@ -1,23 +1,18 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
-import {onRequest} from "firebase-functions/v2/https";
+import {onCall} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 import {setGlobalOptions} from "firebase-functions";
-
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+import {AstrologicalCalculatorRequest, AstrologicalData, calculateAstrologicalData} from "./astrologicalCalculator";
 
 setGlobalOptions({region: "europe-west1"});
 
-export const helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
-  response.status(200);
-  response.send(JSON.stringify({data: {message: "Hello from Firebase!"}}));
-});
+export const astrologicalCalculator =
+    onCall<AstrologicalCalculatorRequest, AstrologicalData>(
+        ({data}) => {
+            logger.info(
+                `Astrological calculator call with birthday timestamp:
+            ${data.birthdayTimestamp},`,
+                {structuredData: true}
+            );
+            return calculateAstrologicalData(data.birthdayTimestamp);
+        }
+    );

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
 import 'package:am_i_dreaming/src/component/premium_button.dart';
-import 'package:am_i_dreaming/src/model/user_document.dart';
+import 'package:am_i_dreaming/src/functions/astrological_calculator.dart';
 import 'package:am_i_dreaming/src/service/country_provider.dart';
 import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:am_i_dreaming/src/view/users/user_details_records.dart';
@@ -35,8 +35,7 @@ class _UserDetailsViewState extends State<UserDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationState>(
-        builder: (context, appState, child) => isLoading &&
-                appState.userDocument == UserDocument.empty()
+        builder: (context, appState, child) => isLoading
             ? const Center(child: CircularProgressIndicator.adaptive())
             : CupertinoPageScaffold(
                 navigationBar: CupertinoNavigationBar(
@@ -46,7 +45,10 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                           _isLoading = true;
                         });
                         try {
-                          await appState.updateUserData();
+                          var userAstrologicalData =
+                              await astrologicalCalculator(context,
+                                  appState.userDocument.birthdayTimestampUTC);
+                          await appState.updateUserData(userAstrologicalData);
                         } finally {
                           setState(() {
                             _isLoading = false;
