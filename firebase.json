@@ -1,1 +1,44 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"am-i-dreaming","appId":"1:341744325210:android:2980c013bd538c69c77e63","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"am-i-dreaming","appId":"1:341744325210:ios:644847e949d8f3bbc77e63","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"am-i-dreaming","configurations":{"android":"1:341744325210:android:2980c013bd538c69c77e63","ios":"1:341744325210:ios:644847e949d8f3bbc77e63"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "am-i-dreaming",
+          "appId": "1:341744325210:android:2980c013bd538c69c77e63",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "am-i-dreaming",
+          "appId": "1:341744325210:ios:644847e949d8f3bbc77e63",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "am-i-dreaming",
+          "configurations": {
+            "android": "1:341744325210:android:2980c013bd538c69c77e63",
+            "ios": "1:341744325210:ios:644847e949d8f3bbc77e63"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": []
+    }
+  ]
+}
