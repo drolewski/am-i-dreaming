@@ -157,10 +157,7 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
-    print(astrologicalData);
-    print(astrologicalData != null);
     if (astrologicalData != null) {
-      print(astrologicalData.sunZodiac);
       return FirebaseFirestore.instance
           .collection('user')
           .add(<String, dynamic>{

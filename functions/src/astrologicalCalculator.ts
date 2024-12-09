@@ -1,5 +1,3 @@
-import * as logger from "firebase-functions/logger";
-
 export interface AstrologicalCalculatorRequest {
     birthdayTimestamp: number;
     text: string
@@ -24,25 +22,15 @@ interface PlanetReturns {
 export const calculateAstrologicalData = (birthdayTimestamp: number
 ): AstrologicalData => {
     const birthdayDate = new Date(birthdayTimestamp);
-    logger.info(`${birthdayDate}`, {structuredData: true});
     const julianDay = calculateJulianDay(birthdayDate);
-    logger.info(`${julianDay}`, {structuredData: true});
     const sunZodiac = calculateSunZodiac(birthdayDate);
-    logger.info(`${sunZodiac}`, {structuredData: true});
     const zodiacElement = calculateZodiacElement(sunZodiac);
-    logger.info(`${zodiacElement}`, {structuredData: true});
     const zodiacQuality = calculateZodiacQuality(sunZodiac);
-    logger.info(`${zodiacQuality}`, {structuredData: true});
     const lunarZodiac = calculateLunarZodiac(julianDay);
-    logger.info(`${lunarZodiac}`, {structuredData: true});
     const moonPhase = calculateMoonPhase(julianDay);
-    logger.info(`${moonPhase}`, {structuredData: true});
     const ascendantZodiac = calculateAscendant(julianDay);
-    logger.info(`${ascendantZodiac}`, {structuredData: true});
     const astrologicalHouses = calculateAstrologicalHouses(julianDay);
-    logger.info(`${astrologicalHouses}`, {structuredData: true});
     const planetReturns = calculatePlanetReturn(julianDay);
-    logger.info(`${planetReturns}`, {structuredData: true});
 
     return {
         sunZodiac: sunZodiac,
