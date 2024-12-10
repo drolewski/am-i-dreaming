@@ -71,7 +71,7 @@ class ApplicationState extends ChangeNotifier {
               name: snapshot.docs[0].data()['name'] as String,
               sex: SexEnum.fromString(snapshot.docs[0].data()['sex'] as String),
               birthCity: snapshot.docs[0].data()['birthCity'] as String,
-              birthdayTimestampUTC: snapshot.docs[0].data()['timestamp'] as int,
+              birthdayTimestampUTC: snapshot.docs[0].data()['birthdayTimestampUTC'] as int,
               birthCountryCode:
                   snapshot.docs[0].data()['birthCountryCode'] as String,
               sunZodiac: ZodiacEnum.fromString(
@@ -156,6 +156,8 @@ class ApplicationState extends ChangeNotifier {
     if (!loggedIn) {
       throw Exception('Must be logged in');
     }
+
+    print(user.birthdayTimestampUTC);
 
     if (astrologicalData != null) {
       return FirebaseFirestore.instance

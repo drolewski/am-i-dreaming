@@ -395,6 +395,7 @@ class _UserFormState extends State<UserForm> {
   }
 
   int birthDateTimestampUTC() {
+    print(_birthDate);
     return DateTime(_birthDate.year, _birthDate.month, _birthDate.day,
             _birthTime.hour, _birthTime.minute)
         .toUtc()
