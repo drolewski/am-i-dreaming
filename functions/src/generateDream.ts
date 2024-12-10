@@ -10,7 +10,7 @@ export const generateDream = async (bucket: Bucket, db: Firestore, dreamId: stri
 
     if (dream.exists) {
         const dreamData = dream.data();
-        const filename = await generateImage(bucket, dreamData?.prompt as string);
+        const filename = await generateImage(bucket, (dreamData?.prompt ?? dreamData?.text) as string);
         const signedUrl = await getSignedUrl(bucket, filename);
         await db.collection("dream").doc(dreamId).set({url: signedUrl.url}, {merge: true});
         return signedUrl;

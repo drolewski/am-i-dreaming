@@ -111,6 +111,8 @@ class ApplicationState extends ChangeNotifier {
                 id: document.id,
                 text: document.data()['text'] as String,
                 timestamp: document.data()['timestamp'] as int,
+                prompt: document.data()['prompt'] as String? ?? "",
+                url: document.data()['url'] as String? ?? "",
               ),
             );
           }

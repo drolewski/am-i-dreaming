@@ -1,10 +1,12 @@
 import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:am_i_dreaming/src/util/date_formater.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+
+import '../../../functions/dream.dart';
 
 class DreamDetails extends StatefulWidget {
   const DreamDetails({super.key, required this.dreamIndex});
@@ -16,43 +18,69 @@ class DreamDetails extends StatefulWidget {
 }
 
 class _DreamDetailsState extends State<DreamDetails> {
+  bool _isLoading = false;
 
-  List fruit = [];
+  bool get isLoading => _isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ApplicationState>(builder: (context, appState, _) {
-      return CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            middle: Text(formatTimestampToDate(
-                context, appState.dreamDocuments[widget.dreamIndex].timestamp)),
-          ),
-          child: SafeArea(
-              child: Padding(
-                  padding:
-                      const EdgeInsets.only(top: 20, left: 20.0, right: 20.0),
-                  child: Column(children: [
-                    SizedBox(
-                        width: double.infinity,
-                        child: CupertinoButton(
-                            child: Text(AppLocalizations.of(context)!
-                                .generate_dream_picture_button),
-                            onPressed: () async {
-                              print("generuj");
-                              await dream(context, appState.dreamDocuments[widget.dreamIndex].id);
-                            })),
-                    const PremiumButton(),
-                    Text(appState.dreamDocuments[widget.dreamIndex].text),
-                  ]))));
-    });
+    return Consumer<ApplicationState>(
+        builder: (context, appState, _) => isLoading
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  middle: Text(formatTimestampToDate(context,
+                      appState.dreamDocuments[widget.dreamIndex].timestamp)),
+                ),
+                child: SafeArea(
+                    child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 20, left: 20.0, right: 20.0),
+                        child: Column(children: [
+                          _generatedImage(appState),
+                          _generateImageButton(appState, context),
+                          const PremiumButton(),
+                          Text(appState.dreamDocuments[widget.dreamIndex].text),
+                        ])))));
   }
 
-  Future<void> dream(
-      BuildContext context, String dreamId) async {
-    print(dreamId);
-    final result = await FirebaseFunctions.instanceFor(region: "europe-west1")
-        .httpsCallable('dream')
-        .call({"dreamId": dreamId});
-    print(result);
+  Widget _generatedImage(ApplicationState appState) {
+    return appState.dreamDocuments[widget.dreamIndex].url.isNotEmpty
+        ? Image.network(loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return Center(
+                child: loadingProgress.expectedTotalBytes != null &&
+                        loadingProgress.cumulativeBytesLoaded <
+                            loadingProgress.expectedTotalBytes!
+                    ? const CircularProgressIndicator.adaptive()
+                    : const SizedBox.shrink());
+          },
+            fit: BoxFit.scaleDown,
+            appState.dreamDocuments[widget.dreamIndex].url)
+        : const SizedBox.shrink();
+  }
+
+  SizedBox _generateImageButton(
+      ApplicationState appState, BuildContext context) {
+    return appState.dreamDocuments[widget.dreamIndex].url.isEmpty
+        ? SizedBox(
+            width: double.infinity,
+            child: CupertinoButton(
+                child: Text(AppLocalizations.of(context)!
+                    .generate_dream_picture_button),
+                onPressed: () async {
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  await dream(
+                      context, appState.dreamDocuments[widget.dreamIndex].id);
+                  setState(() {
+                    _isLoading = false;
+                  });
+                }))
+        : const SizedBox.shrink();
   }
 }
