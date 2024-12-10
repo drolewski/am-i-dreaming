@@ -108,6 +108,7 @@ class ApplicationState extends ChangeNotifier {
           for (final document in snapshot.docs) {
             _dreamDocuments.add(
               DreamDocument(
+                id: document.id,
                 text: document.data()['text'] as String,
                 timestamp: document.data()['timestamp'] as int,
               ),

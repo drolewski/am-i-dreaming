@@ -1,6 +1,7 @@
 import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:am_i_dreaming/src/util/date_formater.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -38,10 +39,20 @@ class _DreamDetailsState extends State<DreamDetails> {
                                 .generate_dream_picture_button),
                             onPressed: () async {
                               print("generuj");
+                              await dream(context, appState.dreamDocuments[widget.dreamIndex].id);
                             })),
                     const PremiumButton(),
                     Text(appState.dreamDocuments[widget.dreamIndex].text),
                   ]))));
     });
+  }
+
+  Future<void> dream(
+      BuildContext context, String dreamId) async {
+    print(dreamId);
+    final result = await FirebaseFunctions.instanceFor(region: "europe-west1")
+        .httpsCallable('dream')
+        .call({"dreamId": dreamId});
+    print(result);
   }
 }
