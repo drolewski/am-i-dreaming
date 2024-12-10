@@ -157,8 +157,6 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
-    print(user.birthdayTimestampUTC);
-
     if (astrologicalData != null) {
       return FirebaseFirestore.instance
           .collection('user')
