@@ -23,7 +23,7 @@ class DreamView extends StatelessWidget {
         Consumer<ApplicationState>(
             builder: (context, appState, _) => Center(
                   child: DreamInput(
-                      addDream: (dream) => appState.addNewDream(dream)),
+                      addDream: (dream, prompt) => appState.addNewDream(dream, prompt)),
                 ))
       ],
     )));

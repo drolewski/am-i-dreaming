@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class DreamInput extends StatefulWidget {
   const DreamInput({super.key, required this.addDream});
 
-  final FutureOr<void> Function(String dream) addDream;
+  final FutureOr<void> Function(String dream, String prompt) addDream;
 
   @override
   State<StatefulWidget> createState() => _DreamInputState();
@@ -48,7 +48,7 @@ class _DreamInputState extends State<DreamInput> {
                 child: CupertinoButton.filled(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await widget.addDream(_controller.text);
+                      await widget.addDream(_controller.text, AppLocalizations.of(context)!.dream_generation_prompt_wrapper(_controller.text));
                       _controller.clear();
                     }
                   },

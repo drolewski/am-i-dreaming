@@ -132,5 +132,14 @@
   "save_user_data": "Zapisz dane",
   "no_dreams": "Jeszcze z nami nie śniłeś",
   "empty_user_form_button": "Uzupełnij dane",
-  "empty_user_form_text": "Uzupełnij dane i ciesz się naszymi horoskopami"
+  "empty_user_form_text": "Uzupełnij dane i ciesz się naszymi horoskopami",
+  "dream_generation_prompt_wrapper": "Wyobraź sobie, że jesteś malarzem przedstawiającym ludzkie marzenia senne. Wygeneruj obraz przedstawiający następujący sen: {dreamDescription}",
+  "@dream_generation_prompt_wrapper": {
+    "description": "Dream generation prompt wrapper",
+    "placeholders": {
+      "dreamDescription": {
+        "type": "string"
+      }
+    }
+  }
 }

@@ -140,13 +140,14 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<DocumentReference> addNewDream(String dream) {
+  Future<DocumentReference> addNewDream(String dream, String prompt) {
     if (!_loggedIn) {
       throw Exception('Must be logged in');
     }
 
     return FirebaseFirestore.instance.collection('dream').add(<String, dynamic>{
       'text': dream,
+      'prompt': prompt,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });
