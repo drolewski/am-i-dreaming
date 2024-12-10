@@ -2,9 +2,11 @@
 
 ## Important
 
+- Integrate with GoogleAds
+- Moon phase of dream on dream details screen
+- Description of dream with wrapup 
 - Generate horoscope
 - Integrate with firebase storage
-- Integrate with GoogleAds
 - Integrate with Payment
 - Add only one dream per day
 - Calculate spend on single generation of image and special horoscopes.
@@ -17,7 +19,6 @@
 - test google login and logout ;) google.disconnected() ?
 - Fix typography, texts etc.
 - Configure environment variable to store gemini, ads, google login, apple login etc. api keys ???
-- Moon phase of dream on dream details screen
 - Cleanup rules on firebase from test configs
 
 ## Future tasks
