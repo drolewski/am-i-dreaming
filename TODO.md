@@ -5,7 +5,6 @@
 - Integrate with chat-gpt maybe gemini with easier integration and better image generation
 -- https://pub.dev/packages/google_generative_ai
 -- https://ai.google.dev/gemini-api/docs/get-started/tutorial?lang=dart&hl=pl
-- Integrate with edge function
 - Generate horoscope
 - Integrate with firebase storage
 - Generate dream image

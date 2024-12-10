@@ -1,3 +1,5 @@
+import * as logger from "firebase-functions/logger";
+
 export interface AstrologicalCalculatorRequest {
     birthdayTimestamp: number;
     text: string
@@ -22,15 +24,25 @@ interface PlanetReturns {
 export const calculateAstrologicalData = (birthdayTimestamp: number
 ): AstrologicalData => {
     const birthdayDate = new Date(birthdayTimestamp);
+    logger.info(`${birthdayDate}`, {structuredData: true});
     const julianDay = calculateJulianDay(birthdayDate);
+    logger.info(`${julianDay}`, {structuredData: true});
     const sunZodiac = calculateSunZodiac(birthdayDate);
+    logger.info(`${sunZodiac}`, {structuredData: true});
     const zodiacElement = calculateZodiacElement(sunZodiac);
+    logger.info(`${zodiacElement}`, {structuredData: true});
     const zodiacQuality = calculateZodiacQuality(sunZodiac);
+    logger.info(`${zodiacQuality}`, {structuredData: true});
     const lunarZodiac = calculateLunarZodiac(julianDay);
+    logger.info(`${lunarZodiac}`, {structuredData: true});
     const moonPhase = calculateMoonPhase(julianDay);
+    logger.info(`${moonPhase}`, {structuredData: true});
     const ascendantZodiac = calculateAscendant(julianDay);
+    logger.info(`${ascendantZodiac}`, {structuredData: true});
     const astrologicalHouses = calculateAstrologicalHouses(julianDay);
-    const planetReturns = calculatePlanetReturn(julianDay);
+    logger.info(`${astrologicalHouses}`, {structuredData: true});
+    const moonReturn = calculatePlanetReturn(birthdayTimestamp, "Moon");
+    const sunReturn = calculatePlanetReturn(birthdayTimestamp, "Sun");
 
     return {
         sunZodiac: sunZodiac,
@@ -40,7 +52,7 @@ export const calculateAstrologicalData = (birthdayTimestamp: number
         moonPhase: moonPhase,
         ascendantZodiac: ascendantZodiac,
         astrologicalHouses: astrologicalHouses,
-        planetReturns: planetReturns,
+        planetReturns: {sunReturnDate: sunReturn, moonReturnDate: moonReturn},
     };
 };
 
@@ -278,73 +290,26 @@ const calculateAscendant = (julianDay: number): string => {
     return signs[signIndex];
 };
 
-const calculatePlanetReturn = (birthdayJulianDate: number): PlanetReturns => {
-    const sunBirthPosition = calculateSunPosition(birthdayJulianDate);
-    const moonBirthPosition = calculateMoonLongitude(birthdayJulianDate);
-
-    let today = new Date();
-    let candidateJulianDay = calculateJulianDay(today);
-    let hasSunPosition = false;
-    let hasMoonPosition = false;
-    let sunDay = new Date();
-    let moonDay = new Date();
-    while (!hasSunPosition || !hasMoonPosition) {
-        const currentSunPosition = calculateSunPosition(candidateJulianDay);
-        const currentMoonPosition = calculateMoonLongitude(candidateJulianDay);
-
-        if (!hasSunPosition &&
-            Math.abs(currentSunPosition - sunBirthPosition) < 0.01) {
-            hasSunPosition = true;
-            sunDay = today;
-        }
-
-        if (!hasMoonPosition &&
-            Math.abs(currentMoonPosition - moonBirthPosition) < 0.001) {
-            hasMoonPosition = true;
-            moonDay = today;
-        }
-
-        today = newDate(today, 90);
-        candidateJulianDay = calculateJulianDay(today);
-    }
-
-    return {
-        moonReturnDate: moonDay.getTime(),
-        sunReturnDate: sunDay.getTime(),
-    };
+const orbitalPeriods: { [key: string]: number } = {
+    Sun: 365.25, // 1 rok
+    Mercury: 87.97, // ~88 dni
+    Venus: 224.7, // ~225 dni
+    Mars: 686.98, // ~1,88 roku
+    Jupiter: 4332.59, // ~11,86 lat
+    Saturn: 10759.22, // ~29,46 lat
+    Uranus: 30685.49, // ~84 lat
+    Neptune: 60190.03, // ~165 lat
+    Moon: 29.53, // 29 dni
 };
 
-const newDate = (baseDate: Date, durationSeconds: number): Date => {
-    return new Date(baseDate.getTime() + durationSeconds * 1000);
-};
+const calculatePlanetReturn = (birthDate: number, planet: string): number => {
+    const orbitalPeriod = orbitalPeriods[planet];
+    const daysSinceBirth = (new Date().getTime() - birthDate) / (1000 * 60 * 60 * 24);
 
-const calculateSunPosition = (julianDay: number): number => {
-    const D = julianDay - 2451545.0;
+    const completedCycles = Math.floor(daysSinceBirth / orbitalPeriod);
 
-    const L = (280.460 + 0.9856474 * D) % 360;
+    const nextReturnDays = (completedCycles + 1) * orbitalPeriod;
+    const nextReturnMilliseconds = nextReturnDays * 24 * 60 * 60 * 1000;
 
-    const g = (357.528 + 0.9856003 * D) % 360;
-
-    const lambda =
-        L + 1.915 * Math.sin(g * Math.PI / 180) +
-        0.020 * Math.sin(2 * g * Math.PI / 180);
-
-    return lambda % 360;
-};
-
-const calculateMoonLongitude = (julianDay: number): number => {
-    const T = (julianDay - 2451545.0) / 36525.0;
-
-    const L0 = (218.31617 + 481267.88134 * T +
-        0.000001003 * Math.pow(T, 2)) % 360;
-    const M = (134.96341 + 477198.86756 * T +
-        0.000000005 * Math.pow(T, 2)) % 360;
-    const mPrime =
-        (93.27209 + 483202.01753 * T + 0.000000003 * Math.pow(T, 2)) % 360;
-    const F = (0.0000003 * T) % 360;
-
-    const C = 1.914602 *
-        Math.sin(M * Math.PI / 180) +
-        0.019993 * Math.sin(2 * M * Math.PI / 180);
-    return (L0 + C + mPrime + F) % 360;
+    return new Date(birthDate + nextReturnMilliseconds).getTime();
 };
