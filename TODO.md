@@ -20,7 +20,8 @@
 - delete user account action
 - test google login and logout ;) google.disconnected() ?
 - Fix typography, texts etc.
-- Configure environment variable to store gemini, ads, google login, apple login etc. api keys ??? 
+- Configure environment variable to store gemini, ads, google login, apple login etc. api keys ???
+- Moon phase of dream on dream details screen
 
 ## Future tasks
 
