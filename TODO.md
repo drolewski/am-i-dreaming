@@ -20,6 +20,8 @@
 - Fix typography, texts etc.
 - Configure environment variable to store gemini, ads, google login, apple login etc. api keys ???
 - Cleanup rules on firebase from test configs
+- Where should i set the ads and when should I display ads?
+- Configure ads for Android.
 
 ## Future tasks
 
