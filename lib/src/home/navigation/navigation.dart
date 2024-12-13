@@ -3,6 +3,8 @@ import 'package:am_i_dreaming/src/view/users/user_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../view/horoscopes/horoscopes_options.dart';
+
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
 
@@ -41,12 +43,7 @@ class _NavigationState extends State<Navigation> {
       case 0:
         return const DreamView();
       case 1:
-        return Padding(
-            padding: const EdgeInsets.only(top: 60),
-            child: SafeArea(
-                child: Column(children: [
-              Text("horoscopy"),
-            ])));
+        return const HoroscopesOptions();
       case 2:
         return const UserView();
       default:

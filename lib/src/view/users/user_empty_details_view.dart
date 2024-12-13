@@ -21,7 +21,6 @@ class _UserEmptyDetailsViewState extends State<UserEmptyDetailsView> {
         child: Padding(
             padding: const EdgeInsets.only(top: 20, left: 20.0, right: 20.0),
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const BannerAdWidget(),

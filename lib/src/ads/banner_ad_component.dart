@@ -21,19 +21,21 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: SizedBox(
-        width: widget.adSize.width.toDouble(),
-        height: widget.adSize.height.toDouble(),
-        child: _bannerAd == null
-            // Nothing to render yet.
-            ? const SizedBox()
-            // The actual ad.
-            : AdWidget(ad: _bannerAd!),
-      ),
-    ));
+    return Container(
+        alignment: Alignment.center,
+        child: SafeArea(
+            child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: SizedBox(
+            width: widget.adSize.width.toDouble(),
+            height: widget.adSize.height.toDouble(),
+            child: _bannerAd == null
+                // Nothing to render yet.
+                ? const SizedBox()
+                // The actual ad.
+                : AdWidget(ad: _bannerAd!),
+          ),
+        )));
   }
 
   @override
