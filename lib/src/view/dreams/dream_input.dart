@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../ads/rewarded_ad.dart';
+
 class DreamInput extends StatefulWidget {
   const DreamInput({super.key, required this.addDream});
 
@@ -16,6 +18,14 @@ class _DreamInputState extends State<DreamInput> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_DreamInputState');
   final _controller = TextEditingController();
   final _dreamMaxLength = 500;
+
+  final RewardedAdUtil rewardedAd = RewardedAdUtil();
+
+  @override
+  void initState() {
+    rewardedAd.loadRewardedAd();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +57,19 @@ class _DreamInputState extends State<DreamInput> {
                 width: double.infinity,
                 child: CupertinoButton.filled(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await widget.addDream(_controller.text, AppLocalizations.of(context)!.dream_generation_prompt_wrapper(_controller.text));
-                      _controller.clear();
+                    if (rewardedAd.rewardedAd != null) {
+                      rewardedAd.rewardedAd?.show(
+                        onUserEarnedReward: (_, reward) async {
+                          if (_formKey.currentState!.validate()) {
+                            await widget.addDream(
+                                _controller.text,
+                                AppLocalizations.of(context)!
+                                    .dream_generation_prompt_wrapper(
+                                        _controller.text));
+                            _controller.clear();
+                          }
+                        },
+                      );
                     }
                   },
                   child: Text(AppLocalizations.of(context)!.button_add_dream),
@@ -63,6 +83,7 @@ class _DreamInputState extends State<DreamInput> {
   @override
   void dispose() {
     _controller.dispose();
+    rewardedAd.dispose();
     super.dispose();
   }
 }

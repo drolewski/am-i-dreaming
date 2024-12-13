@@ -1,4 +1,3 @@
-import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:am_i_dreaming/src/util/date_formater.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../../../ads/rewarded_ad.dart';
 import '../../../functions/dream.dart';
 
 class DreamDetails extends StatefulWidget {
@@ -21,6 +21,20 @@ class _DreamDetailsState extends State<DreamDetails> {
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
+
+  final RewardedAdUtil rewardedAd = RewardedAdUtil();
+
+  @override
+  void initState() {
+    rewardedAd.loadRewardedAd();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    rewardedAd.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +53,6 @@ class _DreamDetailsState extends State<DreamDetails> {
                         child: Column(children: [
                           _generatedImage(appState),
                           _generateImageButton(appState, context),
-                          const PremiumButton(),
                           Text(appState.dreamDocuments[widget.dreamIndex].text),
                         ])))));
   }
@@ -72,14 +85,20 @@ class _DreamDetailsState extends State<DreamDetails> {
                 child: Text(AppLocalizations.of(context)!
                     .generate_dream_picture_button),
                 onPressed: () async {
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  await dream(
-                      context, appState.dreamDocuments[widget.dreamIndex].id);
-                  setState(() {
-                    _isLoading = false;
-                  });
+                  if (rewardedAd.rewardedAd != null) {
+                    rewardedAd.rewardedAd?.show(
+                      onUserEarnedReward: (_, reward) async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        await dream(context,
+                            appState.dreamDocuments[widget.dreamIndex].id);
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      },
+                    );
+                  }
                 }))
         : const SizedBox.shrink();
   }

@@ -1,6 +1,5 @@
 import 'package:am_i_dreaming/src/ads/banner_ad_util.dart';
 import 'package:am_i_dreaming/src/ads/full_screen_ad.dart';
-import 'package:am_i_dreaming/src/ads/rewarded_ad.dart';
 import 'package:am_i_dreaming/src/view/dreams/dream_view.dart';
 import 'package:am_i_dreaming/src/view/users/user_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,14 +15,12 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   final FullScreenAdUtil fullScreenAd = FullScreenAdUtil();
-  final RewardedAdUtil rewardedAd = RewardedAdUtil();
   final BannerAdUtil bannerAd = BannerAdUtil();
 
   @override
   void initState() {
     super.initState();
     fullScreenAd.loadInterstitialAd();
-    rewardedAd.loadRewardedAd();
     bannerAd.loadBannerAd();
   }
 
@@ -56,7 +53,6 @@ class _NavigationState extends State<Navigation> {
   void dispose() {
     bannerAd.dispose();
     fullScreenAd.dispose();
-    rewardedAd.dispose();
     super.dispose();
   }
 
@@ -78,21 +74,6 @@ class _NavigationState extends State<Navigation> {
                     print("Reklama");
                     if (fullScreenAd.interstitialAd != null) {
                       fullScreenAd.interstitialAd?.show();
-                    }
-                  }),
-              CupertinoButton.filled(
-                  child: const Text(
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                      "Reklama nagradzana"),
-                  onPressed: () {
-                    print("Reklama nagradzana");
-                    if (rewardedAd.rewardedAd != null) {
-                      rewardedAd.rewardedAd?.show(
-                        onUserEarnedReward: (_, reward) {
-                          print("nagroda");
-                        },
-                      );
                     }
                   }),
               Align(

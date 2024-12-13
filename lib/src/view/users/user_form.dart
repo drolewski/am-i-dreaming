@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../../ads/rewarded_ad.dart';
 import '../../functions/astrological_calculator.dart';
 import '../../model/sex_enum.dart';
 
@@ -34,6 +35,7 @@ class _UserFormState extends State<UserForm> {
   final _prefixColor = CupertinoColors.white;
   final _textColor = CupertinoColors.systemTeal;
   final _maxYear = DateTime.now().subtract(const Duration(days: 10 * 365));
+  final RewardedAdUtil rewardedAd = RewardedAdUtil();
 
   var _birthDate = DateTime.now().subtract(const Duration(days: 10 * 365));
 
@@ -44,6 +46,18 @@ class _UserFormState extends State<UserForm> {
   var _selectedSexIndex = 0;
 
   bool _isReloading = false;
+
+  @override
+  void initState() {
+    rewardedAd.loadRewardedAd();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    rewardedAd.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext contexts) {
@@ -351,39 +365,50 @@ class _UserFormState extends State<UserForm> {
                                     width: double.infinity,
                                     child: CupertinoButton.filled(
                                       onPressed: () async {
-                                        if (_formKey.currentState!.validate()) {
-                                          setState(() {
-                                            _isReloading = true;
-                                          });
-                                          var userModel = UserModel(
-                                              name: _nameController.text,
-                                              sex: widget
-                                                  .sexes[_selectedSexIndex]
-                                                  .name,
-                                              birthCity:
-                                                  _birthCityController.text,
-                                              birthdayTimestampUTC:
-                                                  birthDateTimestampUTC(),
-                                              birthCountryCode: widget
-                                                  .countries[
-                                                      _selectedCountryIndex]
-                                                  .countryCode);
-                                          try {
-                                            var userAstrologicalData =
-                                                await astrologicalCalculator(
-                                                    context,
-                                                    userModel
-                                                        .birthdayTimestampUTC);
-                                            await appState.saveData(userModel,
-                                                userAstrologicalData);
-                                          } finally {
-                                            setState(() {
-                                              _isReloading = false;
-                                            });
-                                            _birthCityController.clear();
-                                            _nameController.clear();
-                                            Navigator.of(context).pop();
-                                          }
+                                        if (rewardedAd.rewardedAd != null) {
+                                          rewardedAd.rewardedAd?.show(
+                                            onUserEarnedReward:
+                                                (_, reward) async {
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                setState(() {
+                                                  _isReloading = true;
+                                                });
+                                                var userModel = UserModel(
+                                                    name: _nameController.text,
+                                                    sex: widget
+                                                        .sexes[
+                                                            _selectedSexIndex]
+                                                        .name,
+                                                    birthCity:
+                                                        _birthCityController
+                                                            .text,
+                                                    birthdayTimestampUTC:
+                                                        birthDateTimestampUTC(),
+                                                    birthCountryCode: widget
+                                                        .countries[
+                                                            _selectedCountryIndex]
+                                                        .countryCode);
+                                                try {
+                                                  var userAstrologicalData =
+                                                      await astrologicalCalculator(
+                                                          context,
+                                                          userModel
+                                                              .birthdayTimestampUTC);
+                                                  await appState.saveData(
+                                                      userModel,
+                                                      userAstrologicalData);
+                                                } finally {
+                                                  setState(() {
+                                                    _isReloading = false;
+                                                  });
+                                                  _birthCityController.clear();
+                                                  _nameController.clear();
+                                                  Navigator.of(context).pop();
+                                                }
+                                              }
+                                            },
+                                          );
                                         }
                                       },
                                       child: Text(AppLocalizations.of(context)!

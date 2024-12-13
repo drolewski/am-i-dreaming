@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:am_i_dreaming/src/component/detail_list_record.dart';
-import 'package:am_i_dreaming/src/component/premium_button.dart';
 import 'package:am_i_dreaming/src/functions/astrological_calculator.dart';
 import 'package:am_i_dreaming/src/service/country_provider.dart';
 import 'package:am_i_dreaming/src/state/app_state.dart';
@@ -13,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../ads/rewarded_ad.dart';
 import '../../component/detail_record.dart';
 import '../../logic/zodiac/translate/element_translator.dart';
 import '../../logic/zodiac/translate/quality_translator.dart';
@@ -30,7 +30,25 @@ class _UserDetailsViewState extends State<UserDetailsView> {
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
+
+  bool _rewardedRefresh = false;
+
+  bool get rewardedRefresh => _rewardedRefresh;
+
   final CountryProvider countryProvider = CountryProvider();
+  final RewardedAdUtil rewardedAd = RewardedAdUtil();
+
+  @override
+  void initState() {
+    rewardedAd.loadRewardedAd();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    rewardedAd.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +59,25 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                 navigationBar: CupertinoNavigationBar(
                   trailing: GestureDetector(
                       onTap: () async {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        try {
-                          var userAstrologicalData =
-                              await astrologicalCalculator(context,
-                                  appState.userDocument.birthdayTimestampUTC);
-                          await appState.updateUserData(userAstrologicalData);
-                        } finally {
-                          setState(() {
-                            _isLoading = false;
-                          });
+                        if (rewardedAd.rewardedAd != null) {
+                          rewardedAd.rewardedAd?.show(
+                            onUserEarnedReward: (_, reward) async {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              try {
+                                var userAstrologicalData =
+                                    await astrologicalCalculator(context,
+                                    appState.userDocument.birthdayTimestampUTC);
+                                await appState.updateUserData(userAstrologicalData);
+                              } finally {
+                                setState(() {
+                                  _isLoading = false;
+                                  _rewardedRefresh = false;
+                                });
+                              }
+                            },
+                          );
                         }
                       },
                       child: !isLoading
@@ -68,7 +93,6 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                             child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const PremiumButton(),
                             Text(
                               appState.userDocument.name,
                               style: const TextStyle(
