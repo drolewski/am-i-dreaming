@@ -1,3 +1,4 @@
+import 'package:am_i_dreaming/src/ads/banner_ad_component.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -23,6 +24,7 @@ class _UserEmptyDetailsViewState extends State<UserEmptyDetailsView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const BannerAdWidget(),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                       child: Text(

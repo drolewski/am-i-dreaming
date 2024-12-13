@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../ads/banner_ad_component.dart';
 import '../../ads/rewarded_ad.dart';
 import '../../component/detail_record.dart';
 import '../../logic/zodiac/translate/element_translator.dart';
@@ -88,11 +89,12 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                 ),
                 child: SafeArea(
                     child: Container(
-                        margin: const EdgeInsets.only(right: 20, left: 20),
+                        margin: const EdgeInsets.only(right: 20, left: 20, top: 20),
                         child: SingleChildScrollView(
                             child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            const BannerAdWidget(),
                             Text(
                               appState.userDocument.name,
                               style: const TextStyle(
