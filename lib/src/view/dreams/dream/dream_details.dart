@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
+import '../../../ads/banner_ad_component.dart';
 import '../../../ads/rewarded_ad.dart';
 import '../../../functions/dream.dart';
 
@@ -51,6 +52,7 @@ class _DreamDetailsState extends State<DreamDetails> {
                         padding: const EdgeInsets.only(
                             top: 20, left: 20.0, right: 20.0),
                         child: Column(children: [
+                          const BannerAdWidget(),
                           _generatedImage(appState),
                           _generateImageButton(appState, context),
                           Text(appState.dreamDocuments[widget.dreamIndex].text),
@@ -58,22 +60,24 @@ class _DreamDetailsState extends State<DreamDetails> {
   }
 
   Widget _generatedImage(ApplicationState appState) {
-    return appState.dreamDocuments[widget.dreamIndex].url.isNotEmpty
-        ? Image.network(loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-            if (loadingProgress == null) {
-              return child;
-            }
-            return Center(
-                child: loadingProgress.expectedTotalBytes != null &&
-                        loadingProgress.cumulativeBytesLoaded <
-                            loadingProgress.expectedTotalBytes!
-                    ? const CircularProgressIndicator.adaptive()
-                    : const SizedBox.shrink());
-          },
-            fit: BoxFit.scaleDown,
-            appState.dreamDocuments[widget.dreamIndex].url)
-        : const SizedBox.shrink();
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: appState.dreamDocuments[widget.dreamIndex].url.isNotEmpty
+            ? Image.network(loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return Center(
+                    child: loadingProgress.expectedTotalBytes != null &&
+                            loadingProgress.cumulativeBytesLoaded <
+                                loadingProgress.expectedTotalBytes!
+                        ? const CircularProgressIndicator.adaptive()
+                        : const SizedBox.shrink());
+              },
+                fit: BoxFit.scaleDown,
+                appState.dreamDocuments[widget.dreamIndex].url)
+            : const SizedBox.shrink());
   }
 
   SizedBox _generateImageButton(
