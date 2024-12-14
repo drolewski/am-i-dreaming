@@ -392,7 +392,6 @@ class _UserFormState extends State<UserForm> {
                                                 try {
                                                   var userAstrologicalData =
                                                       await astrologicalCalculator(
-                                                          context,
                                                           userModel
                                                               .birthdayTimestampUTC);
                                                   await appState.saveData(

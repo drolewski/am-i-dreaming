@@ -138,5 +138,17 @@
         "type": "String"
       }
     }
-  }
+  },
+  "horoscopes_button_generate_horoscope_for_my_zodiac": "Horoscope for {zodiac}",
+  "@horoscopes_button_generate_horoscope_for_my_zodiac": {
+    "description": "Zodiac generation button",
+    "placeholders": {
+      "zodiac": {
+        "type": "String"
+      }
+    }
+  },
+  "horoscopes_button_generate_other_horoscopes": "Generate other horoscopes",
+  "horoscopes_button_generate_personalized_horoscope": "Generate personalized horoscope",
+  "language": "english"
 }

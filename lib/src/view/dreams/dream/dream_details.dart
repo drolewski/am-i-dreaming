@@ -95,8 +95,7 @@ class _DreamDetailsState extends State<DreamDetails> {
                         setState(() {
                           _isLoading = true;
                         });
-                        await dream(context,
-                            appState.dreamDocuments[widget.dreamIndex].id);
+                        await dream(appState.dreamDocuments[widget.dreamIndex].id);
                         setState(() {
                           _isLoading = false;
                         });

@@ -68,9 +68,10 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                               });
                               try {
                                 var userAstrologicalData =
-                                    await astrologicalCalculator(context,
-                                    appState.userDocument.birthdayTimestampUTC);
-                                await appState.updateUserData(userAstrologicalData);
+                                    await astrologicalCalculator(appState
+                                        .userDocument.birthdayTimestampUTC);
+                                await appState
+                                    .updateUserData(userAstrologicalData);
                               } finally {
                                 setState(() {
                                   _isLoading = false;
@@ -89,7 +90,8 @@ class _UserDetailsViewState extends State<UserDetailsView> {
                 ),
                 child: SafeArea(
                     child: Container(
-                        margin: const EdgeInsets.only(right: 20, left: 20, top: 20),
+                        margin:
+                            const EdgeInsets.only(right: 20, left: 20, top: 20),
                         child: SingleChildScrollView(
                             child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

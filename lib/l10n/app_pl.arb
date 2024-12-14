@@ -138,8 +138,20 @@
     "description": "Dream generation prompt wrapper",
     "placeholders": {
       "dreamDescription": {
-        "type": "string"
+        "type": "String"
       }
     }
-  }
+  },
+  "horoscopes_button_generate_horoscope_for_my_zodiac": "Horoskop dla {zodiac}",
+  "@horoscopes_button_generate_horoscope_for_my_zodiac": {
+    "description": "Zodiac generation button",
+    "placeholders": {
+      "zodiac": {
+        "type": "String"
+      }
+    }
+  },
+  "horoscopes_button_generate_other_horoscopes": "Wygeneruj pozostałe horoskopy",
+  "horoscopes_button_generate_personalized_horoscope": "Wygeneruj spersonalizowany horoskop",
+  "language": "polish"
 }

@@ -21,6 +21,8 @@
 - Cleanup rules on firebase from test configs
 - Where should i set the ads and when should I display ads?
 - Configure ads for Android.
+- prompt injection protection
+- security tests etc.
 
 ## Future tasks
 

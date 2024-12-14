@@ -1,5 +1,4 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:flutter/cupertino.dart';
 
 class AstrologicalData {
   AstrologicalData(
@@ -47,8 +46,7 @@ class PlanetReturns {
       );
 }
 
-Future<AstrologicalData?> astrologicalCalculator(
-    BuildContext context, int birthdayTimestamp) async {
+Future<AstrologicalData?> astrologicalCalculator(int birthdayTimestamp) async {
   final result = await FirebaseFunctions.instanceFor(region: "europe-west1")
       .httpsCallable('astrologicalCalculator')
       .call({"birthdayTimestamp": birthdayTimestamp});
