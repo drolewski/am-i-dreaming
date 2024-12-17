@@ -13,6 +13,7 @@ export const generateImage = async (bucket: Bucket, prompt: string,): Promise<st
             project: await getSecret("OPENAI_PROJECT"),
         }
     );
+    // TODO openAI Generation metrics
     const response = await openai.images.generate({
         model: "dall-e-3",
         prompt: prompt, // Wrap this url with some story text about dream.

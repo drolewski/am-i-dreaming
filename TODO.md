@@ -23,6 +23,7 @@
 - Configure ads for Android.
 - prompt injection protection
 - security tests etc.
+- OpenAi generation metrics
 
 ## Future tasks
 

@@ -44,8 +44,14 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                                     setState(() {
                                       _isLoading = true;
                                     });
-                                    await horoscopes(AppLocalizations.of(context)!.language,
+                                    final hor = await horoscope(
+                                        AppLocalizations.of(context)!.language,
                                         appState.userDocument.sunZodiac);
+                                    print(hor.date);
+                                    print(hor.language);
+                                    print(hor.value);
+                                    print(hor.zodiac.icon);
+                                    print(hor.zodiac.name);
                                     setState(() {
                                       _isLoading = false;
                                     });
