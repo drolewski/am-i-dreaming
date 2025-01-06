@@ -13,6 +13,8 @@
 - security tests etc.
 - Refactor horoscopes view
 - Check/fix zodiacal data calculation
+- Check/fix dream image generation - there is some problem with signedurl, 
+   maybe smth temporary? maybe smth wrong with implementation
 
 ## Future tasks
 - Style on android platform
