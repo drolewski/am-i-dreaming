@@ -1,4 +1,5 @@
 import 'package:am_i_dreaming/src/functions/horoscopes.dart';
+import 'package:am_i_dreaming/src/model/user_status.dart';
 import 'package:am_i_dreaming/src/state/app_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,33 +31,93 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                       child: Center(
                           child: SizedBox(
                               width: double.infinity,
-                              child: CupertinoButton.filled(
-                                  child: Text(
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w400),
-                                      AppLocalizations.of(context)!
-                                          .horoscopes_button_generate_horoscope_for_my_zodiac(
-                                              appState.userDocument.sunZodiac
-                                                  .toModel()
-                                                  .icon)),
-                                  onPressed: () async {
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-                                    final hor = await horoscope(
-                                        AppLocalizations.of(context)!.language,
-                                        appState.userDocument.sunZodiac);
-                                    print(hor.date);
-                                    print(hor.language);
-                                    print(hor.value);
-                                    print(hor.zodiac.icon);
-                                    print(hor.zodiac.name);
-                                    setState(() {
-                                      _isLoading = false;
-                                    });
-                                  }))))
+                              child: appState.userStatus
+                                          ?.isSingleHoroscopeGenerated ==
+                                      true
+                                  ? appState.userStatus
+                                              ?.areAllHoroscopesGenerated ==
+                                          true
+                                      ? personalizedHoroscopesButton(appState)
+                                      : allHoroscopesButton(appState)
+                                  : singleHoroscopeButton(appState))))
                 ],
               ));
+  }
+
+  Widget singleHoroscopeButton(ApplicationState appState) {
+    return CupertinoButton.filled(
+        child: Text(
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            AppLocalizations.of(context)!
+                .horoscopes_button_generate_horoscope_for_my_zodiac(
+                    appState.userDocument.sunZodiac.toModel().icon)),
+        onPressed: () async {
+          setState(() {
+            _isLoading = true;
+          });
+          final hor = await horoscope(AppLocalizations.of(context)!.language,
+              appState.userDocument.sunZodiac);
+          appState.upsertUserStatus(UserStatus(
+              id: appState.userStatus?.id,
+              updatedAt: DateTime.now().millisecondsSinceEpoch,
+              isSingleHoroscopeGenerated: true,
+              areAllHoroscopesGenerated:
+                  appState.userStatus?.areAllHoroscopesGenerated ?? false,
+              isPersonalizedHoroscopeGenerated:
+                  appState.userStatus?.isPersonalizedHoroscopeGenerated ??
+                      false,
+              numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
+          setState(() {
+            _isLoading = false;
+          });
+        });
+  }
+
+  Widget allHoroscopesButton(ApplicationState appState) {
+    return CupertinoButton.filled(
+        child: Text(
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            AppLocalizations.of(context)!
+                .horoscopes_button_generate_other_horoscopes),
+        onPressed: () async {
+          setState(() {
+            _isLoading = true;
+          });
+          appState.upsertUserStatus(UserStatus(
+              id: appState.userStatus?.id,
+              updatedAt: DateTime.now().millisecondsSinceEpoch,
+              isSingleHoroscopeGenerated: true,
+              areAllHoroscopesGenerated: true,
+              isPersonalizedHoroscopeGenerated:
+                  appState.userStatus?.isPersonalizedHoroscopeGenerated ??
+                      false,
+              numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
+          setState(() {
+            _isLoading = false;
+          });
+        });
+  }
+
+  Widget personalizedHoroscopesButton(ApplicationState appState) {
+    return CupertinoButton.filled(
+        child: Text(
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            AppLocalizations.of(context)!
+                .horoscopes_button_generate_personalized_horoscope),
+        onPressed: () async {
+          setState(() {
+            _isLoading = true;
+          });
+          appState.upsertUserStatus(UserStatus(
+              id: appState.userStatus?.id,
+              updatedAt: DateTime.now().millisecondsSinceEpoch,
+              isSingleHoroscopeGenerated: true,
+              areAllHoroscopesGenerated: true,
+              isPersonalizedHoroscopeGenerated: true,
+              numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
+          setState(() {
+            _isLoading = false;
+          });
+        });
   }
 }

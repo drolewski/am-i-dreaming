@@ -4,6 +4,7 @@ import 'package:am_i_dreaming/src/model/dream_document.dart';
 import 'package:am_i_dreaming/src/model/moon_model.dart';
 import 'package:am_i_dreaming/src/model/sex_enum.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
+import 'package:am_i_dreaming/src/model/user_status.dart';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
 import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,6 +28,11 @@ class ApplicationState extends ChangeNotifier {
   User? _userStored = null;
 
   User? get userStored => _userStored;
+
+  StreamSubscription<QuerySnapshot>? _userStatusDocumentSubscription;
+  UserStatus? _userStatus = null;
+
+  UserStatus? get userStatus => _userStatus;
 
   StreamSubscription<QuerySnapshot>? _dreamDocumentSubscription;
   List<DreamDocument> _dreamDocuments = [];
@@ -71,7 +77,8 @@ class ApplicationState extends ChangeNotifier {
               name: snapshot.docs[0].data()['name'] as String,
               sex: SexEnum.fromString(snapshot.docs[0].data()['sex'] as String),
               birthCity: snapshot.docs[0].data()['birthCity'] as String,
-              birthdayTimestampUTC: snapshot.docs[0].data()['birthdayTimestampUTC'] as int,
+              birthdayTimestampUTC:
+                  snapshot.docs[0].data()['birthdayTimestampUTC'] as int,
               birthCountryCode:
                   snapshot.docs[0].data()['birthCountryCode'] as String,
               sunZodiac: ZodiacEnum.fromString(
@@ -118,14 +125,36 @@ class ApplicationState extends ChangeNotifier {
           }
           notifyListeners();
         });
+        _userStatusDocumentSubscription = FirebaseFirestore.instance
+            .collection('userStatus')
+            .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .limit(1)
+            .snapshots()
+            .listen((snapshot) {
+          final document = snapshot.docs[0];
+          _userStatus = UserStatus(
+              id: document.id,
+              updatedAt: document.data()['updatedAt'] as int,
+              isSingleHoroscopeGenerated:
+                  document.data()['isSingleHoroscopeGenerated'] as bool,
+              areAllHoroscopesGenerated:
+                  document.data()['areAllHoroscopesGenerated'] as bool,
+              isPersonalizedHoroscopeGenerated:
+                  document.data()['isPersonalizedHoroscopeGenerated'] as bool,
+              numberOfDreams: document.data()['numberOfDreams'] as int);
+
+          notifyListeners();
+        });
       } else {
         _loggedIn = false;
         _dreamDocuments = [];
         _dreamDocumentSet = false;
         _userDocument = UserDocument.empty();
         _userDocumentSet = false;
+        _userStatus = null;
         _userDocumentSubscription?.cancel();
         _dreamDocumentSubscription?.cancel();
+        _userStatusDocumentSubscription?.cancel();
       }
       notifyListeners();
     });
@@ -137,8 +166,10 @@ class ApplicationState extends ChangeNotifier {
     _dreamDocumentSet = false;
     _userDocument = UserDocument.empty();
     _userDocumentSet = false;
+    _userStatus = null;
     _userDocumentSubscription?.cancel();
     _dreamDocumentSubscription?.cancel();
+    _userStatusDocumentSubscription?.cancel();
     notifyListeners();
   }
 
@@ -183,7 +214,6 @@ class ApplicationState extends ChangeNotifier {
         'userId': FirebaseAuth.instance.currentUser!.uid,
       });
     }
-    return null;
   }
 
   Future<void> updateUserData(AstrologicalData? astrologicalData) async {
@@ -208,5 +238,35 @@ class ApplicationState extends ChangeNotifier {
         'userId': FirebaseAuth.instance.currentUser!.uid,
       });
     }
+  }
+
+  Future<void> upsertUserStatus(UserStatus userStatus) async {
+    if (!loggedIn) {
+      throw Exception('Must be logged in');
+    }
+
+    if (userStatus.id != null) {
+      return FirebaseFirestore.instance
+          .collection('userStatus')
+          .doc(userStatus.id)
+          .update({
+        'userId': FirebaseAuth.instance.currentUser!.uid,
+        'updatedAt': userStatus.updatedAt,
+        'isSingleHoroscopeGenerated': userStatus.isSingleHoroscopeGenerated,
+        'areAllHoroscopesGenerated': userStatus.areAllHoroscopesGenerated,
+        'isPersonalizedHoroscopeGenerated':
+            userStatus.isPersonalizedHoroscopeGenerated,
+        'numberOfDreams': userStatus.numberOfDreams,
+      });
+    }
+    FirebaseFirestore.instance.collection('userStatus').add(<String, dynamic>{
+      'userId': FirebaseAuth.instance.currentUser!.uid,
+      'updatedAt': userStatus.updatedAt,
+      'isSingleHoroscopeGenerated': userStatus.isSingleHoroscopeGenerated,
+      'areAllHoroscopesGenerated': userStatus.areAllHoroscopesGenerated,
+      'isPersonalizedHoroscopeGenerated':
+          userStatus.isPersonalizedHoroscopeGenerated,
+      'numberOfDreams': userStatus.numberOfDreams,
+    });
   }
 }
