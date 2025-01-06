@@ -1,5 +1,10 @@
 import {firestore} from "firebase-admin";
-import {HoroscopeDocument, HoroscopeGptResponse} from "./horoscope";
+import {
+    HoroscopeDocument,
+    HoroscopeGptResponse,
+    PersonalizedHoroscopeDocument,
+    PersonalizedHoroscopeGptResponse,
+} from "./horoscope";
 import Filter = firestore.Filter;
 import Firestore = firestore.Firestore;
 
@@ -24,4 +29,27 @@ export const saveHoroscope = async (db: FirebaseFirestore.Firestore, horoscopeRe
     });
     horoscopeDocuments.forEach((horoscope) => db.collection("horoscope").add(horoscope));
     return horoscopeDocuments;
+};
+
+export const findPersonalizedHoroscope = async (
+    db: Firestore, userId: string, formattedDate: string, language: string) => {
+    const dateFilter = Filter.where("date", "==", formattedDate);
+    const userIdFilter = Filter.where("userId", "==", userId);
+    const languageFilter = Filter.where("language", "==", language);
+    return await db.collection("personalizedHoroscope")
+        .where(Filter.and(dateFilter, userIdFilter, languageFilter))
+        .limit(1)
+        .get();
+};
+
+export const savePersonalizedHoroscope = async (
+    db: FirebaseFirestore.Firestore, horoscopeResponse: PersonalizedHoroscopeGptResponse, userId: string) => {
+    const horoscopeDocument: PersonalizedHoroscopeDocument = {
+        userId: userId,
+        date: horoscopeResponse.date,
+        language: horoscopeResponse.language,
+        horoscope: horoscopeResponse.horoscope,
+    } as unknown as PersonalizedHoroscopeDocument;
+    db.collection("personalizedHoroscope").add(horoscopeDocument);
+    return horoscopeDocument;
 };

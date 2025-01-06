@@ -4,7 +4,7 @@ import {setGlobalOptions} from "firebase-functions";
 import * as admin from "firebase-admin";
 import {AstrologicalCalculatorRequest, AstrologicalData, calculateAstrologicalData} from "./astrologicalCalculator";
 import {generateDream} from "./generateDream";
-import {getOrCreateHoroscope} from "./horoscope";
+import {getOrCreateHoroscope, getOrCreatePersonalizedHoroscope} from "./horoscope";
 
 setGlobalOptions({region: "europe-west1"});
 
@@ -43,5 +43,15 @@ export const horoscope = onCall(async ({data}) => {
         {structuredData: true}
     );
     return await getOrCreateHoroscope(db, data.timestamp, data.zodiac, data.language);
+});
+
+export const personalizedHoroscope = onCall(async ({data}) => {
+    logger.info(
+        `Get personalized horoscope for: userId=${data.userId}, language=${data.language},
+        timestamp=${data.timestamp}, birthdate=${data.birthdate}, birthplace=${data.birthplace}`,
+        {structuredData: true}
+    );
+    return await getOrCreatePersonalizedHoroscope(
+        db, data.userId, data.timestamp, data.birthdate, data.birthplace, data.language);
 });
 
