@@ -23,7 +23,7 @@ const getSignedUrl = async (bucket: Bucket, filename: string) => {
     const file = bucket.file(filename);
     const [url] = await file.getSignedUrl({
         action: "read",
-        expires: Date.now() + 365 * 24 * 60 * 60 * 1000,
+        expires: new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000).getTime(),
     });
     return {url: url};
 };
