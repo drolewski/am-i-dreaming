@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../ads/banner_ad_component.dart';
+import '../../ads/rewarded_ad.dart';
 import '../../functions/personalized_horoscope.dart';
 import '../../model/horoscope_model.dart';
 import 'horoscope_row.dart';
@@ -23,6 +24,21 @@ class HoroscopesView extends StatefulWidget {
 class _HoroscopeViewState extends State<HoroscopesView> {
   final _key = GlobalKey();
   bool _isLoading = false;
+  final DateTime _todayDate = DateTime.now();
+
+  final RewardedAdUtil rewardedAd = RewardedAdUtil();
+
+  @override
+  void initState() {
+    rewardedAd.loadRewardedAd();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    rewardedAd.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +51,10 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                   Center(
                       child: SizedBox(
                           width: double.infinity,
-                          child: appState
-                                      .userStatus?.isSingleHoroscopeGenerated ==
-                                  true
+                          child: appState.userStatus
+                                          ?.isSingleHoroscopeGenerated ==
+                                      true &&
+                                  _compareDates(appState)
                               ? appState.userStatus
                                           ?.areAllHoroscopesGenerated ==
                                       true
@@ -64,25 +81,28 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                     .horoscopes_button_generate_horoscope_for_my_zodiac(
                         appState.userDocument.sunZodiac.toModel().icon)),
             onPressed: () async {
-              setState(() {
-                _isLoading = true;
-              });
-              await horoscope(AppLocalizations.of(context)!.language,
-                  appState.userDocument.sunZodiac);
-              await appState.updateHoroscopes();
-              appState.upsertUserStatus(UserStatus(
-                  id: appState.userStatus?.id,
-                  updatedAt: DateTime.now().millisecondsSinceEpoch,
-                  isSingleHoroscopeGenerated: true,
-                  areAllHoroscopesGenerated:
-                      appState.userStatus?.areAllHoroscopesGenerated ?? false,
-                  isPersonalizedHoroscopeGenerated:
-                      appState.userStatus?.isPersonalizedHoroscopeGenerated ??
-                          false,
-                  numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
-              setState(() {
-                _isLoading = false;
-              });
+              if (rewardedAd.rewardedAd != null) {
+                rewardedAd.rewardedAd?.show(
+                  onUserEarnedReward: (_, reward) async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    await horoscope(AppLocalizations.of(context)!.language,
+                        appState.userDocument.sunZodiac);
+                    await appState.updateHoroscopes();
+                    appState.upsertUserStatus(UserStatus(
+                        id: appState.userStatus?.id,
+                        updatedAt: DateTime.now().millisecondsSinceEpoch,
+                        isSingleHoroscopeGenerated: true,
+                        areAllHoroscopesGenerated: false,
+                        isPersonalizedHoroscopeGenerated: false,
+                        numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                );
+              }
             }));
   }
 
@@ -96,22 +116,26 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                 AppLocalizations.of(context)!
                     .horoscopes_button_generate_other_horoscopes),
             onPressed: () async {
-              setState(() {
-                _isLoading = true;
-              });
-              await appState.updateHoroscopes();
-              appState.upsertUserStatus(UserStatus(
-                  id: appState.userStatus?.id,
-                  updatedAt: DateTime.now().millisecondsSinceEpoch,
-                  isSingleHoroscopeGenerated: true,
-                  areAllHoroscopesGenerated: true,
-                  isPersonalizedHoroscopeGenerated:
-                      appState.userStatus?.isPersonalizedHoroscopeGenerated ??
-                          false,
-                  numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
-              setState(() {
-                _isLoading = false;
-              });
+              if (rewardedAd.rewardedAd != null) {
+                rewardedAd.rewardedAd?.show(
+                  onUserEarnedReward: (_, reward) async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    await appState.updateHoroscopes();
+                    appState.upsertUserStatus(UserStatus(
+                        id: appState.userStatus?.id,
+                        updatedAt: DateTime.now().millisecondsSinceEpoch,
+                        isSingleHoroscopeGenerated: true,
+                        areAllHoroscopesGenerated: true,
+                        isPersonalizedHoroscopeGenerated: false,
+                        numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                );
+              }
             }));
   }
 
@@ -125,26 +149,33 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                 AppLocalizations.of(context)!
                     .horoscopes_button_generate_personalized_horoscope),
             onPressed: () async {
-              setState(() {
-                _isLoading = true;
-              });
-              await personalizedHoroscope(
-                  AppLocalizations.of(context)!.language,
-                  FirebaseAuth.instance.currentUser!.uid,
-                  appState.userDocument.birthdayTimestampUTC,
-                  appState.userDocument.birthCity);
-              appState.updateHoroscopes();
-              appState.updatePersonalizedHoroscope();
-              appState.upsertUserStatus(UserStatus(
-                  id: appState.userStatus?.id,
-                  updatedAt: DateTime.now().millisecondsSinceEpoch,
-                  isSingleHoroscopeGenerated: true,
-                  areAllHoroscopesGenerated: true,
-                  isPersonalizedHoroscopeGenerated: true,
-                  numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
-              setState(() {
-                _isLoading = false;
-              });
+              if (rewardedAd.rewardedAd != null) {
+                rewardedAd.rewardedAd?.show(
+                  onUserEarnedReward: (_, reward) async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    await personalizedHoroscope(
+                        AppLocalizations.of(context)!.language,
+                        FirebaseAuth.instance.currentUser!.uid,
+                        appState.userDocument.birthdayTimestampUTC,
+                        appState.userDocument.birthCity);
+                    appState.updateHoroscopes();
+                    appState.updatePersonalizedHoroscope();
+                    appState.upsertUserStatus(UserStatus(
+                        id: appState.userStatus?.id,
+                        updatedAt: DateTime.now().millisecondsSinceEpoch,
+                        isSingleHoroscopeGenerated: true,
+                        areAllHoroscopesGenerated: true,
+                        isPersonalizedHoroscopeGenerated: true,
+                        numberOfDreams:
+                            appState.userStatus?.numberOfDreams ?? 0));
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                );
+              }
             }));
   }
 
@@ -168,7 +199,8 @@ class _HoroscopeViewState extends State<HoroscopesView> {
     return Expanded(
         child: appState.horoscopesSet &&
                 appState.horoscopes.isNotEmpty &&
-                appState.userStatus?.isSingleHoroscopeGenerated == true
+                appState.userStatus?.isSingleHoroscopeGenerated == true &&
+                _compareDates(appState)
             ? appState.userStatus?.isSingleHoroscopeGenerated == true &&
                     appState.userStatus?.areAllHoroscopesGenerated == true
                 ? AnimatedList(
@@ -203,5 +235,24 @@ class _HoroscopeViewState extends State<HoroscopesView> {
 
   String _capitalize(String name) {
     return name[0].toUpperCase() + name.substring(1).toLowerCase();
+  }
+
+  // It should not display text for yesterday and show new buttons :)
+  bool _compareDates(ApplicationState appState) {
+    final date1 = DateTime.fromMillisecondsSinceEpoch(
+        appState.userStatus?.updatedAt ?? 0);
+    var result = _todayDate.year == date1.year &&
+        _todayDate.month == date1.month &&
+        _todayDate.day == date1.day;
+    if (!result) {
+      appState.upsertUserStatus(UserStatus(
+          id: appState.userStatus?.id,
+          updatedAt: DateTime.now().millisecondsSinceEpoch,
+          isSingleHoroscopeGenerated: false,
+          areAllHoroscopesGenerated: false,
+          isPersonalizedHoroscopeGenerated: false,
+          numberOfDreams: appState.userStatus?.numberOfDreams ?? 0));
+    }
+    return result;
   }
 }
