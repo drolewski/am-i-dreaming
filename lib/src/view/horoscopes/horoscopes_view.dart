@@ -48,7 +48,6 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                                       : personalizedHoroscopesButton(appState)
                                   : allHoroscopesButton(appState)
                               : singleHoroscopeButton(appState))),
-                  personalizedHoroscopeWidget(appState),
                   horoscopeList(appState)
                 ],
               ));
@@ -135,6 +134,7 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                   appState.userDocument.birthdayTimestampUTC,
                   appState.userDocument.birthCity);
               appState.updateHoroscopes();
+              appState.updatePersonalizedHoroscope();
               appState.upsertUserStatus(UserStatus(
                   id: appState.userStatus?.id,
                   updatedAt: DateTime.now().millisecondsSinceEpoch,
@@ -148,14 +148,23 @@ class _HoroscopeViewState extends State<HoroscopesView> {
             }));
   }
 
-  Widget personalizedHoroscopeWidget(ApplicationState appState) {
-    return appState.userStatus?.isPersonalizedHoroscopeGenerated == true
-        ? const Text("Personalized horoscope")
-        : Container();
-  }
-
   Widget horoscopeList(ApplicationState appState) {
-    final resHoroscopes = sortedListOfHoroscopes(appState);
+    final resHoroscopes = sortedListOfHoroscopes(appState).map((h) {
+      return HoroscopeListRow(
+          header: '${h.zodiac.icon} ${_capitalize(h.zodiac.name.name)}',
+          language: h.language,
+          date: h.date,
+          value: h.value);
+    }).toList();
+    if (appState.personalizedHoroscopeDocument != null) {
+      resHoroscopes.insert(
+          0,
+          HoroscopeListRow(
+              header: "Personalizowany horoskop",
+              language: appState.personalizedHoroscopeDocument?.language ?? '',
+              date: appState.personalizedHoroscopeDocument?.date ?? '',
+              value: appState.personalizedHoroscopeDocument?.horoscope ?? ''));
+    }
     return Expanded(
         child: appState.horoscopesSet &&
                 appState.horoscopes.isNotEmpty &&
@@ -190,5 +199,9 @@ class _HoroscopeViewState extends State<HoroscopesView> {
       return a.zodiac.name.name.compareTo(b.zodiac.name.name);
     });
     return resHoroscopes;
+  }
+
+  String _capitalize(String name) {
+    return name[0].toUpperCase() + name.substring(1).toLowerCase();
   }
 }

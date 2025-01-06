@@ -1,10 +1,18 @@
-import 'package:am_i_dreaming/src/model/horoscope_model.dart';
 import 'package:flutter/cupertino.dart';
+
+class HoroscopeListRow {
+  HoroscopeListRow({required this.header, required this.language, required this.date, required this.value});
+
+  final String header;
+  final String language;
+  final String date;
+  final String value;
+}
 
 class HoroscopeRow extends StatelessWidget{
   const HoroscopeRow({super.key, required this.horoscope});
 
-  final Horoscope horoscope;
+  final HoroscopeListRow horoscope;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +24,7 @@ class HoroscopeRow extends StatelessWidget{
                 style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20),
-                '${horoscope.zodiac.icon} ${_capitalize(horoscope.zodiac.name.name)}')),
+                horoscope.header)),
         Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: Text(
@@ -27,9 +35,4 @@ class HoroscopeRow extends StatelessWidget{
       ],
     );
   }
-
-  String _capitalize(String name) {
-    return name[0].toUpperCase() + name.substring(1).toLowerCase();
-  }
-
 }

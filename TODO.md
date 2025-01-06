@@ -24,6 +24,7 @@
 - prompt injection protection
 - security tests etc.
 - OpenAi generation metrics
+- Refactor horoscopes view
 
 ## Future tasks
 
@@ -35,3 +36,5 @@
 - Test google login on real app ios/android
 - Do i need labels on navigation buttons?
 - More specific moon phase calculation like here: https://github.com/enoosoft/moon_phase/
+- Tarot card horoscopes functionality
+- Connect with ezoterics functionality
