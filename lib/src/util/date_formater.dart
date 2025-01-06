@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 String formatTimestampToDate(BuildContext context, int timestamp) {
   return AppLocalizations.of(context)!.formattedDate(
@@ -15,4 +16,9 @@ String formatTimestampToDateTime(BuildContext context, int timestamp) {
   var date =
       DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: true).toLocal();
   return AppLocalizations.of(context)!.formattedDateTime(date, date);
+}
+
+String formatTimeStampToSimpleDate(int timestamp) {
+  return DateFormat('dd-MM-yyyy')
+      .format(DateTime.fromMillisecondsSinceEpoch(timestamp)).toString();
 }

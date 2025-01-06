@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:am_i_dreaming/src/model/dream_document.dart';
+import 'package:am_i_dreaming/src/model/horoscope_model.dart';
 import 'package:am_i_dreaming/src/model/moon_model.dart';
 import 'package:am_i_dreaming/src/model/sex_enum.dart';
 import 'package:am_i_dreaming/src/model/user_document.dart';
 import 'package:am_i_dreaming/src/model/user_status.dart';
 import 'package:am_i_dreaming/src/model/zodiac_model.dart';
-import 'package:am_i_dreaming/src/service/user_astrological_details_calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import '../../firebase_options.dart';
 import '../functions/astrological_calculator.dart';
 import '../model/user_model.dart';
+import '../util/date_formater.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -44,6 +45,11 @@ class ApplicationState extends ChangeNotifier {
 
   UserDocument get userDocument => _userDocument;
 
+  StreamSubscription<QuerySnapshot>? _userHoroscopesSubscription;
+  List<Horoscope> _horoscopes = [];
+
+  List<Horoscope> get horoscopes => _horoscopes;
+
   bool _userDocumentSet = false;
 
   bool get userDocumentSet => _userDocumentSet;
@@ -52,8 +58,8 @@ class ApplicationState extends ChangeNotifier {
 
   bool get dreamDocumentSet => _dreamDocumentSet;
 
-  UserAstrologicalDetailsCalculator userAstrologicalDetailsCalculator =
-      UserAstrologicalDetailsCalculator();
+  bool _horoscopesSet = false;
+  bool get horoscopesSet => _horoscopesSet;
 
   Future<void> initUser() async {
     await Firebase.initializeApp(
@@ -131,20 +137,23 @@ class ApplicationState extends ChangeNotifier {
             .limit(1)
             .snapshots()
             .listen((snapshot) {
-          final document = snapshot.docs[0];
-          _userStatus = UserStatus(
-              id: document.id,
-              updatedAt: document.data()['updatedAt'] as int,
-              isSingleHoroscopeGenerated:
-                  document.data()['isSingleHoroscopeGenerated'] as bool,
-              areAllHoroscopesGenerated:
-                  document.data()['areAllHoroscopesGenerated'] as bool,
-              isPersonalizedHoroscopeGenerated:
-                  document.data()['isPersonalizedHoroscopeGenerated'] as bool,
-              numberOfDreams: document.data()['numberOfDreams'] as int);
+          if (snapshot.docs.length == 1) {
+            final document = snapshot.docs[0];
+            _userStatus = UserStatus(
+                id: document.id,
+                updatedAt: document.data()['updatedAt'] as int,
+                isSingleHoroscopeGenerated:
+                    document.data()['isSingleHoroscopeGenerated'] as bool,
+                areAllHoroscopesGenerated:
+                    document.data()['areAllHoroscopesGenerated'] as bool,
+                isPersonalizedHoroscopeGenerated:
+                    document.data()['isPersonalizedHoroscopeGenerated'] as bool,
+                numberOfDreams: document.data()['numberOfDreams'] as int);
 
-          notifyListeners();
+            notifyListeners();
+          }
         });
+        updateHoroscopes();
       } else {
         _loggedIn = false;
         _dreamDocuments = [];
@@ -152,9 +161,12 @@ class ApplicationState extends ChangeNotifier {
         _userDocument = UserDocument.empty();
         _userDocumentSet = false;
         _userStatus = null;
+        _horoscopes = [];
+        _horoscopesSet = false;
         _userDocumentSubscription?.cancel();
         _dreamDocumentSubscription?.cancel();
         _userStatusDocumentSubscription?.cancel();
+        _userHoroscopesSubscription?.cancel();
       }
       notifyListeners();
     });
@@ -167,9 +179,12 @@ class ApplicationState extends ChangeNotifier {
     _userDocument = UserDocument.empty();
     _userDocumentSet = false;
     _userStatus = null;
+    _horoscopes = [];
+    _horoscopesSet = false;
     _userDocumentSubscription?.cancel();
     _dreamDocumentSubscription?.cancel();
     _userStatusDocumentSubscription?.cancel();
+    _userHoroscopesSubscription?.cancel();
     notifyListeners();
   }
 
@@ -267,6 +282,32 @@ class ApplicationState extends ChangeNotifier {
       'isPersonalizedHoroscopeGenerated':
           userStatus.isPersonalizedHoroscopeGenerated,
       'numberOfDreams': userStatus.numberOfDreams,
+    });
+  }
+
+  Future<void> updateHoroscopes() async {
+    _userHoroscopesSubscription = FirebaseFirestore.instance
+        .collection('horoscope')
+        .where('date',
+            isEqualTo: formatTimeStampToSimpleDate(
+                DateTime.now().millisecondsSinceEpoch))
+        .snapshots()
+        .listen((snapshot) {
+      _horoscopes = [];
+      for (final document in snapshot.docs) {
+        _horoscopes.add(
+          Horoscope(
+            zodiac: ZodiacEnum.fromString(document.data()['zodiac'] as String)
+                .toModel(),
+            language: document.data()['language'] as String,
+            date: document.data()['date'] as String? ?? "",
+            value: document.data()['value'] as String? ?? "",
+          ),
+        );
+      }
+      _horoscopesSet = true;
+
+      notifyListeners();
     });
   }
 }

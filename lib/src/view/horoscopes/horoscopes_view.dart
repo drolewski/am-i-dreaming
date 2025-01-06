@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../ads/banner_ad_component.dart';
+import '../../model/horoscope_model.dart';
 
 class HoroscopesView extends StatefulWidget {
   const HoroscopesView({super.key});
@@ -16,6 +17,7 @@ class HoroscopesView extends StatefulWidget {
 }
 
 class _HoroscopeViewState extends State<HoroscopesView> {
+  final _key = GlobalKey();
   bool _isLoading = false;
 
   @override
@@ -39,7 +41,9 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                                           true
                                       ? personalizedHoroscopesButton(appState)
                                       : allHoroscopesButton(appState)
-                                  : singleHoroscopeButton(appState))))
+                                  : singleHoroscopeButton(appState)))),
+                  personalizedHoroscope(appState),
+                  horoscopeList(appState)
                 ],
               ));
   }
@@ -55,8 +59,9 @@ class _HoroscopeViewState extends State<HoroscopesView> {
           setState(() {
             _isLoading = true;
           });
-          final hor = await horoscope(AppLocalizations.of(context)!.language,
+          await horoscope(AppLocalizations.of(context)!.language,
               appState.userDocument.sunZodiac);
+          await appState.updateHoroscopes();
           appState.upsertUserStatus(UserStatus(
               id: appState.userStatus?.id,
               updatedAt: DateTime.now().millisecondsSinceEpoch,
@@ -83,6 +88,7 @@ class _HoroscopeViewState extends State<HoroscopesView> {
           setState(() {
             _isLoading = true;
           });
+          await appState.updateHoroscopes();
           appState.upsertUserStatus(UserStatus(
               id: appState.userStatus?.id,
               updatedAt: DateTime.now().millisecondsSinceEpoch,
@@ -108,6 +114,7 @@ class _HoroscopeViewState extends State<HoroscopesView> {
           setState(() {
             _isLoading = true;
           });
+          appState.updateHoroscopes();
           appState.upsertUserStatus(UserStatus(
               id: appState.userStatus?.id,
               updatedAt: DateTime.now().millisecondsSinceEpoch,
@@ -119,5 +126,49 @@ class _HoroscopeViewState extends State<HoroscopesView> {
             _isLoading = false;
           });
         });
+  }
+
+  Widget personalizedHoroscope(ApplicationState appState) {
+    return appState.userStatus?.isPersonalizedHoroscopeGenerated == true
+        ? const Text("Personalized horoscope")
+        : const Text("");
+  }
+
+  Widget horoscopeList(ApplicationState appState) {
+    final resHoroscopes = sortedListOfHoroscopes(appState);
+    return Expanded(
+        child: appState.horoscopesSet &&
+                appState.horoscopes.isNotEmpty &&
+                appState.userStatus?.isSingleHoroscopeGenerated == true
+            ? appState.userStatus?.isSingleHoroscopeGenerated == true &&
+                    appState.userStatus?.areAllHoroscopesGenerated == true
+                ? AnimatedList(
+                    key: _key,
+                    reverse: false,
+                    initialItemCount: resHoroscopes.length,
+                    itemBuilder: (_, int index, Animation<double> animation) {
+                      return Text(resHoroscopes[index].value);
+                    },
+                  )
+                : Text(resHoroscopes[0].value)
+            : const Text("Generate horoscopes"));
+  }
+
+  List<Horoscope> sortedListOfHoroscopes(ApplicationState appState) {
+    final resHoroscopes = appState.horoscopes.where((hor) {
+      return hor.language == AppLocalizations.of(context)!.language;
+    }).toList();
+    resHoroscopes.sort((a, b) {
+      if (appState.userDocument.sunZodiac == a.zodiac.name &&
+          appState.userDocument.sunZodiac != b.zodiac.name) {
+        return -1;
+      }
+      if (appState.userDocument.sunZodiac == b.zodiac.name &&
+          appState.userDocument.sunZodiac != a.zodiac.name) {
+        return 1;
+      }
+      return a.zodiac.name.toString().compareTo(b.zodiac.name.toString());
+    });
+    return resHoroscopes;
   }
 }
