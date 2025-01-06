@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../ads/banner_ad_component.dart';
 import '../../model/horoscope_model.dart';
+import 'horoscope_row.dart';
 
 class HoroscopesView extends StatefulWidget {
   const HoroscopesView({super.key});
@@ -147,10 +148,10 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                     reverse: false,
                     initialItemCount: resHoroscopes.length,
                     itemBuilder: (_, int index, Animation<double> animation) {
-                      return Text(resHoroscopes[index].value);
+                      return HoroscopeRow(horoscope: resHoroscopes[index]);
                     },
                   )
-                : Text(resHoroscopes[0].value)
+                : HoroscopeRow(horoscope: resHoroscopes[0])
             : const Text("Generate horoscopes"));
   }
 
@@ -167,7 +168,7 @@ class _HoroscopeViewState extends State<HoroscopesView> {
           appState.userDocument.sunZodiac != a.zodiac.name) {
         return 1;
       }
-      return a.zodiac.name.toString().compareTo(b.zodiac.name.toString());
+      return a.zodiac.name.name.compareTo(b.zodiac.name.name);
     });
     return resHoroscopes;
   }

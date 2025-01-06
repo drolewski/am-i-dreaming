@@ -7,7 +7,7 @@ const BASIC_HOROSCOPE_SYSTEM_MESSAGE = `You are an astrologer and esoteric
 expert specializing in creating zodiac horoscopes.`;
 
 const basicHoroscopeUserMessage = (date: string, language: string): string => `
-Write a horoscope for all zodiacs (leave zodiac name in english) 
+Write a horoscope for all zodiacs (leave zodiac name in english and don't use zodiac name in generated text)
 and date: ${date} in language: ${language}. Every single horoscope should contain minimum 5 sentences max 8.`;
 
 const HoroscopesEvent = z.object({
