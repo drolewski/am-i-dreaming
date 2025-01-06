@@ -25,6 +25,7 @@
 - security tests etc.
 - OpenAi generation metrics
 - Refactor horoscopes view
+- If signed url is expired we should display button to generate image once again ;)
 
 ## Future tasks
 
