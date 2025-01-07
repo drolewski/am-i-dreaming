@@ -191,7 +191,7 @@ class _HoroscopeViewState extends State<HoroscopesView> {
       resHoroscopes.insert(
           0,
           HoroscopeListRow(
-              header: "Personalizowany horoskop",
+              header: AppLocalizations.of(context)!.personalized_horoscope,
               language: appState.personalizedHoroscopeDocument?.language ?? '',
               date: appState.personalizedHoroscopeDocument?.date ?? '',
               value: appState.personalizedHoroscopeDocument?.horoscope ?? ''));
@@ -212,7 +212,7 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                     },
                   )
                 : HoroscopeRow(horoscope: resHoroscopes[0])
-            : const Text("Generate horoscopes"));
+            : Text(AppLocalizations.of(context)!.generate_horoscopes));
   }
 
   List<Horoscope> sortedListOfHoroscopes(ApplicationState appState) {

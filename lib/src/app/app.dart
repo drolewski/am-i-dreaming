@@ -39,10 +39,13 @@ class App extends StatelessWidget {
 
 final _router = GoRouter(
     initialLocation: "/",
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null && state.uri.toString() != '/login') {
+      if (user == null && !state.uri.toString().startsWith('/login')) {
         return '/login';
+      }
+      if (user != null && !user.emailVerified) {
+        return '/login/verify-email';
       }
       return null;
     },
@@ -66,6 +69,37 @@ final _router = GoRouter(
                 email: arguments['email'],
                 headerMaxExtent: 200,
               );
+            },
+          ),
+          GoRoute(
+            path: 'verify-email',
+            builder: (context, state) {
+              return CupertinoPageScaffold(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                SizedBox(
+                    width: double.infinity,
+                    child: CupertinoButton(
+                        child: Text(AppLocalizations.of(context)!.verify_email),
+                        onPressed: () async {
+                          if (FirebaseAuth.instance.currentUser != null) {
+                            FirebaseAuth.instance.currentUser!
+                                .sendEmailVerification();
+                            await FirebaseAuth.instance.signOut();
+                          }
+                          context.push("/");
+                        })),
+                SizedBox(
+                    width: double.infinity,
+                    child: CupertinoButton(
+                        child: Text(AppLocalizations.of(context)!.back),
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          context.push("/");
+                        }))
+              ]));
             },
           ),
         ],

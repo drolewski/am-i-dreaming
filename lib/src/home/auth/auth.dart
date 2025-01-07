@@ -21,7 +21,14 @@ class AuthGate extends StatelessWidget {
           );
           context.push(uri.toString());
         })),
-        AuthStateChangeAction(((context, state) {
+        AuthStateChangeAction<SignedIn>((context, state) {
+          if (!state.user!.emailVerified) {
+            context.pushReplacement('/login');
+          } else {
+            context.pushReplacement('/');
+          }
+        }),
+        AuthStateChangeAction(((context, state) async {
           final user = switch (state) {
             SignedIn state => state.user,
             UserCreated state => state.credential.user,
@@ -32,8 +39,8 @@ class AuthGate extends StatelessWidget {
           }
           if (state is UserCreated) {
             user.updateDisplayName(user.email!.split('@')[0]);
+            context.pushReplacement('/');
           }
-          context.pushReplacement('/');
         })),
       ],
       providers: [

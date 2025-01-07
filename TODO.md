@@ -1,21 +1,21 @@
 # TODOs
 
 ## Important [Release date at the end of February]
-- Delete user account action
-- test google login and logout ;) google.disconnected() ?
 - Fix typography, texts etc.
 - Cleanup rules on firebase from test configs
-- Where should i set the ads and when should I display ads?
-- Implement and test for Android
-- Configure ads for Android.
+- Prepare emails send by service and application name on google login etc. 
 - prompt injection protection
 - security tests etc.
-- Refactor horoscopes view
 - Check/fix zodiacal data calculation
-- Check/fix dream image generation - there is some problem with signedurl, 
-   maybe smth temporary? maybe smth wrong with implementation
+- Check/fix dream image generation - there is some problem with signedurl,
+  maybe smth temporary? maybe smth wrong with implementation
+- Test on real iOS Device
+- Implement and test for Android
+- Configure ads for Android.
+- Check budgets and cards connected to services :)
 
 ## Future tasks
+- Refactor horoscopes view
 - Style on android platform
 - Email reminders configuration
 - Password politics
@@ -38,3 +38,7 @@
 - Configure environment variable to store gemini, ads, google login, apple login etc. api keys ???
 - OpenAi generation metrics
 - If signed url is expired we should display button to generate image once again ;)
+- Restart password screen
+- Where should i set the ads and when should I display ads?
+- Apple login?
+- Facebook login?

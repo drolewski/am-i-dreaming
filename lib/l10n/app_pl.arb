@@ -154,5 +154,9 @@
   "horoscopes_button_generate_other_horoscopes": "Wygeneruj pozostałe horoskopy",
   "horoscopes_button_generate_personalized_horoscope": "Wygeneruj spersonalizowany horoskop",
   "already_saved_dream": "Zapisałeś już dzisiejszy sen",
+  "verify_email": "Zweryfikuj adres email",
+  "back": "Wróć",
+  "personalized_horoscope": "Personalizowany horoskop",
+  "generate_horoscopes": "Wygeneruj horoskopy",
   "language": "polish"
 }

@@ -52,7 +52,20 @@ class _UserEmptyDetailsViewState extends State<UserEmptyDetailsView> {
                                                   .logout),
                                           onPressed: () {
                                             _signOut(appState);
-                                          })))))
+                                          }))))),
+                  Center(
+                      child: SizedBox(
+                          width: double.infinity,
+                          child: CupertinoButton(
+                              child: Text(
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400),
+                                  AppLocalizations.of(context)!
+                                      .delete_account),
+                              onPressed: () => Navigator.of(context)
+                                  .restorablePush(_modalBuilder))))
+
                 ])));
   }
 
@@ -60,5 +73,35 @@ class _UserEmptyDetailsViewState extends State<UserEmptyDetailsView> {
     await FirebaseAuth.instance.signOut();
     context.pushReplacement("/login");
     appState.destroy();
+  }
+
+  @pragma('vm:entry-point')
+  static Route<void> _modalBuilder(BuildContext context, Object? arguments) {
+    return CupertinoModalPopupRoute<void>(
+      builder: (BuildContext context) {
+        return Consumer<ApplicationState>(
+            builder: (context, appState, child) => CupertinoActionSheet(
+              title: Text(AppLocalizations.of(context)!.delete_account),
+              message: Text(AppLocalizations.of(context)!
+                  .delete_account_question_modal),
+              actions: <CupertinoActionSheetAction>[
+                CupertinoActionSheetAction(
+                  child: Text(AppLocalizations.of(context)!.yes),
+                  onPressed: () async {
+                    context.pushReplacement("/login");
+                    appState.removeUser();
+                    Navigator.pop(context);
+                  },
+                ),
+                CupertinoActionSheetAction(
+                  child: Text(AppLocalizations.of(context)!.no),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ));
+      },
+    );
   }
 }

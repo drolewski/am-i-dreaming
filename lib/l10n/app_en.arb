@@ -151,5 +151,9 @@
   "horoscopes_button_generate_other_horoscopes": "Generate other horoscopes",
   "horoscopes_button_generate_personalized_horoscope": "Generate personalized horoscope",
   "already_saved_dream": "You have already saved today's dream",
+  "verify_email": "Verify email address",
+  "back": "Back",
+  "personalized_horoscope": "Personalized horoscope",
+  "generate_horoscopes": "Generate horoscopes",
   "language": "english"
 }
