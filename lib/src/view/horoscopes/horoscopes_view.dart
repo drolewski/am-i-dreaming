@@ -237,7 +237,6 @@ class _HoroscopeViewState extends State<HoroscopesView> {
     return name[0].toUpperCase() + name.substring(1).toLowerCase();
   }
 
-  // It should not display text for yesterday and show new buttons :)
   bool _compareDates(ApplicationState appState) {
     final date1 = DateTime.fromMillisecondsSinceEpoch(
         appState.userStatus?.updatedAt ?? 0);

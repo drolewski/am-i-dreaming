@@ -52,7 +52,7 @@ class ApplicationState extends ChangeNotifier {
   List<Horoscope> get horoscopes => _horoscopes;
 
   StreamSubscription<QuerySnapshot>?
-      _userPersonalizedHoroscopeDocumentSubscription;
+  _userPersonalizedHoroscopeDocumentSubscription;
   PersonalizedHoroscopeDocument? _personalizedHoroscopeDocument;
 
   PersonalizedHoroscopeDocument? get personalizedHoroscopeDocument =>
@@ -93,9 +93,9 @@ class ApplicationState extends ChangeNotifier {
               sex: SexEnum.fromString(snapshot.docs[0].data()['sex'] as String),
               birthCity: snapshot.docs[0].data()['birthCity'] as String,
               birthdayTimestampUTC:
-                  snapshot.docs[0].data()['birthdayTimestampUTC'] as int,
+              snapshot.docs[0].data()['birthdayTimestampUTC'] as int,
               birthCountryCode:
-                  snapshot.docs[0].data()['birthCountryCode'] as String,
+              snapshot.docs[0].data()['birthCountryCode'] as String,
               sunZodiac: ZodiacEnum.fromString(
                   snapshot.docs[0].data()['sunZodiac'] as String),
               lunarZodiac: ZodiacEnum.fromString(
@@ -152,11 +152,11 @@ class ApplicationState extends ChangeNotifier {
                 id: document.id,
                 updatedAt: document.data()['updatedAt'] as int,
                 isSingleHoroscopeGenerated:
-                    document.data()['isSingleHoroscopeGenerated'] as bool,
+                document.data()['isSingleHoroscopeGenerated'] as bool,
                 areAllHoroscopesGenerated:
-                    document.data()['areAllHoroscopesGenerated'] as bool,
+                document.data()['areAllHoroscopesGenerated'] as bool,
                 isPersonalizedHoroscopeGenerated:
-                    document.data()['isPersonalizedHoroscopeGenerated'] as bool,
+                document.data()['isPersonalizedHoroscopeGenerated'] as bool,
                 numberOfDreams: document.data()['numberOfDreams'] as int);
 
             notifyListeners();
@@ -207,16 +207,26 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
+    upsertUserStatus(UserStatus(
+        id: userStatus?.id,
+        updatedAt: DateTime.now().millisecondsSinceEpoch,
+        isSingleHoroscopeGenerated: userStatus?.isSingleHoroscopeGenerated ?? false,
+        areAllHoroscopesGenerated: userStatus?.areAllHoroscopesGenerated ?? false,
+        isPersonalizedHoroscopeGenerated: userStatus?.isPersonalizedHoroscopeGenerated ?? false,
+        numberOfDreams: (userStatus?.numberOfDreams ?? 0 )+ 1));
+
     return FirebaseFirestore.instance.collection('dream').add(<String, dynamic>{
       'text': dream,
       'prompt': prompt,
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      'timestamp': DateTime
+          .now()
+          .millisecondsSinceEpoch,
       'userId': FirebaseAuth.instance.currentUser!.uid,
     });
   }
 
-  Future<DocumentReference?> saveData(
-      UserModel user, AstrologicalData? astrologicalData) async {
+  Future<DocumentReference?> saveData(UserModel user,
+      AstrologicalData? astrologicalData) async {
     if (!loggedIn) {
       throw Exception('Must be logged in');
     }
@@ -239,7 +249,9 @@ class ApplicationState extends ChangeNotifier {
         'sunReturnDate': astrologicalData.planetReturns.sunReturnDate,
         'moonReturnDate': astrologicalData.planetReturns.moonReturnDate,
         'ascendant': astrologicalData.ascendantZodiac,
-        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'timestamp': DateTime
+            .now()
+            .millisecondsSinceEpoch,
         'userId': FirebaseAuth.instance.currentUser!.uid,
       });
     }
@@ -284,7 +296,7 @@ class ApplicationState extends ChangeNotifier {
         'isSingleHoroscopeGenerated': userStatus.isSingleHoroscopeGenerated,
         'areAllHoroscopesGenerated': userStatus.areAllHoroscopesGenerated,
         'isPersonalizedHoroscopeGenerated':
-            userStatus.isPersonalizedHoroscopeGenerated,
+        userStatus.isPersonalizedHoroscopeGenerated,
         'numberOfDreams': userStatus.numberOfDreams,
       });
     }
@@ -294,7 +306,7 @@ class ApplicationState extends ChangeNotifier {
       'isSingleHoroscopeGenerated': userStatus.isSingleHoroscopeGenerated,
       'areAllHoroscopesGenerated': userStatus.areAllHoroscopesGenerated,
       'isPersonalizedHoroscopeGenerated':
-          userStatus.isPersonalizedHoroscopeGenerated,
+      userStatus.isPersonalizedHoroscopeGenerated,
       'numberOfDreams': userStatus.numberOfDreams,
     });
   }
@@ -303,8 +315,10 @@ class ApplicationState extends ChangeNotifier {
     _userHoroscopesSubscription = FirebaseFirestore.instance
         .collection('horoscope')
         .where('date',
-            isEqualTo: formatTimeStampToSimpleDate(
-                DateTime.now().millisecondsSinceEpoch))
+        isEqualTo: formatTimeStampToSimpleDate(
+            DateTime
+                .now()
+                .millisecondsSinceEpoch))
         .snapshots()
         .listen((snapshot) {
       _horoscopes = [];
@@ -329,10 +343,12 @@ class ApplicationState extends ChangeNotifier {
     _userHoroscopesSubscription = FirebaseFirestore.instance
         .collection('personalizedHoroscope')
         .where(Filter.and(
-            Filter("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid),
-            Filter("date",
-                isEqualTo: formatTimeStampToSimpleDate(
-                    DateTime.now().millisecondsSinceEpoch))))
+        Filter("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid),
+        Filter("date",
+            isEqualTo: formatTimeStampToSimpleDate(
+                DateTime
+                    .now()
+                    .millisecondsSinceEpoch))))
         .limit(1)
         .snapshots()
         .listen((snapshot) {
