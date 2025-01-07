@@ -1,7 +1,6 @@
 # TODOs
 
 ## Important [Release date at the end of February]
-- Add only one dream per day
 - Delete user account action
 - test google login and logout ;) google.disconnected() ?
 - Fix typography, texts etc.

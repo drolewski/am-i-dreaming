@@ -57,19 +57,18 @@ class _DreamInputState extends State<DreamInput> {
                 width: double.infinity,
                 child: CupertinoButton.filled(
                   onPressed: () async {
-                    if (rewardedAd.rewardedAd != null) {
-                      rewardedAd.rewardedAd?.show(
-                        onUserEarnedReward: (_, reward) async {
-                          if (_formKey.currentState!.validate()) {
-                            await widget.addDream(
-                                _controller.text,
-                                AppLocalizations.of(context)!
-                                    .dream_generation_prompt_wrapper(
-                                        _controller.text));
-                            _controller.clear();
-                          }
-                        },
-                      );
+                    if (_formKey.currentState!.validate()) {
+                      if (rewardedAd.rewardedAd != null) {
+                        rewardedAd.rewardedAd?.show(
+                            onUserEarnedReward: (_, reward) async {
+                          await widget.addDream(
+                              _controller.text,
+                              AppLocalizations.of(context)!
+                                  .dream_generation_prompt_wrapper(
+                                      _controller.text));
+                          _controller.clear();
+                        });
+                      }
                     }
                   },
                   child: Text(AppLocalizations.of(context)!.button_add_dream),

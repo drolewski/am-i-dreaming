@@ -21,7 +21,6 @@ Write horoscope for the date of ${date}. Generate minimum of 8 sentences max 14 
 
 const HoroscopesEvent = z.object({
     date: z.string(),
-    language: z.string(),
     horoscopes: z.array(z.object({
         zodiac: z.string(),
         value: z.string(),
@@ -30,7 +29,6 @@ const HoroscopesEvent = z.object({
 
 const PersonalizedHoroscopeEvent = z.object({
     date: z.string(),
-    language: z.string(),
     horoscope: z.string(),
 });
 

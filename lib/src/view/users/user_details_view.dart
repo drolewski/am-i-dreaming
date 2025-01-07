@@ -207,28 +207,28 @@ class _UserDetailsViewState extends State<UserDetailsView> {
   static Route<void> _modalBuilder(BuildContext context, Object? arguments) {
     return CupertinoModalPopupRoute<void>(
       builder: (BuildContext context) {
-        return CupertinoActionSheet(
-          title: Text(AppLocalizations.of(context)!.delete_account),
-          message:
-              Text(AppLocalizations.of(context)!.delete_account_question_modal),
-          actions: <CupertinoActionSheetAction>[
-            CupertinoActionSheetAction(
-              child: Text(AppLocalizations.of(context)!.yes),
-              onPressed: () {
-                // logout -> logout should redirect also
-                // remove account
-                // redirect to login view
-                Navigator.pop(context);
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: Text(AppLocalizations.of(context)!.no),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
+        return Consumer<ApplicationState>(
+            builder: (context, appState, child) => CupertinoActionSheet(
+                  title: Text(AppLocalizations.of(context)!.delete_account),
+                  message: Text(AppLocalizations.of(context)!
+                      .delete_account_question_modal),
+                  actions: <CupertinoActionSheetAction>[
+                    CupertinoActionSheetAction(
+                      child: Text(AppLocalizations.of(context)!.yes),
+                      onPressed: () async {
+                        context.pushReplacement("/login");
+                        appState.removeUser();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    CupertinoActionSheetAction(
+                      child: Text(AppLocalizations.of(context)!.no),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ));
       },
     );
   }

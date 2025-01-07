@@ -18,12 +18,13 @@ export const findHoroscope = async (db: Firestore, formattedDate: string, zodiac
         .get();
 };
 
-export const saveHoroscope = async (db: FirebaseFirestore.Firestore, horoscopeResponse: HoroscopeGptResponse) => {
+export const saveHoroscope = async (
+    db: FirebaseFirestore.Firestore, horoscopeResponse: HoroscopeGptResponse, language: string) => {
     const horoscopeDocuments: HoroscopeDocument[] = horoscopeResponse.horoscopes.map((horoscope) => {
         return {
             zodiac: horoscope.zodiac.toLowerCase(),
             date: horoscopeResponse.date,
-            language: horoscopeResponse.language,
+            language: language,
             value: horoscope.value,
         } as unknown as HoroscopeDocument;
     });
@@ -43,11 +44,12 @@ export const findPersonalizedHoroscope = async (
 };
 
 export const savePersonalizedHoroscope = async (
-    db: FirebaseFirestore.Firestore, horoscopeResponse: PersonalizedHoroscopeGptResponse, userId: string) => {
+    db: FirebaseFirestore.Firestore, horoscopeResponse: PersonalizedHoroscopeGptResponse,
+    userId: string, language: string) => {
     const horoscopeDocument: PersonalizedHoroscopeDocument = {
         userId: userId,
         date: horoscopeResponse.date,
-        language: horoscopeResponse.language,
+        language: language,
         horoscope: horoscopeResponse.horoscope,
     } as unknown as PersonalizedHoroscopeDocument;
     db.collection("personalizedHoroscope").add(horoscopeDocument);

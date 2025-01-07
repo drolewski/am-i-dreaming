@@ -20,13 +20,11 @@ mystery to your answers.`;*/
 
 export interface HoroscopeGptResponse {
     date: string;
-    language: string;
     horoscopes: HoroscopeGpt[];
 }
 
 export interface PersonalizedHoroscopeGptResponse {
     date: string;
-    language: string;
     horoscope: string;
 }
 
@@ -45,7 +43,6 @@ export interface HoroscopeDocument {
 export interface PersonalizedHoroscopeDocument {
     userId: string;
     date: string;
-    language: string;
     horoscope: string;
 }
 
@@ -98,7 +95,7 @@ const createHoroscope = async (
     formattedDate: string, language: string, db: FirebaseFirestore.Firestore, zodiac: string) => {
     const completion = await generateBasicHoroscopes(formattedDate, language);
     const horoscopeResponse: HoroscopeGptResponse = JSON.parse(<string>completion.choices[0].message.content);
-    const horoscopeDocuments = await saveHoroscope(db, horoscopeResponse);
+    const horoscopeDocuments = await saveHoroscope(db, horoscopeResponse, language);
     return horoscopeDocuments.find((h) => h.zodiac.toLowerCase() === zodiac);
 };
 
@@ -108,7 +105,7 @@ const createPersonalizedHoroscope = async (
     const completion = await generatePersonalizedHoroscope(formattedDate, language, birthdate, birthplace);
     const horoscopeResponse: PersonalizedHoroscopeGptResponse = JSON.parse(
         <string>completion.choices[0].message.content);
-    return await savePersonalizedHoroscope(db, horoscopeResponse, userId);
+    return await savePersonalizedHoroscope(db, horoscopeResponse, userId, language);
 };
 
 const formatDate = (date: Date): string => {

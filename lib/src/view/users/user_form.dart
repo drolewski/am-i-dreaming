@@ -365,49 +365,45 @@ class _UserFormState extends State<UserForm> {
                                     width: double.infinity,
                                     child: CupertinoButton.filled(
                                       onPressed: () async {
-                                        if (rewardedAd.rewardedAd != null) {
-                                          rewardedAd.rewardedAd?.show(
-                                            onUserEarnedReward:
-                                                (_, reward) async {
-                                              if (_formKey.currentState!
-                                                  .validate()) {
+                                        if (_formKey.currentState!.validate()) {
+                                          if (rewardedAd.rewardedAd != null) {
+                                            rewardedAd.rewardedAd?.show(
+                                                onUserEarnedReward:
+                                                    (_, reward) async {
+                                              setState(() {
+                                                _isReloading = true;
+                                              });
+                                              var userModel = UserModel(
+                                                  name: _nameController.text,
+                                                  sex: widget
+                                                      .sexes[_selectedSexIndex]
+                                                      .name,
+                                                  birthCity:
+                                                      _birthCityController.text,
+                                                  birthdayTimestampUTC:
+                                                      birthDateTimestampUTC(),
+                                                  birthCountryCode: widget
+                                                      .countries[
+                                                          _selectedCountryIndex]
+                                                      .countryCode);
+                                              try {
+                                                var userAstrologicalData =
+                                                    await astrologicalCalculator(
+                                                        userModel
+                                                            .birthdayTimestampUTC);
+                                                await appState.saveData(
+                                                    userModel,
+                                                    userAstrologicalData);
+                                              } finally {
                                                 setState(() {
-                                                  _isReloading = true;
+                                                  _isReloading = false;
                                                 });
-                                                var userModel = UserModel(
-                                                    name: _nameController.text,
-                                                    sex: widget
-                                                        .sexes[
-                                                            _selectedSexIndex]
-                                                        .name,
-                                                    birthCity:
-                                                        _birthCityController
-                                                            .text,
-                                                    birthdayTimestampUTC:
-                                                        birthDateTimestampUTC(),
-                                                    birthCountryCode: widget
-                                                        .countries[
-                                                            _selectedCountryIndex]
-                                                        .countryCode);
-                                                try {
-                                                  var userAstrologicalData =
-                                                      await astrologicalCalculator(
-                                                          userModel
-                                                              .birthdayTimestampUTC);
-                                                  await appState.saveData(
-                                                      userModel,
-                                                      userAstrologicalData);
-                                                } finally {
-                                                  setState(() {
-                                                    _isReloading = false;
-                                                  });
-                                                  _birthCityController.clear();
-                                                  _nameController.clear();
-                                                  Navigator.of(context).pop();
-                                                }
+                                                _birthCityController.clear();
+                                                _nameController.clear();
+                                                Navigator.of(context).pop();
                                               }
-                                            },
-                                          );
+                                            });
+                                          }
                                         }
                                       },
                                       child: Text(AppLocalizations.of(context)!
