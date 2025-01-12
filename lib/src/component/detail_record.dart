@@ -10,21 +10,24 @@ class DetailsRecord extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(top: 8),
-        child: Row(children: [
-          Expanded(
-              child: Text(
-            label,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-          )),
-          Expanded(
-              child: Container(
-                  alignment: Alignment.centerRight,
+        child: Container(
+            decoration: const BoxDecoration(color: CupertinoColors.systemFill),
+            child: Row(children: [
+              Expanded(
                   child: Text(
-                    textAlign: TextAlign.end,
-                    value,
-                    style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.w400),
-                  )))
-        ]));
+                label,
+                style:
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              )),
+              Expanded(
+                  child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        textAlign: TextAlign.end,
+                        value,
+                        style: const TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.w400),
+                      )))
+            ])));
   }
 }

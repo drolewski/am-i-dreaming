@@ -47,7 +47,9 @@ class _NavigationState extends State<Navigation> {
 
   Widget getHoroscopeIcon(UserDocument userDocument) {
     if (userDocument == UserDocument.empty()) {
-      return const Icon(CupertinoIcons.star_fill);
+      return const Text(
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+          "✨");
     }
     return Text(
         style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),

@@ -212,7 +212,7 @@ class _HoroscopeViewState extends State<HoroscopesView> {
                     },
                   )
                 : HoroscopeRow(horoscope: resHoroscopes[0])
-            : Text(AppLocalizations.of(context)!.generate_horoscopes));
+            : Text(""));
   }
 
   List<Horoscope> sortedListOfHoroscopes(ApplicationState appState) {

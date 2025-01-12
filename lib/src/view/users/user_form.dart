@@ -33,7 +33,7 @@ class _UserFormState extends State<UserForm> {
   final _prefixFontSize = 20.0;
   final _textFontSize = 20.0;
   final _prefixColor = CupertinoColors.white;
-  final _textColor = CupertinoColors.systemTeal;
+  final _textColor = CupertinoColors.systemPurple;//CupertinoColors.systemTeal;
   final _maxYear = DateTime.now().subtract(const Duration(days: 10 * 365));
   final RewardedAdUtil rewardedAd = RewardedAdUtil();
 
@@ -77,8 +77,9 @@ class _UserFormState extends State<UserForm> {
                                         padding:
                                             const EdgeInsets.only(bottom: 10),
                                         child: Text(
-                                          AppLocalizations.of(context)!
-                                              .about_you_form,
+                                          "",
+                                          // AppLocalizations.of(context)!
+                                          //     .about_you_form,
                                           style: const TextStyle(
                                               color: CupertinoColors.systemTeal,
                                               fontSize: 28,
@@ -150,7 +151,7 @@ class _UserFormState extends State<UserForm> {
                                                   color: _textColor)),
                                           onPressed: () => _showDialog(
                                                 CupertinoPicker(
-                                                  looping: true,
+                                                  looping: false,
                                                   magnification: 2.35 / 2.1,
                                                   squeeze: 1.25,
                                                   useMagnifier: true,
@@ -326,7 +327,7 @@ class _UserFormState extends State<UserForm> {
                                                   color: _textColor)),
                                           onPressed: () => _showDialog(
                                                 CupertinoPicker(
-                                                  looping: true,
+                                                  looping: false,
                                                   magnification: 2.35 / 2.1,
                                                   squeeze: 1.25,
                                                   useMagnifier: true,

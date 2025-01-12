@@ -42,3 +42,65 @@
 - Where should i set the ads and when should I display ads?
 - Apple login?
 - Facebook login?
+- Loading data from api, generated horoscope etc. during ads loading
+
+
+Review -> Monika
+- Zmniejszyć ikonę startową, aby nie wystawała na mniejszych telefonach
+- Feature: Intro w aplikacji, przedstawiające ją dla nowych użytkowników, żeby wiedzieli do czego apliakcja służy, ekran startowy przed logowaniem
+- Rozbudowanie widoku weryfikacji adresu email o jakiś opis "ups nie zwertygfikowałeś/aś adresu email", zmiena buttonu primary na wypukły
+- Opisz swój sen niewidoczny napis (musi być jaśniejszy kolor)
+- Zamiast 'snij' --> 'dodaj swój sen'?
+- W trakcie łądowania generowanego obrazu znika nagłówek scaffolda
+- Może reklama na dole?
+- Share dream na widoku szczegółów jako akcja w nagłówku (wysłanie na messengerze itp.)
+- Tytuł snu nadawany przez użytkownika i wyświetlany na listingu
+- Klasyfikacja snu przez użytkownika, uzytkownik będzie mógł sklasyfikwoać/otagować sen, nas†epnei na listingu ten sen będzie wyświetlał się w odpowiednim kolorze (np. niepokojący, radosny, marzenie, itp.)
+- Generowane przez AI podsumowanie snu i wnioski/opis/klasyfikacja itp.
+- Co się stanie ze szczegółami snu na małym telefonie, jeżeli wyświeltimy obrazek i bardzo długi opis?? (czy nie będzie problemu z renderowaniem)
+- Wyświetlenia do 1 roku w tył (?)
+- "Dodaj swój sen" -> powinien może być disabled pod spodem powinna pojawić się informacja "Dodałeś dzisiaj swój sen. Wróć jutro." Widzimy się jutro?
+- Znikający sen testowy ??? wut??
+- Usuwanie snu (usunięcie snu nie powinno odblokowywać możliwości dodania snu w dniu dzisiejszym)
+- Tło delikatnie jasniejsze, może jakis fiolecik (?)
+- Puste dane uzytkownika na widoku horoscopów i użytkownika mają inne marginesy
+- Na widoku pustych horoskopów, nie powinnobyć możliwości wylogowania, ani usunięcia konta 
+- Nagłówek definiowania użytkownika powinin być: W innym kolorze, Dodać jakąś ikonkę, może ikona apki? lub jakaś inna, koło horoskopów, nagłówek widoku powinien być większą czcionką, innym kolorem (np. filetowym/niebieskim), większy, pod nim ikona/obrazek, ten widok bez reklamy?. "Dołącz do nas i ciesz się codziennymi horoskpami tworzonymi specjalnie dla Ciebie." -> bardziej spersonalizowany oppis mówiący o naszym celu.
+- Button Uzupełnij dane -> "Opowiedz nam o sobie"
+- Uzupełnij dane "O Tobie" -> Bez nagłówka? jakoś dostylować odległości
+- SystyemTeal -> SystemIndigo/SystemPurple (jakiś z tych kolorów jako dominujący w aplikacji) niektóre elementy w nowym kolorze, niektóre elementy w kolorze poprzednim -> zgasic go jak peta, bardziej szary, mdły ??
+- Na widoku horoskopów, powinno być odniesienie do widoku uzytkownika -> Przejdź do widoku użytkownika aby uzupełnić dane, widok horoskopów powienien być dumy & pure
+- Usuń konto modal -> "Czy na pewno chcesz nas opuścić?"/"Czy na pewno chcesz usunąć wszystkie dane swojego konta?"
+- Usuń konto nie powinno być widoczne na pustym ekranie uzytkownika (security/prawo)
+- Usuń konto nie powinien tak świecić jaskrawym kolorem (jakiś szary/jaśniejszy niebieski itp.)
+- Ikony na nawigacji powinny byc może tekstowe? (tak jak gwiazdki horoskopu i znaki zodiaku)
+- Picker kraju ma dziwne sortowanie (nie jest alfabetycznie)
+- Sprawdzić jak się zachowają długie wartości w inputach danych user
+- Zmiana danych użytkownika na widoku uzytkownika -> Edycja danych, które można zmienić zgodnie z prawem np. imię, płeć, godzina urodzenia, miejsce urodzenia
+- Sprawdzić jak się zachowają długie wartości w inputach na widoku szczegółów uzytkownika
+- Imię wyświeltone jako dana w formacie Imię     Monika
+- Szczegóły użytkownika: Mniejsze czcionki, większe odległości między wierszami, większe rozróżnienie przestrzeni między wierszami, Kolorystyka bardziej kontrastowa, 
+- "Nieznany znak zodiaku" dla znaku księżycowego na koncie m.zamroczynska@icloud.com
+- Sam dom astrologiczny dorównany do lewej (wartości) ?
+- Inna ikona unicode bez tła (czy idzie ją wykorzystać w treściach tekstowych) ???? lepiej by wyglądała
+- Tooltip wyjaśniający czym są dane wpisy (tylko przy trudnych zagadnieniach/zawsze)
+- Reklama wyrównana szerokością do kontentu stron
+- Pomyśleć nad kolejnością na szczegółach uzytkowników
+- Czy nagłówek powinien być na każdym ekranie zawsze (Sny, Uzytkownik na nieuzupełnionych danych itp.)
+- Horoskop dla -> Wygeneruj horoskop na dziś
+- Wywalić napis -> "Wygeneruj horoskop"
+- Czcionka w nagłówkach powinna być fiku miku
+- Buttony w aplikacji sticky to bottom (??) -> Może wszystkie buttony nad paskiem nawigacji ???
+- Wygeneruj spersonalizowany horoskop -> Twój horoskop
+- Od razu generujemy cały horokop -> nie ma pośredniego kroku między jeden horoskop, a wszystkie horoskopy, Potem button na generowanie Twojego horoskopu
+- Na długim listingu przycisk powrót na górę (floating action button)
+- Wiok horoskopów: Akordeon -> z rozwijaniem opisów horoskopów na stronie, podział na eksjce "ogólne horoskopy", "personalizowany horoskop", domyślnie sekcje zwinięte
+- "Personalizowany horoskop" -> "Horoskop dla Ciebie"/ "Horoskop na dzis" "Twój horoskop" -> Czcionek fiku miku może jak w na główku, ale mniejszy ?
+- Większe odstępy
+- Sekcja z ogólnymi horoskopami -> "Pokaż pozostałe horoskopy"
+- Tłumaczenia na dany język znaków zodiaku (?)
+- Aplikacja ogólnie jest za ciemna
+- Dostylowanie kolorów do ustawień systemowych (jasny ciemny kolor aplikacji)
+- Edycja daty snu
+- generowanie obrazkow: raz dziennie na poczatek, potem na koncie premium nieograniczony dostep, ograniczenie do generowania obrazkow a nie do liczby wpisanych snow
+- 

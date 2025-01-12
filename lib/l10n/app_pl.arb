@@ -1,7 +1,7 @@
 {
   "@localization": "pl",
   "dreams": "Sny",
-  "horoscopes": "Horoscopy",
+  "horoscopes": "Horoskopy",
   "user": "Użytkownik",
   "@user": {
     "description": "Użytkownik na pasku nawigacji, ta nazwa mogłaby mieć nazwę bliższą domenie zodiaków"

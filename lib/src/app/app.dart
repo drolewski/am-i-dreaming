@@ -29,8 +29,8 @@ class App extends StatelessWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: const CupertinoThemeData(
-        brightness: Brightness.dark,
-        primaryColor: CupertinoColors.systemTeal,
+        brightness: Brightness.dark, //WidgetsBinding.instance.platformDispatcher.platformBrightness,
+        primaryColor: CupertinoColors.systemPurple,
       ),
       routerConfig: _router,
     );
