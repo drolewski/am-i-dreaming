@@ -29,7 +29,8 @@ class App extends StatelessWidget {
       ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: const CupertinoThemeData(
-        brightness: Brightness.dark, //WidgetsBinding.instance.platformDispatcher.platformBrightness,
+        brightness: Brightness.dark,
+        //WidgetsBinding.instance.platformDispatcher.platformBrightness,
         primaryColor: CupertinoColors.systemPurple,
       ),
       routerConfig: _router,
@@ -75,31 +76,52 @@ final _router = GoRouter(
             path: 'verify-email',
             builder: (context, state) {
               return CupertinoPageScaffold(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                SizedBox(
-                    width: double.infinity,
-                    child: CupertinoButton(
-                        child: Text(AppLocalizations.of(context)!.verify_email),
-                        onPressed: () async {
-                          if (FirebaseAuth.instance.currentUser != null) {
-                            FirebaseAuth.instance.currentUser!
-                                .sendEmailVerification();
-                            await FirebaseAuth.instance.signOut();
-                          }
-                          context.push("/");
-                        })),
-                SizedBox(
-                    width: double.infinity,
-                    child: CupertinoButton(
-                        child: Text(AppLocalizations.of(context)!.back),
-                        onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
-                          context.push("/");
-                        }))
-              ]));
+                  navigationBar: CupertinoNavigationBar(
+                    automaticallyImplyLeading: false,
+                    middle: Text(AppLocalizations.of(context)!.verify_email),
+                  ),
+                  child: Padding(
+                      padding:
+                          const EdgeInsets.only(right: 20, left: 20, top: 20),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Text(
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                    AppLocalizations.of(context)!
+                                        .email_verification)),
+                            SizedBox(
+                                width: double.infinity,
+                                child: CupertinoButton.filled(
+                                    child: Text(AppLocalizations.of(context)!
+                                        .verify_email),
+                                    onPressed: () async {
+                                      if (FirebaseAuth.instance.currentUser !=
+                                          null) {
+                                        FirebaseAuth.instance.currentUser!
+                                            .sendEmailVerification();
+                                        await FirebaseAuth.instance.signOut();
+                                      }
+                                      context.push("/");
+                                    })),
+                            SizedBox(
+                                width: double.infinity,
+                                child: Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: CupertinoButton(
+                                        child: Text(
+                                            AppLocalizations.of(context)!.back),
+                                        onPressed: () async {
+                                          await FirebaseAuth.instance.signOut();
+                                          context.push("/");
+                                        })))
+                          ])));
             },
           ),
         ],

@@ -158,5 +158,6 @@
   "back": "Wróć",
   "personalized_horoscope": "Personalizowany horoskop",
   "generate_horoscopes": "Wygeneruj horoskopy",
+  "email_verification": "Nie zweryfikowano adresu email! Przeprowadź wertfikację.",
   "language": "polish"
 }

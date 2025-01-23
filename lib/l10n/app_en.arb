@@ -155,5 +155,6 @@
   "back": "Back",
   "personalized_horoscope": "Personalized horoscope",
   "generate_horoscopes": "Generate horoscopes",
+  "email_verification": "You didn't verify your email address. Please verify your email.",
   "language": "english"
 }
