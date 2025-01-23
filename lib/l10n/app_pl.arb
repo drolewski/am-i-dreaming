@@ -17,7 +17,7 @@
       }
     }
   },
-  "button_add_dream": "Śnij!",
+  "button_add_dream": "Dodaj swój sen",
   "formattedDate": "{date}",
   "@formattedDate": {
     "description": "Date parameter",

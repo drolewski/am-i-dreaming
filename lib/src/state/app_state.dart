@@ -159,6 +159,18 @@ class ApplicationState extends ChangeNotifier {
                     document.data()['isPersonalizedHoroscopeGenerated'] as bool,
                 numberOfDreams: document.data()['numberOfDreams'] as int);
 
+            if (formatTimeStampToSimpleDate(_userStatus?.updatedAt ?? 0) ==
+                formatTimeStampToSimpleDate(
+                    DateTime.now().millisecondsSinceEpoch)) {
+              _userStatus = UserStatus(
+                  id: userStatus?.id,
+                  updatedAt: DateTime.now().millisecondsSinceEpoch,
+                  isSingleHoroscopeGenerated: false,
+                  areAllHoroscopesGenerated: false,
+                  isPersonalizedHoroscopeGenerated: false,
+                  numberOfDreams: 0);
+              upsertUserStatus(_userStatus!);
+            }
             notifyListeners();
           }
         });

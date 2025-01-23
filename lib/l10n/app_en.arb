@@ -14,7 +14,7 @@
       }
     }
   },
-  "button_add_dream": "Add dream!",
+  "button_add_dream": "Add your dream",
   "formattedDate": "{date}",
   "@formattedDate": {
     "description": "Date parameter",

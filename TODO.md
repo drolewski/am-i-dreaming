@@ -53,9 +53,7 @@
 - Zmniejszyć ikonę startową, aby nie wystawała na mniejszych telefonach
 
 Review -> Monika
-- Rozbudowanie widoku weryfikacji adresu email o jakiś opis "ups nie zwertygfikowałeś/aś adresu email", zmiena buttonu primary na wypukły
-- Opisz swój sen niewidoczny napis (musi być jaśniejszy kolor)
-- Zamiast 'snij' --> 'dodaj swój sen'?
+- Po dodaniu snu znikają wcześniejsze zny -> może trzeba dodać do aktualnego stanu obiekt zapisywany też w bazie??? 
 - W trakcie łądowania generowanego obrazu znika nagłówek scaffolda
 - Może reklama na dole? nad buttonem
 - Co się stanie ze szczegółami snu na małym telefonie, jeżeli wyświeltimy obrazek i bardzo długi opis?? (czy nie będzie problemu z renderowaniem)

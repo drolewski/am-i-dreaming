@@ -12,34 +12,40 @@ class DreamView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          automaticallyImplyLeading: false,
+          middle: Text(AppLocalizations.of(context)!.dreams),
+        ),
         child: SafeArea(
             child: Column(
-      children: [
-        Expanded(
-            flex: 3,
-            child: Consumer<ApplicationState>(
-              builder: (context, appState, _) => Center(
-                  child: DreamsList(
-                dreamDocuments: appState.dreamDocuments,
-                isDreamSet: appState.dreamDocumentSet,
-              )),
-            )),
-        Consumer<ApplicationState>(
-            builder: (context, appState, _) => Center(
-                  child: (appState.userStatus?.numberOfDreams ?? 0) < 1
-                      ? DreamInput(
-                          addDream: (dream, prompt) =>
-                              appState.addNewDream(dream, prompt))
-                      : Container(
-                          padding: const EdgeInsets.only(top: 24, bottom: 24),
-                          child: Text(
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                              AppLocalizations.of(context)!
-                                  .already_saved_dream),
-                        ),
-                ))
-      ],
-    )));
+          children: [
+            Expanded(
+                flex: 3,
+                child: Consumer<ApplicationState>(
+                  builder: (context, appState, _) => Center(
+                      child: DreamsList(
+                    dreamDocuments: appState.dreamDocuments,
+                    isDreamSet: appState.dreamDocumentSet,
+                  )),
+                )),
+            Consumer<ApplicationState>(
+                builder: (context, appState, _) => Center(
+                      child: (appState.userStatus?.numberOfDreams ?? 0) < 1
+                          ? DreamInput(
+                              addDream: (dream, prompt) =>
+                                  appState.addNewDream(dream, prompt))
+                          : Container(
+                              padding:
+                                  const EdgeInsets.only(top: 24, bottom: 24),
+                              child: Text(
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                  AppLocalizations.of(context)!
+                                      .already_saved_dream),
+                            ),
+                    ))
+          ],
+        )));
   }
 }

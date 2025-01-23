@@ -35,6 +35,7 @@ class _DreamInputState extends State<DreamInput> {
         children: <Widget>[
           CupertinoTextFormFieldRow(
             placeholder: AppLocalizations.of(context)!.describe_dream,
+            placeholderStyle: const TextStyle(color: CupertinoColors.lightBackgroundGray),
             controller: _controller,
             maxLines: 5,
             minLines: 5,
